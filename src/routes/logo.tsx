@@ -177,6 +177,102 @@ function LogoPage() {
                 <Download className="h-4 w-4" /> Baixar PNG
               </Button>
             </div>
+        </div>
+
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-white text-center">Versões 16:9 (Símbolo + Texto)</h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {/* 16:9 Black */}
+            <div className="glass-strong flex flex-col items-center space-y-6 rounded-none p-6 transition-transform hover:scale-[1.02]">
+              <div className="flex aspect-video w-full items-center justify-center bg-black p-8">
+                <div className="flex items-center gap-4">
+                  <div 
+                    className="h-12 w-12" 
+                    style={{ 
+                      backgroundColor: primaryColor,
+                      WebkitMaskImage: `url(${logoAsset.url})`,
+                      maskImage: `url(${logoAsset.url})`,
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain'
+                    }}
+                  />
+                  <span className="text-2xl font-bold" style={{ color: primaryColor }}>DashCompass</span>
+                </div>
+              </div>
+              <div className="w-full space-y-3">
+                <h3 className="text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">Horizontal / Fundo Preto</h3>
+                <Button 
+                  onClick={() => downloadPng('black', '16:9')} 
+                  className="w-full gap-2 rounded-none bg-white text-black hover:bg-white/90"
+                >
+                  <Download className="h-4 w-4" /> Baixar PNG
+                </Button>
+              </div>
+            </div>
+
+            {/* 16:9 White */}
+            <div className="glass-strong flex flex-col items-center space-y-6 rounded-none p-6 transition-transform hover:scale-[1.02]">
+              <div className="flex aspect-video w-full items-center justify-center bg-white p-8">
+                <div className="flex items-center gap-4">
+                  <div 
+                    className="h-12 w-12" 
+                    style={{ 
+                      backgroundColor: primaryColor,
+                      WebkitMaskImage: `url(${logoAsset.url})`,
+                      maskImage: `url(${logoAsset.url})`,
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain'
+                    }}
+                  />
+                  <span className="text-2xl font-bold" style={{ color: primaryColor }}>DashCompass</span>
+                </div>
+              </div>
+              <div className="w-full space-y-3">
+                <h3 className="text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">Horizontal / Fundo Branco</h3>
+                <Button 
+                  onClick={() => downloadPng('white', '16:9')} 
+                  className="w-full gap-2 rounded-none bg-white text-black hover:bg-white/90"
+                >
+                  <Download className="h-4 w-4" /> Baixar PNG
+                </Button>
+              </div>
+            </div>
+
+            {/* 16:9 Primary */}
+            <div className="glass-strong flex flex-col items-center space-y-6 rounded-none p-6 transition-transform hover:scale-[1.02] sm:col-span-2 lg:col-span-1">
+              <div 
+                className="flex aspect-video w-full items-center justify-center p-8"
+                style={{ backgroundColor: primaryColor }}
+              >
+                <div className="flex items-center gap-4">
+                  <div 
+                    className="h-12 w-12 bg-black" 
+                    style={{ 
+                      WebkitMaskImage: `url(${logoAsset.url})`,
+                      maskImage: `url(${logoAsset.url})`,
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain'
+                    }}
+                  />
+                  <span className="text-2xl font-bold text-black">DashCompass</span>
+                </div>
+              </div>
+              <div className="w-full space-y-3">
+                <h3 className="text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">Horizontal / Fundo Admin</h3>
+                <Button 
+                  onClick={() => downloadPng('primary-bg', '16:9')} 
+                  className="w-full gap-2 rounded-none bg-white text-black hover:bg-white/90"
+                >
+                  <Download className="h-4 w-4" /> Baixar PNG
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Primary Background Variant */}
