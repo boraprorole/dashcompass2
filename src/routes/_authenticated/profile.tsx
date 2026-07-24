@@ -104,6 +104,8 @@ function ProfilePage() {
       const fileName = `${user.id}/${Date.now()}.${fileExt}`;
       const filePath = fileName;
 
+      console.log("Iniciando upload para:", filePath, "Tipo:", fileToUpload.type);
+
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(filePath, fileToUpload, {
