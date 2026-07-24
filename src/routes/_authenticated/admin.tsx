@@ -1124,6 +1124,7 @@ function CompaniesTab() {
           company_id: company.id,
           created_by: userData.user.id,
           agency_id: payload.agency_id || null,
+          description: "Relatório gerado automaticamente para " + company.name
         },
       ]);
 
