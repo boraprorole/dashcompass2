@@ -98,7 +98,7 @@ function ProfilePage() {
         }
       }
 
-      const fileName = `${user.id}/${Date.now()}.webp`;
+      const fileName = `${user.id}/${Date.now()}.${fileToUpload.type === 'image/webp' ? 'webp' : file.name.split('.').pop()}`;
       const filePath = fileName;
 
       const { error: uploadError } = await supabase.storage
