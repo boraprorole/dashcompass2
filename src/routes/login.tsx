@@ -142,32 +142,38 @@ function LoginPage() {
 
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center px-4 py-12">
-      {/* decorative orbs */}
-      <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-primary/30 blur-3xl" />
-      <div className="pointer-events-none absolute -right-20 bottom-10 h-96 w-96 rounded-full bg-primary-glow/30 blur-3xl" />
-
+    <div className="relative flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <div className="relative w-full max-w-md">
-        <div className="mb-8 text-center">
-          <span className="mx-auto mb-4 block font-sans text-4xl font-bold tracking-tighter text-primary text-center">
+        <div className="mb-12 text-center">
+          <span className="mx-auto mb-4 block font-sans text-5xl font-bold tracking-tighter text-primary">
             DASHCOMPASS
           </span>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Acesse sua conta para continuar
+          <p className="mt-4 text-[15px] text-muted-foreground/80">
+            Design minimalista. Performance máxima.
           </p>
         </div>
 
-        <div className="glass-strong rounded-3xl p-8">
+        <div className="rounded-[20px] border border-border bg-card p-10 shadow-glass">
           <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")}>
-            <TabsList className="grid w-full grid-cols-2 bg-muted/50">
-              <TabsTrigger value="signin">Entrar</TabsTrigger>
-              <TabsTrigger value="signup">Cadastrar</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 rounded-[14px] bg-[#111] p-1 border border-border">
+              <TabsTrigger 
+                value="signin"
+                className="rounded-[10px] data-[state=active]:bg-primary data-[state=active]:text-black"
+              >
+                Entrar
+              </TabsTrigger>
+              <TabsTrigger 
+                value="signup"
+                className="rounded-[10px] data-[state=active]:bg-primary data-[state=active]:text-black"
+              >
+                Cadastrar
+              </TabsTrigger>
             </TabsList>
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <TabsContent value="signup" className="m-0 space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="displayName">Nome</Label>
+                  <Label htmlFor="displayName" className="text-sm font-medium text-foreground/80">Nome</Label>
                   <Input
                     id="displayName"
                     value={displayName}
@@ -180,7 +186,7 @@ function LoginPage() {
               </TabsContent>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-sm font-medium text-foreground/80">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -194,7 +200,7 @@ function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Senha</Label>
+                <Label htmlFor="password" className="text-sm font-medium text-foreground/80">Senha</Label>
                 <Input
                   id="password"
                   type="password"
@@ -229,7 +235,7 @@ function LoginPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full" size="lg" disabled={loading}>
+              <Button type="submit" className="w-full h-12 text-[15px] font-bold" size="lg" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {mode === "signin" ? "Entrar" : "Criar conta"}
               </Button>
