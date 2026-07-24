@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Compass } from "lucide-react";
 
 
 export const Route = createFileRoute("/login")({
@@ -144,37 +144,38 @@ function LoginPage() {
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-dot-grid px-8 py-12">
       <div className="relative w-full max-w-7xl flex flex-col items-center">
-        <div className="mb-16 text-center md:hidden">
-          <span className="mx-auto mb-6 block font-sans text-64px font-bold tracking-tighter text-primary">
-            DASHCOMPASS
-          </span>
-          <p className="mt-4 text-[15px] text-muted-foreground/80">
-            Design minimalista. Performance máxima.
+        <div className="mb-12 text-center md:hidden">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Compass className="h-10 w-10 text-primary" />
+            <span className="font-sans text-36px font-bold tracking-tighter text-white">
+              DASHCOMPASS
+            </span>
+          </div>
+          <p className="text-[14px] text-muted-foreground/60 uppercase tracking-widest font-medium">
+            Inteligência de Dados Minimalista
           </p>
+
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl w-full">
-          {/* Lado Esquerdo - Landing Page Premium */}
-          <div className="hidden md:flex flex-col justify-center space-y-8">
-            <h1 className="text-64px font-bold tracking-tight leading-none text-white">
-              A inteligência que seu <span className="text-primary">marketing</span> merece.
-            </h1>
-            <p className="text-22px text-muted-foreground max-w-lg">
-              DashCompass é a plataforma definitiva para análise estratégica de dados. 
-              Visualize performance em tempo real com precisão absoluta.
-            </p>
-            <div className="grid grid-cols-2 gap-4 pt-4">
-              <div className="bg-card border border-border rounded-[22px] p-6 space-y-2">
-                <p className="text-primary text-28px font-bold">+150%</p>
-                <p className="text-sm text-muted-foreground">ROI Médio</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-20 max-w-6xl w-full items-center">
+          {/* Lado Esquerdo - Branding Minimalista */}
+          <div className="hidden md:flex flex-col justify-center space-y-6">
+            <div className="flex items-center gap-6 mb-2">
+              <div className="h-20 w-20 rounded-[22px] bg-primary flex items-center justify-center shadow-[0_0_40px_rgba(61,252,3,0.3)]">
+                <Compass className="h-10 w-10 text-black stroke-[2.5px]" />
               </div>
-              <div className="bg-card border border-border rounded-[22px] p-6 space-y-2">
-                <p className="text-primary text-28px font-bold">24/7</p>
-                <p className="text-sm text-muted-foreground">Monitoramento AI</p>
+              <h1 className="text-64px font-bold tracking-tighter leading-none text-white">
+                DASH<span className="text-primary/90">COMPASS</span>
+              </h1>
+            </div>
+            <div className="h-px w-24 bg-primary/20" />
+            <p className="text-18px text-muted-foreground/60 uppercase tracking-[0.2em] font-medium max-w-lg">
+              A nova geração de <br />
+              <span className="text-white">análise estratégica de marketing</span>
+            </p>
+
           </div>
-        </div>
-      </div>
-    </div>
+
 
           {/* Lado Direito - Card de Login */}
           <div className="rounded-[24px] border border-border bg-card p-12 shadow-glass flex flex-col justify-center">
@@ -267,6 +268,8 @@ function LoginPage() {
             </form>
           </Tabs>
         </div>
+      </div>
+
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
           Ao continuar, você concorda com os nossos termos de uso.
