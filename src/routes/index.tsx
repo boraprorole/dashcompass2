@@ -525,7 +525,7 @@ function LandingPage() {
             </div>
           </div>
           <div className="pt-8 border-t border-white/5 text-center">
-            <p className="text-xs text-white/20 mb-2">© 2026 DashCompass. Projetado para clareza.</p>
+            <p className="text-xs text-white/20 mb-2">© 2026 DashCompass. {isEn ? "Designed for clarity." : "Projetado para clareza."}</p>
             <div className="space-y-1">
               <p className="text-[10px] text-white/10 uppercase tracking-widest font-bold">The Fcking Company LLC</p>
               <p className="text-[10px] text-white/10">30 N Gould st ste N sheridan wy 82801</p>
