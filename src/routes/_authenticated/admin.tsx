@@ -21,6 +21,7 @@ import { RDStationConnectionsManager } from "@/components/rdstation/RDStationCon
 import { LinkedInConnectionsManager } from "@/components/linkedin/LinkedInConnectionsManager";
 import { PipedriveConnectionsManager } from "@/components/pipedrive/PipedriveConnectionsManager";
 import { GoogleAdsCsvManager } from "@/components/googleads/GoogleAdsCsvManager";
+import { GoogleUnifiedManager } from "@/components/google/GoogleUnifiedManager";
 import { WindsorSettingsTab } from "@/components/windsor/WindsorSettingsTab";
 import { AdminAITab } from "@/components/ai/AdminAITab";
 import { AdminDemandasTab } from "@/components/demandas/AdminDemandasTab";
