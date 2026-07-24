@@ -5,10 +5,10 @@ async function assertAdmin(callerId: string) {
     .from("user_roles")
     .select("role")
     .eq("user_id", callerId)
-    .eq("role", "admin")
-    .maybeSingle();
+    .in("role", ["admin", "admin_global", "admin_agencia"]);
+  
   if (error) throw new Error(error.message);
-  if (!data) throw new Error("Forbidden: admin only");
+  if (!data || data.length === 0) throw new Error("Forbidden: admin only");
 }
 
 export type AdminReportSection = {
@@ -22,10 +22,25 @@ export type AdminReportSection = {
 export async function listReportsAdminImpl(callerId: string) {
   await assertAdmin(callerId);
 
-  const { data: reports, error } = await supabaseAdmin
+  // Buscar os papéis do usuário para determinar o escopo
+  const { data: roles } = await supabaseAdmin
+    .from("user_roles")
+    .select("role, agency_id")
+    .eq("user_id", callerId);
+
+  const isAdminGlobal = roles?.some(r => r.role === "admin_global");
+  const agencyId = roles?.find(r => r.agency_id)?.agency_id;
+
+  const query = supabaseAdmin
     .from("reports")
-    .select("id, title, description, url, embed_code, logo_url, created_at, company_id, companies(name)")
-    .order("created_at", { ascending: false });
+    .select("id, title, description, url, embed_code, logo_url, created_at, company_id, companies(name, agency_id)");
+
+  // Se não for admin global, filtrar por agência
+  if (!isAdminGlobal && agencyId) {
+    query.eq("agency_id", agencyId);
+  }
+
+  const { data: reports, error } = await query.order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
 
   const { data: sections } = await supabaseAdmin
@@ -42,7 +57,7 @@ export async function listReportsAdminImpl(callerId: string) {
 
   return (reports ?? []).map((r) => ({
     ...r,
-    assignedUserIds: [], // Descontinuado, o vínculo agora é por empresa via profiles
+    assignedUserIds: [],
     sections: sectionMap.get(r.id) ?? [],
   }));
 }
