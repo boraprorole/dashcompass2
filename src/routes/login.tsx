@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import logoMarsala from "@/assets/logo-marsala.png";
+
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -149,11 +149,9 @@ function LoginPage() {
 
       <div className="relative w-full max-w-md">
         <div className="mb-8 text-center">
-          <img
-            src={logoMarsala}
-            alt="Marsala — Marketing estratégico"
-            className="mx-auto mb-4 h-40 w-auto object-contain"
-          />
+          <span className="mx-auto mb-4 block font-serif text-4xl italic tracking-widest text-primary text-center">
+            DASHCOMPASS
+          </span>
           <p className="mt-2 text-sm text-muted-foreground">
             Acesse sua conta para continuar
           </p>

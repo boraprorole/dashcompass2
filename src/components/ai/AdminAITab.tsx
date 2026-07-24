@@ -67,9 +67,9 @@ export function AdminAITab() {
             <Sparkles className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold">Marsala AI · Provedores</h2>
+            <h2 className="text-lg font-semibold">DashCompass AI · Provedores</h2>
             <p className="text-xs text-muted-foreground">
-              Configure as chaves usadas pelo chatbot Marsala AI. As chaves ficam
+              Configure as chaves usadas pelo chatbot Compass AI. As chaves ficam
               armazenadas com segurança e substituem eventuais variáveis de ambiente.
             </p>
           </div>
@@ -236,7 +236,7 @@ function AgentsSection() {
         </div>
       ) : !agentsQ.data?.length ? (
         <div className="rounded-xl border border-dashed border-border/60 p-6 text-center text-sm text-muted-foreground">
-          Nenhum agente configurado. Crie o primeiro para padronizar o comportamento do Marsala AI.
+          Nenhum agente configurado. Crie o primeiro para padronizar o comportamento do Compass AI.
         </div>
       ) : (
         <div className="grid gap-3 md:grid-cols-2">

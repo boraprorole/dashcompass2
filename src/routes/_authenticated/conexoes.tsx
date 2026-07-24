@@ -26,7 +26,7 @@ function ConexoesPage() {
         <p className="text-sm text-muted-foreground">
           Conecte suas contas de <strong>Facebook</strong>, <strong>Instagram Business</strong> e{" "}
           <strong>Meta Ads</strong> aos relatórios da sua empresa. Você faz login direto no
-          Facebook, nenhum acesso à Business Manager e conta de anúncios precisa ser compartilhado com a Marsala.
+          Facebook, nenhum acesso à Business Manager e conta de anúncios precisa ser compartilhado com o sistema.
 
         </p>
       </header>
@@ -41,7 +41,7 @@ function ConexoesPage() {
         </div>
       ) : (reportsQ.data?.length ?? 0) === 0 ? (
         <div className="rounded-xl border border-border/40 bg-background/40 p-6 text-center text-sm text-muted-foreground">
-          Nenhum relatório disponível. Peça para a Marsala vincular sua empresa a um relatório.
+          Nenhum relatório disponível. Entre em contato com o suporte para vincular sua empresa a um relatório.
         </div>
       ) : (
         <ul className="space-y-4">

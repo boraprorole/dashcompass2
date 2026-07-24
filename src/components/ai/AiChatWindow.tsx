@@ -81,7 +81,7 @@ export function AiChatWindow({ threadId, initialMessages, settings }: Props) {
           {messages.length === 0 && (
             <div className="rounded-2xl border border-border/60 bg-card/60 p-6 text-center text-sm text-muted-foreground">
               <Sparkles className="mx-auto mb-2 h-6 w-6 text-primary" />
-              Comece a conversar com o <span className="font-semibold text-foreground">Marsala AI</span>.
+              Comece a conversar com o <span className="font-semibold text-foreground">Compass AI</span>.
 
             </div>
           )}
@@ -108,7 +108,7 @@ export function AiChatWindow({ threadId, initialMessages, settings }: Props) {
                 submit();
               }
             }}
-            placeholder="Pergunte algo ao Marsala AI…  (Enter para enviar · Shift+Enter para quebrar linha)"
+            placeholder="Pergunte algo ao Compass AI…  (Enter para enviar · Shift+Enter para quebrar linha)"
             className="min-h-[60px] max-h-48 resize-none"
           />
           {busy ? (
