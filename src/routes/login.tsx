@@ -231,8 +231,8 @@ function LoginPage() {
                 )}
               </AnimatePresence>
 
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-white/80">Email</Label>
+              <div className="space-y-3">
+                <Label htmlFor="email" className="text-sm font-semibold text-white/50 ml-1">EMAIL</Label>
                 <Input
                   id="email"
                   type="email"
@@ -242,12 +242,12 @@ function LoginPage() {
                   autoComplete="email"
                   required
                   maxLength={255}
-                  className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-[14px] focus:ring-primary/20"
+                  className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 h-14 rounded-[18px] focus:ring-primary/20 transition-all duration-300 focus:border-primary/50"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-white/80">Senha</Label>
+              <div className="space-y-3">
+                <Label htmlFor="password" className="text-sm font-semibold text-white/50 ml-1">SENHA</Label>
                 <Input
                   id="password"
                   type="password"
@@ -258,7 +258,7 @@ function LoginPage() {
                   required
                   minLength={6}
                   maxLength={72}
-                  className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-[14px] focus:ring-primary/20"
+                  className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 h-14 rounded-[18px] focus:ring-primary/20 transition-all duration-300 focus:border-primary/50"
                 />
               </div>
 
