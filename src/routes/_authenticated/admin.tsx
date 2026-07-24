@@ -1624,9 +1624,16 @@ function VisualIdTab() {
       }
 
       document.documentElement.style.setProperty("--primary", primaryColor);
+      
+      // Atualizar o brilho primário dinamicamente
+      const r = parseInt(primaryColor.slice(1, 3), 16);
+      const g = parseInt(primaryColor.slice(3, 5), 16);
+      const b = parseInt(primaryColor.slice(5, 7), 16);
+      const primaryGlow = `rgba(${r}, ${g}, ${b}, 0.4)`;
+      document.documentElement.style.setProperty("--primary-glow", primaryGlow);
+      
       toast.success(`Identidade visual salva com sucesso!`);
-      // Re-fetch configuration globally
-      window.location.reload();
+      // Não recarrega a página para evitar perda de estado, o useAuth já deve lidar com a cor se recarregado
     } catch (err: any) {
       console.error("Erro ao salvar cor:", err);
       toast.error("Erro ao salvar identidade visual.");
