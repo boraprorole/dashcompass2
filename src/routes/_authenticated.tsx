@@ -191,7 +191,12 @@ function AuthenticatedLayout() {
         </Button>
       </div>
 
-      <main className="relative flex-1 px-4 py-6 pt-20 md:px-8 md:py-10 md:pt-10 overflow-hidden max-w-full">
+      <main 
+        className={cn(
+          "relative flex-1 px-4 py-6 pt-20 md:px-8 md:py-10 md:pt-10 overflow-hidden max-w-full transition-all duration-300",
+          isCollapsed ? "md:ml-[92px]" : "md:ml-[240px]"
+        )}
+      >
         <Outlet />
 
         {/* Mobile bottom nav */}
