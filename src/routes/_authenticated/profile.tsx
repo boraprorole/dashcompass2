@@ -120,9 +120,15 @@ function ProfilePage() {
         .from("profiles")
         .getPublicUrl(filePath);
 
-      // Verify URL format and ensure it doesn't contain /public/ if bucket is private
-      const finalUrl = publicUrl.replace("/object/public/", "/object/authenticated/");
-      console.log("Final URL for storage:", finalUrl);
+      // Get signed URL instead of public URL because bucket is private
+      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+        .from("profiles")
+        .createSignedUrl(filePath, 31536000); // 1 year expiry
+
+      if (signedUrlError) throw signedUrlError;
+
+      const finalUrl = signedUrlData.signedUrl;
+      console.log("Signed URL for storage:", finalUrl);
 
       setAvatarUrl(finalUrl);
       
