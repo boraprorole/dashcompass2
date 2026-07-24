@@ -261,8 +261,26 @@ function LandingPage() {
               </a>
             ))}
             <div className="pt-4 flex flex-col gap-4 border-t border-white/5">
-              <Link to="/login" className="text-white/70 py-2">{isEn ? "Login" : "Entrar"}</Link>
-              <Button asChild className="w-full bg-primary text-black font-bold h-12">
+              <div className="flex bg-white/5 rounded-lg p-1 border border-white/10 w-fit">
+                <Link 
+                  to="/" 
+                  search={{ lang: 'pt' }}
+                  className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${!isEn ? "bg-primary text-black" : "text-white/40"}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Português
+                </Link>
+                <Link 
+                  to="/" 
+                  search={{ lang: 'en' }}
+                  className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${isEn ? "bg-primary text-black" : "text-white/40"}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  English
+                </Link>
+              </div>
+              <Link to="/login" className="text-white/70 py-2" onClick={() => setIsMenuOpen(false)}>{isEn ? "Login" : "Entrar"}</Link>
+              <Button asChild className="w-full bg-primary text-black font-bold h-12" onClick={() => setIsMenuOpen(false)}>
                 <Link to="/login">{isEn ? "Create account" : "Criar conta"}</Link>
               </Button>
             </div>
