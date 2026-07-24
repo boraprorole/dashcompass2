@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getDemandasEnabled } from "@/lib/demandas.functions";
+import logoAsset from "@/assets/dashcompass-logo.svg.asset.json";
 
 
 export const Route = createFileRoute("/_authenticated")({
@@ -92,29 +93,55 @@ function AuthenticatedLayout() {
             isCollapsed ? "w-[92px]" : "w-[240px]"
           )}
         >
-          <div className="mb-8 flex items-center justify-between">
+          <div className="mb-8 flex items-center justify-between px-4">
             {!isCollapsed && (
-              <Link to="/reports" className="flex flex-1 items-center justify-center overflow-hidden">
-                <span className="font-sans text-xl font-bold tracking-tighter text-primary">
+              <Link to="/reports" className="flex items-center gap-3 overflow-hidden">
+                <img 
+                  src={logoAsset.url} 
+                  alt="Logo" 
+                  className="h-8 w-8 object-contain"
+                  style={{ 
+                    filter: 'brightness(0) saturate(100%) invert(84%) sepia(85%) saturate(4646%) hue-rotate(46deg) brightness(102%) contrast(105%) drop-shadow(0 0 8px rgba(61,252,3,0.3))' 
+                  }}
+                />
+                <span className="font-sans text-xl font-bold tracking-tighter text-white leading-none translate-y-[1px]">
                   DashCompass
                 </span>
-
+              </Link>
+            )}
+            {isCollapsed && (
+              <Link to="/reports" className="flex flex-1 items-center justify-center">
+                <img 
+                  src={logoAsset.url} 
+                  alt="Logo" 
+                  className="h-8 w-8 object-contain"
+                  style={{ 
+                    filter: 'brightness(0) saturate(100%) invert(84%) sepia(85%) saturate(4646%) hue-rotate(46deg) brightness(102%) contrast(105%) drop-shadow(0 0 8px rgba(61,252,3,0.3))' 
+                  }}
+                />
               </Link>
             )}
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className={cn("h-8 w-8", isCollapsed && "mx-auto")}
+              className={cn("h-8 w-8", isCollapsed ? "hidden" : "ml-auto")}
               title={isCollapsed ? "Expandir" : "Recolher"}
             >
-              {isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+              <PanelLeftClose className="h-4 w-4" />
             </Button>
           </div>
           
           {isCollapsed && (
-            <div className="mb-8 flex items-center justify-center overflow-hidden">
-               <span className="font-sans text-xl font-bold text-primary">D</span>
+            <div className="mb-8 flex items-center justify-center">
+               <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setIsCollapsed(false)}
+                className="h-8 w-8"
+              >
+                <PanelLeftOpen className="h-4 w-4" />
+              </Button>
             </div>
           )}
 
@@ -180,11 +207,18 @@ function AuthenticatedLayout() {
 
       {/* Mobile top bar */}
       <div className="glass fixed inset-x-0 top-0 z-20 flex items-center justify-between p-3 md:hidden">
-        <Link to="/reports" className="flex items-center">
-          <span className="font-sans text-xl font-bold tracking-tighter text-primary">
+        <Link to="/reports" className="flex items-center gap-2">
+          <img 
+            src={logoAsset.url} 
+            alt="Logo" 
+            className="h-6 w-6 object-contain"
+            style={{ 
+              filter: 'brightness(0) saturate(100%) invert(84%) sepia(85%) saturate(4646%) hue-rotate(46deg) brightness(102%) contrast(105%) drop-shadow(0 0 8px rgba(61,252,3,0.3))' 
+            }}
+          />
+          <span className="font-sans text-lg font-bold tracking-tighter text-white">
             DashCompass
           </span>
-
         </Link>
         <Button variant="ghost" size="sm" onClick={signOut}>
           <LogOut className="h-4 w-4" />
