@@ -122,10 +122,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1 { font-size: 36px; font-weight: 600; letter-spacing: -0.02em; }
-  h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
-  h3 { font-size: 20px; font-weight: 600; }
-  p { font-size: 15px; color: var(--muted-foreground); }
+  h1 { font-size: 52px; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 32px; }
+  h2 { font-size: 38px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 24px; }
+  h3 { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; }
+  p { font-size: 16px; color: var(--muted-foreground); line-height: 1.6; }
 }
 
 @layer utilities {
@@ -148,10 +148,10 @@
   .bg-dot-grid {
     background-color: var(--background);
     background-image: radial-gradient(
-      rgba(255, 255, 255, 0.05) 1px,
+      rgba(255, 255, 255, 0.06) 1px,
       transparent 1px
     );
-    background-size: 24px 24px;
+    background-size: 22px 22px;
     background-attachment: fixed;
   }
 }

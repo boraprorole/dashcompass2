@@ -145,7 +145,7 @@ function LoginPage() {
     <div className="relative flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <div className="relative w-full max-w-md">
         <div className="mb-12 text-center">
-          <span className="mx-auto mb-4 block font-sans text-5xl font-bold tracking-tighter text-primary">
+          <span className="mx-auto mb-6 block font-sans text-64px font-bold tracking-tighter text-primary">
             DASHCOMPASS
           </span>
           <p className="mt-4 text-[15px] text-muted-foreground/80">
