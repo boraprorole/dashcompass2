@@ -142,9 +142,9 @@ function LoginPage() {
 
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-background px-4 py-12">
-      <div className="relative w-full max-w-md">
-        <div className="mb-12 text-center">
+    <div className="relative flex min-h-screen items-center justify-center bg-dot-grid px-8 py-12">
+      <div className="relative w-full max-w-7xl flex flex-col items-center">
+        <div className="mb-16 text-center md:hidden">
           <span className="mx-auto mb-6 block font-sans text-64px font-bold tracking-tighter text-primary">
             DASHCOMPASS
           </span>
@@ -153,7 +153,31 @@ function LoginPage() {
           </p>
         </div>
 
-        <div className="rounded-[20px] border border-border bg-card p-10 shadow-glass">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl w-full">
+          {/* Lado Esquerdo - Landing Page Premium */}
+          <div className="hidden md:flex flex-col justify-center space-y-8">
+            <h1 className="text-64px font-bold tracking-tight leading-none text-white">
+              A inteligência que seu <span className="text-primary">marketing</span> merece.
+            </h1>
+            <p className="text-22px text-muted-foreground max-w-lg">
+              DashCompass é a plataforma definitiva para análise estratégica de dados. 
+              Visualize performance em tempo real com precisão absoluta.
+            </p>
+            <div className="grid grid-cols-2 gap-4 pt-4">
+              <div className="bg-card border border-border rounded-[22px] p-6 space-y-2">
+                <p className="text-primary text-28px font-bold">+150%</p>
+                <p className="text-sm text-muted-foreground">ROI Médio</p>
+              </div>
+              <div className="bg-card border border-border rounded-[22px] p-6 space-y-2">
+                <p className="text-primary text-28px font-bold">24/7</p>
+                <p className="text-sm text-muted-foreground">Monitoramento AI</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+          {/* Lado Direito - Card de Login */}
+          <div className="rounded-[24px] border border-border bg-card p-12 shadow-glass flex flex-col justify-center">
           <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")}>
             <TabsList className="grid w-full grid-cols-2 rounded-[14px] bg-[#111] p-1 border border-border">
               <TabsTrigger 
