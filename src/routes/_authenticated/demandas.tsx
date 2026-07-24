@@ -14,6 +14,11 @@ export const Route = createFileRoute("/_authenticated/demandas")({
   }),
   beforeLoad: async () => {
     try {
+      const { data: featureData } = await supabase.from("app_features").select("enabled").eq("key", "/demandas").maybeSingle();
+      if (featureData && !featureData.enabled) {
+        throw redirect({ to: "/reports" });
+      }
+
       const { enabled } = await getDemandasEnabled();
       if (!enabled) throw redirect({ to: "/reports" });
 

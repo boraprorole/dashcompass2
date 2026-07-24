@@ -1,4 +1,5 @@
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Navigate, redirect } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { searchNews } from "@/lib/news.functions";
@@ -10,6 +11,12 @@ import { Loader2, Search, ExternalLink, Newspaper } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_authenticated/pr")({
+  beforeLoad: async () => {
+    const { data, error } = await supabase.from("app_features").select("enabled").eq("key", "/pr").maybeSingle();
+    if (error || (data && !data.enabled)) {
+      throw redirect({ to: "/reports" });
+    }
+  },
   component: PRPage,
 });
 

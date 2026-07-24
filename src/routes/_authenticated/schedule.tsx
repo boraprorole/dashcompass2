@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState, useEffect, type ReactNode } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -88,6 +88,12 @@ export const Route = createFileRoute("/_authenticated/schedule")({
   head: () => ({
     meta: [{ title: "Cronograma" }],
   }),
+  beforeLoad: async () => {
+    const { data, error } = await supabase.from("app_features").select("enabled").eq("key", "/schedule").maybeSingle();
+    if (error || (data && !data.enabled)) {
+      throw redirect({ to: "/reports" });
+    }
+  },
   component: SchedulePage,
 });
 
