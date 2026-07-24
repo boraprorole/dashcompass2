@@ -14,6 +14,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LpRouteImport } from './routes/lp'
+import { Route as LogoRouteImport } from './routes/logo'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
@@ -64,6 +65,11 @@ const McpRoute = McpRouteImport.update({
 const LpRoute = LpRouteImport.update({
   id: '/lp',
   path: '/lp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogoRoute = LogoRouteImport.update({
+  id: '/logo',
+  path: '/logo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -210,6 +216,7 @@ const ApiPublicGaOauthCallbackRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/logo': typeof LogoRoute
   '/lp': typeof LpRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/logo': typeof LogoRoute
   '/lp': typeof LpRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
+  '/logo': typeof LogoRoute
   '/lp': typeof LpRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -310,6 +319,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/logo'
     | '/lp'
     | '/mcp'
     | '/privacy'
@@ -342,6 +352,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/logo'
     | '/lp'
     | '/mcp'
     | '/privacy'
@@ -375,6 +386,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/login'
+    | '/logo'
     | '/lp'
     | '/mcp'
     | '/privacy'
@@ -409,6 +421,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
+  LogoRoute: typeof LogoRoute
   LpRoute: typeof LpRoute
   McpRoute: typeof McpRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -463,6 +476,13 @@ declare module '@tanstack/react-router' {
       path: '/lp'
       fullPath: '/lp'
       preLoaderRoute: typeof LpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/logo': {
+      id: '/logo'
+      path: '/logo'
+      fullPath: '/logo'
+      preLoaderRoute: typeof LogoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -686,6 +706,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
+  LogoRoute: LogoRoute,
   LpRoute: LpRoute,
   McpRoute: McpRoute,
   PrivacyRoute: PrivacyRoute,
