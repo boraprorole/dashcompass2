@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const PD_AUTH_BASE = "https://oauth.pipedrive.com/oauth";
-const PD_OAUTH_ORIGIN = "https://dashboard.marsala.ag";
+const PD_OAUTH_ORIGIN = "https://www.dashcompass.com";
 
 export function getPipedriveRedirectUri() {
   return `${PD_OAUTH_ORIGIN}/api/public/pipedrive/oauth/callback`;

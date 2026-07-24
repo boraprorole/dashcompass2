@@ -2,7 +2,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const LI_AUTH_BASE = "https://www.linkedin.com/oauth/v2";
 const LI_API_BASE = "https://api.linkedin.com";
-const LI_OAUTH_ORIGIN = "https://dashboard.marsala.ag";
+const LI_OAUTH_ORIGIN = "https://www.dashcompass.com";
 
 // Community Management scopes — leem posts, engajamento e stats de Company Page.
 export const LINKEDIN_SCOPES = [

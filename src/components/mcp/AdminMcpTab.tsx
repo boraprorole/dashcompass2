@@ -13,7 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const MCP_URL = "https://dashboard.marsala.ag/mcp";
+const MCP_URL = "https://www.dashcompass.com/mcp";
 
 const TOOLS = [
   {
@@ -112,7 +112,7 @@ export function AdminMcpTab() {
           <Copyable value={MCP_URL} />
           <p className="text-[11px] text-muted-foreground">
             Ao adicionar essa URL em um cliente MCP, você será redirecionado para
-            fazer login com sua conta Marsala. A autorização é feita via OAuth 2.1
+            fazer login com sua conta DashCompass. A autorização é feita via OAuth 2.1
             (Supabase) — o cliente nunca recebe sua senha.
           </p>
         </div>
