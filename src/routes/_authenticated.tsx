@@ -216,12 +216,16 @@ function AuthenticatedLayout() {
       {/* Mobile top bar */}
       <div className="glass fixed inset-x-0 top-0 z-20 flex items-center justify-between p-3 md:hidden">
         <Link to="/reports" className="flex items-center gap-2">
-          <img 
-            src={logoAsset.url} 
-            alt="Logo" 
-            className="h-6 w-6 object-contain"
+          <div 
+            className="h-6 w-6 bg-primary"
             style={{ 
-              filter: 'brightness(0) saturate(100%) invert(84%) sepia(85%) saturate(4646%) hue-rotate(46deg) brightness(102%) contrast(105%) drop-shadow(0 0 8px rgba(61,252,3,0.3))' 
+              WebkitMaskImage: `url(${logoAsset.url})`,
+              maskImage: `url(${logoAsset.url})`,
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+              filter: 'drop-shadow(0 0 6px var(--primary-glow))'
             }}
           />
           <span className="font-sans text-lg font-bold tracking-tighter text-white">
