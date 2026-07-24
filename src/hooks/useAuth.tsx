@@ -11,6 +11,7 @@ interface AuthContextValue {
   isTeam: boolean;
   isConexoes: boolean;
   loading: boolean;
+  primaryColor: string;
   signOut: () => Promise<void>;
 }
 
