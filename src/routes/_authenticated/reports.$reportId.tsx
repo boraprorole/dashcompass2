@@ -40,15 +40,15 @@ function ReportDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="glass-strong mx-auto flex max-w-6xl items-center justify-center rounded-3xl p-12 text-muted-foreground">
-        <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Carregando...
+      <div className="mx-auto flex max-w-6xl items-center justify-center rounded-[20px] border border-border bg-card p-24 text-muted-foreground">
+        <Loader2 className="mr-3 h-6 w-6 animate-spin text-primary" /> Carregando relatório...
       </div>
     );
   }
   if (error || !data?.report) {
     return (
-      <div className="glass-strong mx-auto max-w-6xl rounded-3xl p-8 text-destructive">
-        Relatório não encontrado ou sem acesso.
+      <div className="mx-auto max-w-6xl rounded-[20px] border border-border bg-card p-12 text-destructive">
+        Relatório não encontrado ou sem permissão de acesso.
       </div>
     );
   }
@@ -100,14 +100,14 @@ function EmbedFrame({ title, embedCode }: { title: string; embedCode: string | n
 
   if (!embed) {
     return (
-      <div className="glass-strong flex flex-1 items-center justify-center rounded-3xl p-10 text-center text-sm text-muted-foreground">
-        Conteúdo indisponível para esta seção.
+      <div className="flex flex-1 items-center justify-center rounded-[20px] border border-border bg-card p-10 text-center text-sm text-muted-foreground">
+        Nenhum conteúdo configurado para esta visualização.
       </div>
     );
   }
 
   return (
-    <div className="glass-strong relative h-full w-full min-h-0 flex-1 overflow-hidden rounded-3xl">
+    <div className="relative h-full w-full min-h-0 flex-1 overflow-hidden rounded-[20px] border border-border bg-card shadow-glass">
       <iframe
         src={embed.src}
         title={title}

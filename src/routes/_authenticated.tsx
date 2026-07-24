@@ -69,15 +69,12 @@ function AuthenticatedLayout() {
 
   return (
     <TooltipProvider>
-      <div className="relative flex min-h-screen w-full">
-        <div className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-primary/20 blur-3xl" />
-        <div className="pointer-events-none absolute right-0 bottom-0 h-96 w-96 rounded-full bg-primary-glow/20 blur-3xl" />
-
+      <div className="relative flex min-h-screen w-full bg-background overflow-x-hidden">
         {/* Sidebar */}
         <aside 
           className={cn(
-            "glass sticky top-0 hidden h-screen shrink-0 flex-col p-4 transition-all duration-300 md:flex",
-            isCollapsed ? "w-20" : "w-64"
+            "sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-background py-8 transition-all duration-300 md:flex",
+            isCollapsed ? "w-[80px]" : "w-64"
           )}
         >
           <div className="mb-8 flex items-center justify-between">
@@ -113,10 +110,10 @@ function AuthenticatedLayout() {
                 key={item.to}
                 to={item.to}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition",
+                  "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
                   active
-                    ? "bg-primary text-primary-foreground shadow-elevated"
-                    : "text-foreground/80 hover:bg-accent/60",
+                    ? "bg-primary text-black"
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                   isCollapsed && "justify-center px-2"
                 )}
               >
@@ -141,8 +138,8 @@ function AuthenticatedLayout() {
           })}
         </nav>
 
-        <div className={cn("glass mt-4 rounded-xl", isCollapsed ? "p-1.5" : "p-3")}>
-          <div className={cn("flex items-center gap-3", isCollapsed ? "flex-col mb-1" : "mb-3")}>
+        <div className={cn("mt-auto border-t border-border pt-6 px-4")}>
+          <div className={cn("flex items-center gap-3", isCollapsed ? "flex-col mb-4" : "mb-4")}>
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
               {user?.email?.[0]?.toUpperCase() ?? "U"}
             </div>
@@ -155,8 +152,8 @@ function AuthenticatedLayout() {
           </div>
           <Button 
             variant="ghost" 
-            size="sm" 
-            className={cn("w-full justify-start", isCollapsed && "justify-center px-0")} 
+            size="default"
+            className={cn("w-full justify-start mt-2", isCollapsed && "justify-center px-0")} 
             onClick={signOut}
           >
             <LogOut className={cn("h-4 w-4", !isCollapsed && "mr-2")} /> 
