@@ -330,7 +330,7 @@ function LandingPage() {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-20 items-center">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">Os dados já existem. <br/><span className="text-white/40">O problema é encontrá-los.</span></h2>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">{isEn ? "Data already exists." : "Os dados já existem."} <br/><span className="text-white/40">{isEn ? "The problem is finding them." : "O problema é encontrá-los."}</span></h2>
               <div className="space-y-6">
                 {[
                   "Dados espalhados em dezenas de plataformas.",
