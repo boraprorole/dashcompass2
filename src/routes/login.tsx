@@ -192,7 +192,7 @@ function LoginPage() {
                 }}
               />
             </div>
-            <h1 className="text-4xl font-bold tracking-tighter text-white leading-none mt-[4px]">
+            <h1 className="text-4xl font-bold tracking-tighter text-white leading-none translate-y-[2px]">
               DashCompass
             </h1>
           </div>
