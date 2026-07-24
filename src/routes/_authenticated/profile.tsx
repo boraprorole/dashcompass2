@@ -100,13 +100,15 @@ function ProfilePage() {
         }
       }
 
-      const fileName = `${user.id}/${Date.now()}.${fileToUpload.type === 'image/webp' ? 'webp' : file.name.split('.').pop()}`;
+      const fileExt = fileToUpload.type.split("/")[1] || "webp";
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
       const filePath = fileName;
 
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(filePath, fileToUpload, {
-          contentType: fileToUpload.type || "image/webp",
+          contentType: fileToUpload.type,
+          cacheControl: "3600",
           upsert: true
         });
 
