@@ -181,8 +181,8 @@ function LoginPage() {
         className="relative z-30 w-full max-w-[480px] px-6"
       >
         <div className="flex flex-col space-y-8 py-8 md:py-12">
-          <div className="flex items-baseline justify-center gap-4 mb-12">
-            <div className="relative flex items-center justify-center h-10 w-10 self-center">
+          <div className="flex items-center justify-center gap-4 mb-12">
+            <div className="relative flex items-center justify-center h-10 w-10">
               <div 
                 className="h-full w-full bg-primary"
                 style={{ 
@@ -196,7 +196,7 @@ function LoginPage() {
                 }}
               />
             </div>
-            <h1 className="text-4xl font-bold tracking-tighter text-white leading-none">
+            <h1 className="text-4xl font-bold tracking-tighter text-white leading-none translate-y-[4px]">
               DashCompass
             </h1>
           </div>
