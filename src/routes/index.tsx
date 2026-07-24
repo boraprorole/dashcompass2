@@ -261,9 +261,9 @@ function LandingPage() {
               </a>
             ))}
             <div className="pt-4 flex flex-col gap-4 border-t border-white/5">
-              <Link to="/login" className="text-white/70 py-2">Entrar</Link>
+              <Link to="/login" className="text-white/70 py-2">{isEn ? "Login" : "Entrar"}</Link>
               <Button asChild className="w-full bg-primary text-black font-bold h-12">
-                <Link to="/login">Criar conta</Link>
+                <Link to="/login">{isEn ? "Create account" : "Criar conta"}</Link>
               </Button>
             </div>
           </motion.div>
