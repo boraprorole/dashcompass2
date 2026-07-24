@@ -399,13 +399,19 @@ function LandingPage() {
         <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
           <div className="order-2 md:order-1 relative">
             <div className="space-y-4 font-mono text-sm">
-              {[
+              {(isEn ? [
+                "Which campaign brought more sales?",
+                "Why did my CPA increase yesterday?",
+                "Which influencer generated more conversions?",
+                "Compare this month with the previous one.",
+                "Where should I invest more budget?"
+              ] : [
                 "Qual campanha trouxe mais vendas?",
                 "Por que meu CPA aumentou ontem?",
                 "Qual influenciador gerou mais conversões?",
                 "Compare este mês com o anterior.",
                 "Onde devo investir mais orçamento?"
-              ].map((q, i) => (
+              ]).map((q, i) => (
                 <div key={i} className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-between group cursor-default">
                   <span>{q}</span>
                   <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
