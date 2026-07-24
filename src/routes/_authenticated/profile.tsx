@@ -107,7 +107,7 @@ function ProfilePage() {
       console.log("Iniciando upload para:", filePath, "Tipo:", fileToUpload.type);
 
       const { error: uploadError } = await supabase.storage
-        .from("avatars")
+        .from("profiles")
         .upload(filePath, fileToUpload, {
           contentType: fileToUpload.type,
           cacheControl: "3600",
@@ -117,7 +117,7 @@ function ProfilePage() {
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from("avatars")
+        .from("profiles")
         .getPublicUrl(filePath);
 
       setAvatarUrl(publicUrl);
