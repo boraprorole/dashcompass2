@@ -112,6 +112,8 @@ export const Route = createFileRoute("/_authenticated/admin")({
 });
 
 function AdminPage() {
+  const { isAdminGlobal, isAdminAgencia } = useAuth();
+
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <header className="flex items-center gap-3">
@@ -121,7 +123,7 @@ function AdminPage() {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Administração</h1>
           <p className="text-sm text-muted-foreground">
-            Gerencie usuários, relatórios e permissões.
+            {isAdminGlobal ? "Gestão Global do SaaS" : "Gestão da Agência"}
           </p>
         </div>
       </header>
@@ -137,9 +139,13 @@ function AdminPage() {
           <TabsTrigger value="visual" className="gap-2">
             <Palette className="h-4 w-4" /> ID Visual
           </TabsTrigger>
-          <TabsTrigger value="features" className="gap-2">
-            <Settings className="h-4 w-4" /> Funções
-          </TabsTrigger>
+          
+          {isAdminGlobal && (
+            <TabsTrigger value="features" className="gap-2">
+              <Settings className="h-4 w-4" /> Funções
+            </TabsTrigger>
+          )}
+
           <TabsTrigger value="schedule" className="gap-2">
             <CalendarDays className="h-4 w-4" /> Cronograma
           </TabsTrigger>
@@ -152,9 +158,6 @@ function AdminPage() {
           </TabsTrigger>
           <TabsTrigger value="demandas" className="gap-2">
             <ClipboardList className="h-4 w-4" /> Demandas
-          </TabsTrigger>
-          <TabsTrigger value="rdstation" className="gap-2">
-            <Radio className="h-4 w-4" /> RD Station
           </TabsTrigger>
           <TabsTrigger value="mcp" className="gap-2">
             <Radio className="h-4 w-4" /> MCP

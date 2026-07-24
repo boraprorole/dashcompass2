@@ -8,6 +8,9 @@ interface AuthContextValue {
   user: User | null;
   session: Session | null;
   isAdmin: boolean;
+  isAdminGlobal: boolean;
+  isAdminAgencia: boolean;
+  agencyId: string | null;
   isTeam: boolean;
   isConexoes: boolean;
   loading: boolean;
@@ -21,6 +24,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdminGlobal, setIsAdminGlobal] = useState(false);
+  const [isAdminAgencia, setIsAdminAgencia] = useState(false);
+  const [agencyId, setAgencyId] = useState<string | null>(null);
   const [isTeam, setIsTeam] = useState(false);
   const [isConexoes, setIsConexoes] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -49,12 +55,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loadRoles = async (userId: string) => {
     const { data } = await supabase
       .from("user_roles")
-      .select("role")
+      .select("role, agency_id")
       .eq("user_id", userId);
-    const roles = new Set((data ?? []).map((r) => r.role));
-    setIsAdmin(roles.has("admin") || roles.has("admin_global") || roles.has("admin_agencia"));
-    setIsTeam(roles.has("team") || roles.has("equipe") || roles.has("admin_global") || roles.has("admin_agencia"));
-    setIsConexoes(roles.has("conexoes") || roles.has("admin_global"));
+    
+    const rolesArr = data ?? [];
+    const roles = new Set(rolesArr.map((r) => r.role));
+    
+    const isGlobal = roles.has("admin_global");
+    const isAgencia = roles.has("admin_agencia");
+    const agency = rolesArr.find(r => r.agency_id)?.agency_id || null;
+
+    setIsAdminGlobal(isGlobal);
+    setIsAdminAgencia(isAgencia);
+    setAgencyId(agency);
+    setIsAdmin(roles.has("admin") || isGlobal || isAgencia);
+    setIsTeam(roles.has("team") || roles.has("equipe") || isGlobal || isAgencia);
+    setIsConexoes(roles.has("conexoes") || isGlobal);
   };
 
   useEffect(() => {
@@ -91,7 +107,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, isAdmin, isTeam, isConexoes, loading, primaryColor, signOut }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      session, 
+      isAdmin, 
+      isAdminGlobal,
+      isAdminAgencia,
+      agencyId,
+      isTeam, 
+      isConexoes, 
+      loading, 
+      primaryColor, 
+      signOut 
+    }}>
       {children}
     </AuthContext.Provider>
   );
