@@ -67,9 +67,9 @@ export function AdminAITab() {
             <Sparkles className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold">Marsala AI · Provedores</h2>
+            <h2 className="text-lg font-semibold">DashCompass AI · Provedores</h2>
             <p className="text-xs text-muted-foreground">
-              Configure as chaves usadas pelo chatbot Marsala AI. As chaves ficam
+              Configure as chaves usadas pelo chatbot Compass AI. As chaves ficam
               armazenadas com segurança e substituem eventuais variáveis de ambiente.
             </p>
           </div>

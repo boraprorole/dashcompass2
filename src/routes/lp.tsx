@@ -320,7 +320,7 @@ function LandingPage() {
             <span className="italic">merece contexto.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg text-white/75">
-            Ative o Marsala Dashboard e transforme dado disperso em direção.
+            Ative o DashCompass e transforme dado disperso em direção.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
@@ -329,23 +329,15 @@ function LandingPage() {
             >
               Acessar dashboard →
             </Link>
-            <a
-              href="https://www.marsala.ag/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center rounded-full border border-white/25 px-7 py-4 text-sm text-white/90 transition hover:bg-white/5"
-            >
-              Conhecer a consultoria
-            </a>
           </div>
         </div>
       </Section>
 
       <footer className="border-t border-white/10 bg-[#2c0710] px-6 py-10 md:px-14">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-          <div className="font-serif text-lg italic tracking-widest">MARSALA</div>
+          <div className="font-serif text-lg italic tracking-widest">DASHCOMPASS</div>
           <div className="text-xs text-white/50">
-            © {new Date().getFullYear()} Marsala · Marketing estratégico
+            © {new Date().getFullYear()} DashCompass · Marketing estratégico
           </div>
         </div>
       </footer>
