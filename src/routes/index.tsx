@@ -439,11 +439,10 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
       <section id="pricing" className="py-24 bg-card/30">
         <div className="container mx-auto px-6 text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Escolha seu plano.</h2>
-          <p className="text-xl text-white/50">Maximize o ROI do seu marketing com a inteligência do DashCompass.</p>
+          <h2 className="text-4xl font-bold mb-4">{isEn ? "Choose your plan." : "Escolha seu plano."}</h2>
+          <p className="text-xl text-white/50">{isEn ? "Maximize your marketing ROI with DashCompass intelligence." : "Maximize o ROI do seu marketing com a inteligência do DashCompass."}</p>
         </div>
 
         <div className="container mx-auto px-6 grid lg:grid-cols-4 gap-6">
