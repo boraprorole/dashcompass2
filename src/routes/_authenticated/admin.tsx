@@ -1741,4 +1741,118 @@ function FeaturesTab() {
   );
 }
 
+function AgencySettingsTab({ type }: { type: "windsor" | "ai" | "news" }) {
+  const { agencyId, isAdminGlobal } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<any>({});
+
+  const { data: agencyData, isLoading } = useQuery({
+    queryKey: ["agency-settings", agencyId, type],
+    queryFn: async () => {
+      if (!agencyId && !isAdminGlobal) return null;
+      const { data, error } = await supabase
+        .from("agencies")
+        .select("*")
+        .eq("id", agencyId)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!agencyId || isAdminGlobal,
+  });
+
+  useEffect(() => {
+    if (agencyData) {
+      setData(agencyData);
+    }
+  }, [agencyData]);
+
+  const handleSave = async () => {
+    if (!agencyId) return;
+    setLoading(true);
+    try {
+      const updates: any = {};
+      if (type === "windsor") updates.windsor_api_key = data.windsor_api_key;
+      if (type === "ai") {
+        updates.openai_api_key = data.openai_api_key;
+        updates.anthropic_api_key = data.anthropic_api_key;
+      }
+      if (type === "news") updates.news_api_key = data.news_api_key;
+
+      const { error } = await supabase
+        .from("agencies")
+        .update(updates)
+        .eq("id", agencyId);
+      
+      if (error) throw error;
+      toast.success("Configurações salvas com sucesso!");
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (isLoading) return <div className="p-8 text-center"><Loader2 className="animate-spin inline mr-2" /> Carregando...</div>;
+
+  return (
+    <div className="glass-strong p-8 rounded-3xl space-y-6">
+      <div className="flex items-center gap-3">
+        {type === "windsor" && <Key className="h-5 w-5 text-primary" />}
+        {type === "ai" && <Sparkles className="h-5 w-5 text-primary" />}
+        {type === "news" && <Newspaper className="h-5 w-5 text-primary" />}
+        <h3 className="text-xl font-semibold capitalize">{type === "ai" ? "Inteligência Artificial" : type}</h3>
+      </div>
+
+      <div className="grid gap-6">
+        {type === "windsor" && (
+          <div className="space-y-2">
+            <Label>Chave API Windsor.ai</Label>
+            <Input 
+              type="password" 
+              value={data.windsor_api_key || ""} 
+              onChange={(e) => setData({ ...data, windsor_api_key: e.target.value })} 
+            />
+          </div>
+        )}
+        {type === "ai" && (
+          <>
+            <div className="space-y-2">
+              <Label>Chave OpenAI</Label>
+              <Input 
+                type="password" 
+                value={data.openai_api_key || ""} 
+                onChange={(e) => setData({ ...data, openai_api_key: e.target.value })} 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Chave Anthropic</Label>
+              <Input 
+                type="password" 
+                value={data.anthropic_api_key || ""} 
+                onChange={(e) => setData({ ...data, anthropic_api_key: e.target.value })} 
+              />
+            </div>
+          </>
+        )}
+        {type === "news" && (
+          <div className="space-y-2">
+            <Label>Chave NewsAPI</Label>
+            <Input 
+              type="password" 
+              value={data.news_api_key || ""} 
+              onChange={(e) => setData({ ...data, news_api_key: e.target.value })} 
+            />
+          </div>
+        )}
+        
+        <Button onClick={handleSave} disabled={loading || !agencyId}>
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Salvar Configurações
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 
