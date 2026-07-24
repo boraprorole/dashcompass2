@@ -148,8 +148,9 @@ function LoginPage() {
           <div className="flex items-center justify-center gap-3 mb-4">
             <Compass className="h-10 w-10 text-primary" />
             <span className="font-sans text-36px font-bold tracking-tighter text-white">
-              DASHCOMPASS
+              DashCompass
             </span>
+
           </div>
           <p className="text-[14px] text-muted-foreground/60 uppercase tracking-widest font-medium">
             Inteligência de Dados Minimalista
@@ -165,8 +166,9 @@ function LoginPage() {
                 <Compass className="h-10 w-10 text-black stroke-[2.5px]" />
               </div>
               <h1 className="text-64px font-bold tracking-tighter leading-none text-white">
-                DASH<span className="text-primary/90">COMPASS</span>
+                Dash<span className="text-primary/90">Compass</span>
               </h1>
+
             </div>
             <div className="h-px w-24 bg-primary/20" />
             <p className="text-18px text-muted-foreground/60 uppercase tracking-[0.2em] font-medium max-w-lg">
