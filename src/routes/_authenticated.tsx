@@ -84,11 +84,11 @@ function AuthenticatedLayout() {
 
   return (
     <TooltipProvider>
-      <div className="relative flex min-h-screen w-full bg-background overflow-x-hidden p-10">
+      <div className="relative flex min-h-screen w-full bg-background overflow-x-hidden">
         {/* Sidebar */}
         <aside 
           className={cn(
-            "sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-sidebar py-10 transition-all duration-300 md:flex",
+            "fixed inset-y-0 left-0 hidden h-screen shrink-0 flex-col border-r border-border bg-sidebar py-10 transition-all duration-300 md:flex z-30",
             isCollapsed ? "w-[92px]" : "w-[240px]"
           )}
         >
@@ -191,7 +191,12 @@ function AuthenticatedLayout() {
         </Button>
       </div>
 
-      <main className="relative flex-1 px-4 py-6 pt-20 md:px-8 md:py-10 md:pt-10 overflow-hidden max-w-full">
+      <main 
+        className={cn(
+          "relative flex-1 px-4 py-6 pt-20 md:px-8 md:py-10 md:pt-10 overflow-hidden max-w-full transition-all duration-300",
+          isCollapsed ? "md:ml-[92px]" : "md:ml-[240px]"
+        )}
+      >
         <Outlet />
 
         {/* Mobile bottom nav */}
