@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      agencies: {
+        Row: {
+          anthropic_api_key: string | null
+          created_at: string | null
+          id: string
+          name: string
+          news_api_key: string | null
+          openai_api_key: string | null
+          primary_color: string | null
+          updated_at: string | null
+          windsor_api_key: string | null
+        }
+        Insert: {
+          anthropic_api_key?: string | null
+          created_at?: string | null
+          id?: string
+          name: string
+          news_api_key?: string | null
+          openai_api_key?: string | null
+          primary_color?: string | null
+          updated_at?: string | null
+          windsor_api_key?: string | null
+        }
+        Update: {
+          anthropic_api_key?: string | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          news_api_key?: string | null
+          openai_api_key?: string | null
+          primary_color?: string | null
+          updated_at?: string | null
+          windsor_api_key?: string | null
+        }
+        Relationships: []
+      }
       ai_agents: {
         Row: {
           created_at: string
@@ -177,6 +213,61 @@ export type Database = {
           value?: string | null
         }
         Relationships: []
+      }
+      client_users: {
+        Row: {
+          client_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          client_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_users_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          agency_id: string
+          created_at: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          agency_id: string
+          created_at?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          agency_id?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clients_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       companies: {
         Row: {
@@ -727,6 +818,8 @@ export type Database = {
       }
       reports: {
         Row: {
+          agency_id: string | null
+          client_id: string | null
           company_id: string | null
           created_at: string
           created_by: string
@@ -739,6 +832,8 @@ export type Database = {
           url: string | null
         }
         Insert: {
+          agency_id?: string | null
+          client_id?: string | null
           company_id?: string | null
           created_at?: string
           created_by: string
@@ -751,6 +846,8 @@ export type Database = {
           url?: string | null
         }
         Update: {
+          agency_id?: string | null
+          client_id?: string | null
           company_id?: string | null
           created_at?: string
           created_by?: string
@@ -763,6 +860,20 @@ export type Database = {
           url?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "reports_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "reports_company_id_fkey"
             columns: ["company_id"]
@@ -872,24 +983,35 @@ export type Database = {
       }
       user_roles: {
         Row: {
+          agency_id: string | null
           created_at: string
           id: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
+          agency_id?: string | null
           created_at?: string
           id?: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
+          agency_id?: string | null
           created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       windsor_cache: {
         Row: {

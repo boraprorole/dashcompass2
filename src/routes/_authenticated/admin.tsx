@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { listUsers, setUserRole } from "@/lib/admin.functions";
 import {
@@ -112,6 +112,8 @@ export const Route = createFileRoute("/_authenticated/admin")({
 });
 
 function AdminPage() {
+  const { isAdminGlobal, isAdminAgencia } = useAuth();
+
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <header className="flex items-center gap-3">
@@ -121,7 +123,7 @@ function AdminPage() {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Administração</h1>
           <p className="text-sm text-muted-foreground">
-            Gerencie usuários, relatórios e permissões.
+            {isAdminGlobal ? "Gestão Global do SaaS" : "Gestão da Agência"}
           </p>
         </div>
       </header>
@@ -137,9 +139,13 @@ function AdminPage() {
           <TabsTrigger value="visual" className="gap-2">
             <Palette className="h-4 w-4" /> ID Visual
           </TabsTrigger>
-          <TabsTrigger value="features" className="gap-2">
-            <Settings className="h-4 w-4" /> Funções
-          </TabsTrigger>
+          
+          {isAdminGlobal && (
+            <TabsTrigger value="features" className="gap-2">
+              <Settings className="h-4 w-4" /> Funções
+            </TabsTrigger>
+          )}
+
           <TabsTrigger value="schedule" className="gap-2">
             <CalendarDays className="h-4 w-4" /> Cronograma
           </TabsTrigger>
@@ -152,9 +158,6 @@ function AdminPage() {
           </TabsTrigger>
           <TabsTrigger value="demandas" className="gap-2">
             <ClipboardList className="h-4 w-4" /> Demandas
-          </TabsTrigger>
-          <TabsTrigger value="rdstation" className="gap-2">
-            <Radio className="h-4 w-4" /> RD Station
           </TabsTrigger>
           <TabsTrigger value="mcp" className="gap-2">
             <Radio className="h-4 w-4" /> MCP
@@ -183,22 +186,19 @@ function AdminPage() {
           <ScheduleConfigTab />
         </TabsContent>
         <TabsContent value="windsor">
-          <WindsorSettingsTab />
+          <AgencySettingsTab type="windsor" />
         </TabsContent>
         <TabsContent value="ai">
-          <AdminAITab />
+          <AgencySettingsTab type="ai" />
         </TabsContent>
         <TabsContent value="demandas">
           <AdminDemandasTab />
-        </TabsContent>
-        <TabsContent value="rdstation">
-          <AdminRDStationTab />
         </TabsContent>
         <TabsContent value="mcp">
           <AdminMcpTab />
         </TabsContent>
         <TabsContent value="news">
-          <NewsSettingsTab />
+          <AgencySettingsTab type="news" />
         </TabsContent>
       </Tabs>
     </div>
@@ -1597,18 +1597,25 @@ function ScheduleConfigTab() {
 }
 
 function VisualIdTab() {
-  const { primaryColor: contextColor } = useAuth();
+  const { primaryColor: contextColor, isAdminGlobal, isAdminAgencia, agencyId } = useAuth();
   const [primaryColor, setPrimaryColor] = useState(contextColor || "#3DFC03");
   const [isSaving, setIsSaving] = useState(false);
 
   const handleUpdateColor = async () => {
     setIsSaving(true);
     try {
-      const { error } = await supabase
-        .from("app_settings")
-        .upsert({ key: "primary_color", value: primaryColor }, { onConflict: "key" });
-      
-      if (error) throw error;
+      if (isAdminGlobal) {
+        const { error } = await supabase
+          .from("app_settings")
+          .upsert({ key: "primary_color", value: primaryColor }, { onConflict: "key" });
+        if (error) throw error;
+      } else if (isAdminAgencia && agencyId) {
+        const { error } = await supabase
+          .from("agencies")
+          .update({ primary_color: primaryColor })
+          .eq("id", agencyId);
+        if (error) throw error;
+      }
 
       document.documentElement.style.setProperty("--primary", primaryColor);
       toast.success(`Identidade visual salva com sucesso!`);
@@ -1730,6 +1737,120 @@ function FeaturesTab() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function AgencySettingsTab({ type }: { type: "windsor" | "ai" | "news" }) {
+  const { agencyId, isAdminGlobal } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<any>({});
+
+  const { data: agencyData, isLoading } = useQuery({
+    queryKey: ["agency-settings", agencyId, type],
+    queryFn: async () => {
+      if (!agencyId && !isAdminGlobal) return null;
+      const { data, error } = await supabase
+        .from("agencies")
+        .select("*")
+        .eq("id", agencyId as string)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!agencyId || isAdminGlobal,
+  });
+
+  useEffect(() => {
+    if (agencyData) {
+      setData(agencyData);
+    }
+  }, [agencyData]);
+
+  const handleSave = async () => {
+    if (!agencyId) return;
+    setLoading(true);
+    try {
+      const updates: any = {};
+      if (type === "windsor") updates.windsor_api_key = data.windsor_api_key;
+      if (type === "ai") {
+        updates.openai_api_key = data.openai_api_key;
+        updates.anthropic_api_key = data.anthropic_api_key;
+      }
+      if (type === "news") updates.news_api_key = data.news_api_key;
+
+      const { error } = await supabase
+        .from("agencies")
+        .update(updates)
+        .eq("id", agencyId);
+      
+      if (error) throw error;
+      toast.success("Configurações salvas com sucesso!");
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (isLoading) return <div className="p-8 text-center"><Loader2 className="animate-spin inline mr-2" /> Carregando...</div>;
+
+  return (
+    <div className="glass-strong p-8 rounded-3xl space-y-6">
+      <div className="flex items-center gap-3">
+        {type === "windsor" && <Key className="h-5 w-5 text-primary" />}
+        {type === "ai" && <Sparkles className="h-5 w-5 text-primary" />}
+        {type === "news" && <Newspaper className="h-5 w-5 text-primary" />}
+        <h3 className="text-xl font-semibold capitalize">{type === "ai" ? "Inteligência Artificial" : type}</h3>
+      </div>
+
+      <div className="grid gap-6">
+        {type === "windsor" && (
+          <div className="space-y-2">
+            <Label>Chave API Windsor.ai</Label>
+            <Input 
+              type="password" 
+              value={data.windsor_api_key || ""} 
+              onChange={(e) => setData({ ...data, windsor_api_key: e.target.value })} 
+            />
+          </div>
+        )}
+        {type === "ai" && (
+          <>
+            <div className="space-y-2">
+              <Label>Chave OpenAI</Label>
+              <Input 
+                type="password" 
+                value={data.openai_api_key || ""} 
+                onChange={(e) => setData({ ...data, openai_api_key: e.target.value })} 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Chave Anthropic</Label>
+              <Input 
+                type="password" 
+                value={data.anthropic_api_key || ""} 
+                onChange={(e) => setData({ ...data, anthropic_api_key: e.target.value })} 
+              />
+            </div>
+          </>
+        )}
+        {type === "news" && (
+          <div className="space-y-2">
+            <Label>Chave NewsAPI</Label>
+            <Input 
+              type="password" 
+              value={data.news_api_key || ""} 
+              onChange={(e) => setData({ ...data, news_api_key: e.target.value })} 
+            />
+          </div>
+        )}
+        
+        <Button onClick={handleSave} disabled={loading || !agencyId}>
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Salvar Configurações
+        </Button>
+      </div>
     </div>
   );
 }
