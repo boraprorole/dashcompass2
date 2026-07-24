@@ -27,7 +27,8 @@ import { AdminDemandasTab } from "@/components/demandas/AdminDemandasTab";
 import { AdminRDStationTab } from "@/components/rdstation/AdminRDStationTab";
 import { AdminMcpTab } from "@/components/mcp/AdminMcpTab";
 import { NewsSettingsTab } from "@/components/news/NewsSettingsTab";
-import { Sparkles, Radio, Newspaper } from "lucide-react";
+import { Sparkles, Radio, Newspaper, Palette } from "lucide-react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -92,13 +93,16 @@ export const Route = createFileRoute("/_authenticated/admin")({
     const { data: userData, error } = await supabase.auth.getUser();
     if (error || !userData.user) throw redirect({ to: "/login" });
 
-    const { data: role } = await supabase
+    const { data: roles } = await supabase
       .from("user_roles")
       .select("role")
-      .eq("user_id", userData.user.id)
-      .eq("role", "admin")
-      .maybeSingle();
-    if (!role) throw redirect({ to: "/reports" });
+      .eq("user_id", userData.user.id);
+    
+    const userRoles = roles?.map(r => r.role) || [];
+    const hasAdminAccess = userRoles.some(r => ["admin", "admin_global", "admin_agencia"].includes(r));
+    
+    if (!hasAdminAccess) throw redirect({ to: "/reports" });
+
   },
   component: AdminPage,
 });
@@ -126,6 +130,9 @@ function AdminPage() {
           <TabsTrigger value="users" className="gap-2">
             <Users className="h-4 w-4" /> Usuários
           </TabsTrigger>
+          <TabsTrigger value="visual" className="gap-2">
+            <Palette className="h-4 w-4" /> ID Visual
+          </TabsTrigger>
           <TabsTrigger value="schedule" className="gap-2">
             <CalendarDays className="h-4 w-4" /> Cronograma
           </TabsTrigger>
@@ -149,12 +156,17 @@ function AdminPage() {
           </TabsTrigger>
         </TabsList>
 
+
         <TabsContent value="reports">
           <CompaniesTab />
         </TabsContent>
         <TabsContent value="users">
           <UsersTab />
         </TabsContent>
+        <TabsContent value="visual">
+          <VisualIdTab />
+        </TabsContent>
+
         <TabsContent value="schedule">
           <ScheduleConfigTab />
         </TabsContent>
@@ -1571,3 +1583,67 @@ function ScheduleConfigTab() {
     </div>
   );
 }
+
+function VisualIdTab() {
+  const [primaryColor, setPrimaryColor] = useState("#3DFC03");
+
+  const handleUpdateColor = () => {
+    document.documentElement.style.setProperty("--primary", primaryColor);
+    // Em um cenário real, salvaríamos isso no banco para persistência
+    toast.success(`Identidade visual atualizada para ${primaryColor}`);
+  };
+
+  return (
+    <div className="glass-strong p-8 rounded-3xl space-y-6">
+      <div className="flex items-center gap-3 mb-2">
+        <Palette className="h-5 w-5 text-primary" />
+        <h3 className="text-xl font-semibold">Identidade Visual</h3>
+      </div>
+      
+      <p className="text-sm text-muted-foreground max-w-lg">
+        Personalize a cor de destaque da plataforma. Esta cor será aplicada em botões, links, 
+        gráficos e elementos de UI ativos.
+      </p>
+
+      <div className="space-y-4 pt-4">
+        <div className="space-y-2">
+          <Label htmlFor="primaryColor">Cor Primária (Destaque)</Label>
+          <div className="flex gap-4 items-center">
+            <Input 
+              id="primaryColor"
+              type="color" 
+              value={primaryColor} 
+              onChange={(e) => setPrimaryColor(e.target.value)}
+              className="w-20 h-12 p-1 bg-[#111] border-border"
+            />
+            <Input 
+              type="text" 
+              value={primaryColor} 
+              onChange={(e) => setPrimaryColor(e.target.value)}
+              className="max-w-[150px]"
+            />
+          </div>
+        </div>
+
+        <div className="pt-4">
+          <Button onClick={handleUpdateColor}>
+            Salvar Alterações
+          </Button>
+        </div>
+      </div>
+
+      <div className="mt-8 p-6 rounded-2xl bg-[#0B0B0B] border border-border">
+        <h4 className="text-sm font-medium mb-4 text-muted-foreground uppercase tracking-wider">Preview dos Elementos</h4>
+        <div className="flex flex-wrap gap-4">
+          <Button>Botão Primário</Button>
+          <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-black">
+            <Shield className="h-5 w-5" />
+          </div>
+          <Badge>Status Ativo</Badge>
+          <span className="text-primary font-bold">Texto de Destaque</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
