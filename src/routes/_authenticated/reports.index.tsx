@@ -33,36 +33,36 @@ function ReportsPage() {
   });
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8">
-      <header className="flex items-center gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-          <FileText className="h-5 w-5" />
+    <div className="mx-auto max-w-7xl space-y-10 px-2 py-4">
+      <header className="flex items-center gap-6">
+        <div className="flex h-14 w-14 items-center justify-center rounded-[20px] bg-primary text-black">
+          <FileText className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Relatórios</h1>
-          <p className="text-sm text-muted-foreground">
-            Relatórios vinculados ao seu acesso.
+          <h1 className="text-4xl font-bold tracking-tight text-foreground">Relatórios</h1>
+          <p className="mt-1 text-[15px] text-muted-foreground/80">
+            Acesse e gerencie seus relatórios estratégicos.
           </p>
         </div>
       </header>
 
       {isLoading ? (
-        <div className="glass-strong flex items-center justify-center rounded-3xl p-12 text-muted-foreground">
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Carregando...
+        <div className="flex items-center justify-center rounded-[20px] border border-border bg-card p-16 text-muted-foreground">
+          <Loader2 className="mr-3 h-6 w-6 animate-spin text-primary" /> Carregando relatórios...
         </div>
       ) : error ? (
         <div className="glass-strong rounded-3xl p-8 text-destructive">
           Erro ao carregar relatórios.
         </div>
       ) : data && data.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((r) => (
             <article
               key={r.id}
-              className="glass-strong flex flex-col gap-4 rounded-3xl p-5"
+              className="group flex flex-col gap-6 rounded-[20px] border border-border bg-card p-6 transition-all duration-300 hover:bg-[#1D1D1D] hover:scale-[1.01]"
             >
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary/15 text-primary">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[14px] bg-primary/10 text-primary border border-primary/20">
                   {r.logo_url ? (
                     <img src={r.logo_url} alt="" className="h-full w-full object-cover" />
                   ) : (
