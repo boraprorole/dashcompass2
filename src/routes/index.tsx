@@ -173,7 +173,7 @@ function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center pt-32 md:pt-40 overflow-hidden">
+      <section className="relative h-screen flex items-center pt-32 md:pt-40 overflow-hidden">
         {/* Hero Video Background */}
         <div className="absolute inset-0 z-0">
           <video autoPlay muted loop playsInline className="h-full w-full object-cover">
