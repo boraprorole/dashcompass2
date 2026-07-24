@@ -179,7 +179,7 @@ function LoginPage() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="relative z-30 w-full max-w-[520px] px-4"
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col space-y-12 py-12">
           <div className="flex flex-col items-center mb-10">
             <div className="h-16 w-16 rounded-[18px] bg-primary flex items-center justify-center shadow-[0_0_30px_rgba(61,252,3,0.3)] mb-6">
               <Compass className="h-8 w-8 text-black stroke-[2.5px]" />
