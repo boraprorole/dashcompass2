@@ -120,11 +120,15 @@ function ProfilePage() {
         .from("profiles")
         .getPublicUrl(filePath);
 
-      setAvatarUrl(publicUrl);
+      // Verify URL format and ensure it doesn't contain /public/ if bucket is private
+      const finalUrl = publicUrl.replace("/object/public/", "/object/authenticated/");
+      console.log("Final URL for storage:", finalUrl);
+
+      setAvatarUrl(finalUrl);
       
       const { error: updateError } = await supabase
         .from("profiles")
-        .update({ avatar_url: publicUrl })
+        .update({ avatar_url: finalUrl })
         .eq("id", user.id);
 
       if (updateError) throw updateError;
