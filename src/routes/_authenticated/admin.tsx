@@ -1012,6 +1012,7 @@ function SectionFormDialog({
 /* ---------------- Companies + Reports (unified) ---------------- */
 
 function CompaniesTab() {
+  const { isAdminGlobal, agencyId } = useAuth();
   const qc = useQueryClient();
   const [newCompanyName, setNewCompanyName] = useState("");
   const [editingCompany, setEditingCompany] = useState<{ id: string; name: string } | null>(null);
@@ -1026,7 +1027,14 @@ function CompaniesTab() {
   const { data: companies, isLoading } = useQuery({
     queryKey: ["admin-companies"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("companies").select("*").order("name");
+      const query = supabase.from("companies").select("*").order("name");
+      
+      // Se for admin de agência, filtra pela agência dele
+      if (!isAdminGlobal && agencyId) {
+        query.eq("agency_id", agencyId);
+      }
+      
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     },
@@ -1065,7 +1073,14 @@ function CompaniesTab() {
 
   const createMutation = useMutation({
     mutationFn: async (name: string) => {
-      const { error } = await supabase.from("companies").insert([{ name }]);
+      const payload: any = { name };
+      
+      // Associa a empresa à agência do admin logado
+      if (!isAdminGlobal && agencyId) {
+        payload.agency_id = agencyId;
+      }
+      
+      const { error } = await supabase.from("companies").insert([payload]);
       if (error) throw error;
     },
     onSuccess: () => {
