@@ -405,11 +405,7 @@ function LandingPage() {
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
             <div className="flex flex-col md:flex-row items-center gap-8">
-              <Logo isCollapsed iconClassName="h-6 w-6" />
-              <div className="text-center md:text-left">
-                <p className="text-sm text-white/40 font-bold mb-1">The Fcking Company LLC</p>
-                <p className="text-xs text-white/20">30 N Gould st ste N sheridan wy 82801</p>
-              </div>
+              <Logo iconClassName="h-6 w-6" textClassName="text-lg" />
             </div>
             <div className="flex items-center gap-8 text-sm text-white/40">
               <Link to="/terms" className="hover:text-primary transition-colors">Termos</Link>
@@ -417,8 +413,12 @@ function LandingPage() {
               <Link to="/login" className="hover:text-primary transition-colors">Acesso</Link>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/5 text-center">
-            <p className="text-xs text-white/20">© 2026 DashCompass. Projetado para clareza.</p>
+          <div className="pt-8 border-t border-white/5 text-center md:text-left">
+            <p className="text-xs text-white/20 mb-2">© 2026 DashCompass. Projetado para clareza.</p>
+            <div className="space-y-1">
+              <p className="text-[10px] text-white/10 uppercase tracking-widest font-bold">The Fcking Company LLC</p>
+              <p className="text-[10px] text-white/10">30 N Gould st ste N sheridan wy 82801</p>
+            </div>
           </div>
         </div>
       </footer>
