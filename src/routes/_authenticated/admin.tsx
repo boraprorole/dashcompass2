@@ -1106,13 +1106,34 @@ function CompaniesTab() {
         payload.agency_id = agencyId;
       }
       
-      const { error } = await supabase.from("companies").insert([payload]);
-      if (error) throw error;
+      const { data: company, error: companyError } = await supabase
+        .from("companies")
+        .insert([payload])
+        .select("id, name")
+        .single();
+      
+      if (companyError) throw companyError;
+
+      // Criar automaticamente um relatório com o mesmo nome da empresa
+      const { error: reportError } = await supabase.from("reports").insert([
+        {
+          title: company.name,
+          company_id: company.id,
+          created_by: (await supabase.auth.getUser()).data.user?.id,
+          agency_id: payload.agency_id || null,
+        },
+      ]);
+
+      if (reportError) {
+        console.error("Erro ao criar relatório automático:", reportError);
+        toast.error("Empresa criada, mas houve um erro ao gerar o relatório automático.");
+      }
     },
     onSuccess: () => {
       toast.success("Empresa criada.");
       setNewCompanyName("");
       qc.invalidateQueries({ queryKey: ["admin-companies"] });
+      qc.invalidateQueries({ queryKey: ["admin-reports"] });
     },
     onError: (e: Error) => toast.error(e.message),
   });
