@@ -81,8 +81,9 @@ function AuthenticatedLayout() {
             {!isCollapsed && (
               <Link to="/reports" className="flex flex-1 items-center justify-center overflow-hidden">
                 <span className="font-sans text-xl font-bold tracking-tighter text-primary">
-                  DASHCOMPASS
+                  DashCompass
                 </span>
+
               </Link>
             )}
             <Button 
@@ -166,8 +167,9 @@ function AuthenticatedLayout() {
       <div className="glass fixed inset-x-0 top-0 z-20 flex items-center justify-between p-3 md:hidden">
         <Link to="/reports" className="flex items-center">
           <span className="font-sans text-xl font-bold tracking-tighter text-primary">
-            DASHCOMPASS
+            DashCompass
           </span>
+
         </Link>
         <Button variant="ghost" size="sm" onClick={signOut}>
           <LogOut className="h-4 w-4" />
