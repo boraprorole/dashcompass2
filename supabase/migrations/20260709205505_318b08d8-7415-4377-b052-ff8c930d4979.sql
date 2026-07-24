@@ -1,0 +1,1 @@
+DELETE FROM public.windsor_cache;

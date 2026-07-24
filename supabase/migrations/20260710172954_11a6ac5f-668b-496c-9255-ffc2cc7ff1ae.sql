@@ -1,0 +1,1 @@
+DELETE FROM public.windsor_cache WHERE cache_key LIKE 'sc-top%';

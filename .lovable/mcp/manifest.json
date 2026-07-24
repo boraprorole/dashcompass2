@@ -1,0 +1,260 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://oglppifieifcsuzcovgg.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "marsala-dashboard-mcp",
+      "version": "0.1.0",
+      "title": "Marsala Dashboard"
+    },
+    "tools": [
+      {
+        "name": "list_my_reports",
+        "title": "List my reports",
+        "description": "List the marketing reports the signed-in user has access to. Each report includes its connected assets (Instagram usernames, Facebook Page names, ad account names from both Meta OAuth and Windsor). Use these asset names — not just the report title/company — to match a user's mention like '@setpar' or 'Setpar' to the correct report_id.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_report",
+        "title": "Get report",
+        "description": "Fetch a report's embed HTML and its visual sections (iframes/embeds). This tool does NOT return marketing data (Instagram posts, KPIs, Ads, GA4, etc.). For actual performance data use `get_report_metrics`; for Instagram post-level data use `get_instagram_top_posts`. An empty `sections` array only means no visual embeds were added — it does NOT mean the report has no data.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The report UUID"
+            }
+          },
+          "required": [
+            "report_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_report_metrics",
+        "title": "Get report metrics",
+        "description": "Aggregated KPIs for ALL Windsor connectors linked to the report (Instagram, Meta Ads, GA4, GSC, TikTok, LinkedIn, Google Ads, Facebook). Use this for an overall performance view.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The report UUID"
+            },
+            "datePreset": {
+              "type": "string",
+              "enum": [
+                "last_7d",
+                "last_30d",
+                "last_90d",
+                "last_y"
+              ],
+              "description": "Relative period. Default last_30d."
+            },
+            "dateFrom": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "dateTo": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          "required": [
+            "report_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_instagram_top_posts",
+        "title": "Get Instagram top posts",
+        "description": "Fetch the top Instagram posts for a report in a given period. Returns real post-level data (caption, permalink, likes, comments, reach, engagement).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The report UUID"
+            },
+            "datePreset": {
+              "type": "string",
+              "enum": [
+                "last_7d",
+                "last_30d",
+                "last_90d",
+                "last_y"
+              ],
+              "description": "Relative period. Default last_30d."
+            },
+            "dateFrom": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "dateTo": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 24
+            },
+            "sortBy": {
+              "type": "string",
+              "enum": [
+                "engagement",
+                "reach",
+                "likes",
+                "views"
+              ]
+            }
+          },
+          "required": [
+            "report_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_instagram_audience",
+        "title": "Get Instagram audience demographics",
+        "description": "Audience demographics (gender, age, gender+age, top cities, top countries) for each Instagram account linked to the report. Works with both Windsor and Meta OAuth connected accounts.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The report UUID"
+            }
+          },
+          "required": [
+            "report_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_meta_ads_creatives",
+        "title": "Get Meta Ads creatives ranking",
+        "description": "Per-creative Meta Ads performance for each ad account linked to the report: spend, impressions, reach, clicks, CTR, CPC, CPM, frequency, leads, CPL and a health status (winning/fatigue/low-ctr/expensive/healthy). Works with both Windsor and Meta OAuth connected accounts.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The report UUID"
+            },
+            "datePreset": {
+              "type": "string",
+              "enum": [
+                "last_7d",
+                "last_30d",
+                "last_90d",
+                "last_y"
+              ],
+              "description": "Relative period. Default last_30d."
+            },
+            "dateFrom": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "dateTo": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          "required": [
+            "report_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_news",
+        "title": "Search News",
+        "description": "Busca notícias e menções na web via NewsAPI. Útil para PR e Clipping.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Termo de busca (empresa, marca, etc)"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+UPDATE public.ai_threads SET model='claude-sonnet-4-5-20250929' WHERE model='claude-3-5-haiku-20241022';

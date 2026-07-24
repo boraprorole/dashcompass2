@@ -1,0 +1,171 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-glow: var(--primary-glow);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-glass: var(--glass);
+  --color-glass-border: var(--glass-border);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 1rem;
+
+  /* Liquid glass — wine/burgundy palette around #6e2a37 */
+  --background: oklch(0.985 0.005 20);
+  --foreground: oklch(0.22 0.05 15);
+
+  --card: oklch(1 0 0 / 60%);
+  --card-foreground: oklch(0.22 0.05 15);
+
+  --popover: oklch(0.99 0.005 20);
+  --popover-foreground: oklch(0.22 0.05 15);
+
+  --primary: oklch(0.32 0.15 12);          /* #6c0e28 */
+  --primary-foreground: oklch(0.98 0.005 20);
+  --primary-glow: oklch(0.50 0.18 12);
+
+  --secondary: oklch(0.60 0.22 25);          /* #e73648 */
+  --secondary-foreground: oklch(0.98 0.005 20);
+
+  --muted: oklch(0.95 0.008 20);
+  --muted-foreground: oklch(0.50 0.03 15);
+
+  --accent: oklch(0.92 0.04 15);
+  --accent-foreground: oklch(0.30 0.08 15);
+
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0.005 20);
+
+  --border: oklch(0.32 0.15 12 / 12%);
+  --input: oklch(0.32 0.15 12 / 10%);
+  --ring: oklch(0.32 0.15 12 / 40%);
+
+  --glass: oklch(1 0 0 / 55%);
+  --glass-border: oklch(1 0 0 / 40%);
+
+  --sidebar: oklch(1 0 0 / 50%);
+  --sidebar-foreground: oklch(0.22 0.05 15);
+  --sidebar-primary: oklch(0.32 0.15 12);
+  --sidebar-primary-foreground: oklch(0.98 0.005 20);
+  --sidebar-accent: oklch(0.92 0.04 12 / 60%);
+  --sidebar-accent-foreground: oklch(0.32 0.15 12);
+  --sidebar-border: oklch(0.32 0.15 12 / 10%);
+  --sidebar-ring: oklch(0.32 0.15 12 / 30%);
+
+  --gradient-mesh: radial-gradient(at 20% 10%, oklch(0.50 0.18 12 / 35%) 0px, transparent 50%),
+                   radial-gradient(at 80% 20%, oklch(0.32 0.15 12 / 40%) 0px, transparent 50%),
+                   radial-gradient(at 60% 90%, oklch(0.42 0.16 20 / 30%) 0px, transparent 55%),
+                   radial-gradient(at 10% 80%, oklch(0.35 0.14 350 / 30%) 0px, transparent 50%);
+
+  --shadow-glass: 0 8px 32px oklch(0.30 0.08 15 / 12%),
+                  inset 0 1px 0 oklch(1 0 0 / 50%);
+  --shadow-elevated: 0 20px 60px -10px oklch(0.30 0.08 15 / 25%);
+}
+
+.dark {
+  --background: oklch(0.16 0.03 15);
+  --foreground: oklch(0.97 0.005 20);
+  --card: oklch(0.22 0.04 15 / 60%);
+  --card-foreground: oklch(0.97 0.005 20);
+  --popover: oklch(0.20 0.04 15);
+  --popover-foreground: oklch(0.97 0.005 20);
+  --primary: oklch(0.62 0.15 15);
+  --primary-foreground: oklch(0.15 0.03 15);
+  --primary-glow: oklch(0.72 0.18 15);
+  --secondary: oklch(0.60 0.22 25);          /* #e73648 */
+  --secondary-foreground: oklch(0.98 0.005 20);
+  --muted: oklch(0.24 0.03 15);
+  --muted-foreground: oklch(0.70 0.02 15);
+  --accent: oklch(0.32 0.06 15);
+  --accent-foreground: oklch(0.97 0.005 20);
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(0.97 0.005 20);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.62 0.15 15 / 50%);
+  --glass: oklch(0.22 0.04 15 / 55%);
+  --glass-border: oklch(1 0 0 / 12%);
+  --sidebar: oklch(0.20 0.04 15 / 70%);
+  --sidebar-foreground: oklch(0.97 0.005 20);
+  --sidebar-primary: oklch(0.62 0.15 15);
+  --sidebar-primary-foreground: oklch(0.15 0.03 15);
+  --sidebar-accent: oklch(0.30 0.06 15 / 60%);
+  --sidebar-accent-foreground: oklch(0.97 0.005 20);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.62 0.15 15 / 40%);
+
+  --gradient-mesh: radial-gradient(at 20% 10%, oklch(0.50 0.18 15 / 40%) 0px, transparent 50%),
+                   radial-gradient(at 80% 20%, oklch(0.35 0.12 15 / 50%) 0px, transparent 50%),
+                   radial-gradient(at 60% 90%, oklch(0.40 0.10 350 / 40%) 0px, transparent 55%);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    min-height: 100%;
+  }
+
+  body {
+    background-image: var(--gradient-mesh);
+    background-attachment: fixed;
+    background-size: cover;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background-color: var(--glass);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-glass);
+  }
+  .glass-strong {
+    background-color: color-mix(in oklab, var(--glass) 80%, white 5%);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-elevated);
+  }
+  .shadow-elevated { box-shadow: var(--shadow-elevated); }
+}

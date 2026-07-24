@@ -1,0 +1,3 @@
+ALTER TABLE public.ai_agents ALTER COLUMN provider DROP NOT NULL;
+ALTER TABLE public.ai_agents ALTER COLUMN model DROP NOT NULL;
+ALTER TABLE public.ai_agents ALTER COLUMN mode DROP NOT NULL;
