@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import bgVideoAsset from "@/assets/login-bg-latest.mp4.asset.json";
+import bgVideoAsset from "@/assets/login-bg-final.mp4.asset.json";
 import { ArrowRight, Play, CheckCircle2, ChevronRight, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
