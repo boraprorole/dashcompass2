@@ -36,16 +36,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loadSettings = async () => {
     try {
+      // Usar a chave anon_client para que qualquer usuário (mesmo deslogado) possa ler
       const { data, error } = await supabase
         .from("app_settings")
         .select("value")
         .eq("key", "primary_color")
-        .single();
+        .maybeSingle();
       
       if (data?.value) {
         const color = typeof data.value === "string" ? data.value : JSON.stringify(data.value).replace(/"/g, "");
         setPrimaryColor(color);
         document.documentElement.style.setProperty("--primary", color);
+      } else {
+        // Fallback para a cor padrão se não houver configuração
+        document.documentElement.style.setProperty("--primary", "#3DFC03");
       }
     } catch (err) {
       console.error("Erro ao carregar configurações:", err);
