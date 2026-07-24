@@ -3,6 +3,7 @@ import { exchangeCode, fetchGoogleEmail, verifyState } from "@/lib/ga.server";
 import { saveGscConnection } from "@/lib/gsc.server";
 import { saveGadsConnection } from "@/lib/gads.server";
 import { saveOauthConnection } from "@/lib/ga.server";
+import { getGoogleRedirectUri } from "@/lib/google_auth.server";
 
 function html(body: string, status = 200) {
   return new Response(
@@ -31,7 +32,7 @@ export const Route = createFileRoute("/api/public/google/oauth/callback")({
           const parsed = (await verifyState(state)) as { reportId?: string; userId?: string };
           if (!parsed.reportId || !parsed.userId) throw new Error("state incompleto");
           
-          const tokens = await exchangeCode(code, url.origin);
+          const tokens = await exchangeCode(code, url.origin, getGoogleRedirectUri());
           if (!tokens.refresh_token) {
             return html(
               `<h1>Refresh token não retornado</h1><p>Remova o acesso em <a href="https://myaccount.google.com/permissions" target="_blank">myaccount.google.com/permissions</a> e tente conectar novamente.</p><a href="/admin">Voltar</a>`,

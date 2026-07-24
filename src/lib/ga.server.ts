@@ -97,7 +97,7 @@ export async function buildAuthUrl(opts: { origin: string; reportId: string; use
   return `${AUTH_URL}?${params.toString()}`;
 }
 
-export async function exchangeCode(code: string, origin: string) {
+export async function exchangeCode(code: string, origin: string, redirectUriOverride?: string) {
   const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
   if (!clientId || !clientSecret) throw new Error("Google OAuth não configurado");
@@ -108,7 +108,7 @@ export async function exchangeCode(code: string, origin: string) {
       code,
       client_id: clientId,
       client_secret: clientSecret,
-      redirect_uri: getRedirectUri(origin),
+      redirect_uri: redirectUriOverride ?? getRedirectUri(origin),
       grant_type: "authorization_code",
     }),
   });
