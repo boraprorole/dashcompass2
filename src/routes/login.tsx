@@ -180,20 +180,20 @@ function LoginPage() {
         className="relative z-30 w-full max-w-[520px] px-4"
       >
         <div className="flex flex-col space-y-12 py-12">
-          <div className="flex flex-col items-center mb-10">
-            <div className="h-16 w-16 rounded-[18px] bg-primary flex items-center justify-center shadow-[0_0_30px_rgba(61,252,3,0.3)] mb-6">
-              <Compass className="h-8 w-8 text-black stroke-[2.5px]" />
+          <div className="flex flex-col items-center mb-16">
+            <div className="h-20 w-20 rounded-[22px] bg-primary flex items-center justify-center shadow-[0_0_40px_rgba(61,252,3,0.3)] mb-8">
+              <Compass className="h-10 w-10 text-black stroke-[2.5px]" />
             </div>
-            <h1 className="text-3xl font-bold tracking-tight text-white mb-2">
+            <h1 className="text-4xl font-bold tracking-tight text-white mb-4">
               DashCompass
             </h1>
-            <p className="text-[14px] text-muted-foreground font-medium tracking-wide">
+            <p className="text-[16px] text-white/40 font-medium tracking-widest uppercase">
               A nova geração de análise estratégica
             </p>
           </div>
 
           <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 rounded-[14px] bg-white/5 p-1 border border-white/5 mb-8">
+            <TabsList className="grid w-full grid-cols-2 rounded-[18px] bg-white/[0.03] p-1.5 border border-white/[0.05] mb-12">
               <TabsTrigger 
                 value="signin"
                 className="rounded-[10px] py-2.5 data-[state=active]:bg-primary data-[state=active]:text-black text-white/60"
