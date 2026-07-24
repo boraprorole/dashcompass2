@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Compass } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import bgVideoAsset from "@/assets/login-bg.mp4.asset.json";
+import logoAsset from "@/assets/dashcompass-logo.svg.asset.json";
 
 
 export const Route = createFileRoute("/login")({
@@ -181,13 +182,17 @@ function LoginPage() {
       >
         <div className="flex flex-col space-y-8 py-8 md:py-12">
           <div className="flex items-center justify-center gap-4 mb-12">
-            <div className="relative flex items-center justify-center h-10 w-10">
-              {/* Círculo externo definido via CSS para controle preciso da espessura */}
-              <div className="absolute inset-0 rounded-full border-[2.5px] border-primary shadow-[0_0_15px_rgba(61,252,3,0.3)]" />
-              {/* Apenas o ponteiro da bússola interna (removendo o círculo original do ícone) */}
-              <Compass className="h-6 w-6 text-primary stroke-[1.5px] relative z-10 [clip-path:inset(10%)]" />
+            <div className="relative flex items-center justify-center h-12 w-12">
+              <img 
+                src={logoAsset.url} 
+                alt="DashCompass Logo" 
+                className="h-full w-full object-contain"
+                style={{ 
+                  filter: 'brightness(0) saturate(100%) invert(84%) sepia(85%) saturate(4646%) hue-rotate(46deg) brightness(102%) contrast(105%) drop-shadow(0 0 8px rgba(61,252,3,0.3))' 
+                }}
+              />
             </div>
-            <h1 className="text-4xl font-bold tracking-tighter text-white leading-none mt-[2px]">
+            <h1 className="text-4xl font-bold tracking-tighter text-white leading-none mt-[4px]">
               DashCompass
             </h1>
           </div>
