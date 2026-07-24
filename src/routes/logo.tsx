@@ -34,7 +34,7 @@ function LogoPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const downloadPng = (variant: 'black' | 'white' | 'primary-bg') => {
+  const downloadPng = (variant: 'black' | 'white' | 'primary-bg', aspect: '1:1' | '16:9' = '1:1') => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -46,8 +46,13 @@ function LogoPage() {
     img.src = logoAsset.url;
 
     img.onload = () => {
-      canvas.width = 1024;
-      canvas.height = 1024;
+      if (aspect === '1:1') {
+        canvas.width = 1024;
+        canvas.height = 1024;
+      } else {
+        canvas.width = 1920;
+        canvas.height = 1080;
+      }
 
       // Draw background
       if (variant === 'primary-bg') {
@@ -57,33 +62,54 @@ function LogoPage() {
       }
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Create a temporary canvas for the tinted logo
+      // Create a temporary canvas for the tinted logo symbol
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = canvas.width;
       tempCanvas.height = canvas.height;
       const tCtx = tempCanvas.getContext('2d');
       if (!tCtx) return;
 
-      const padding = canvas.width * 0.25;
-      const size = canvas.width - (padding * 2);
-      tCtx.drawImage(img, padding, padding, size, size);
+      if (aspect === '1:1') {
+        const padding = canvas.width * 0.25;
+        const size = canvas.width - (padding * 2);
+        tCtx.drawImage(img, padding, padding, size, size);
+      } else {
+        // 16:9 with text
+        const logoSize = canvas.height * 0.4;
+        const spacing = 40;
+        
+        // Calculate total width of logo + spacing + text
+        tCtx.font = "bold 120px Inter, sans-serif";
+        const textMetrics = tCtx.measureText("DashCompass");
+        const totalWidth = logoSize + spacing + textMetrics.width;
+        
+        const startX = (canvas.width - totalWidth) / 2;
+        const startY = (canvas.height - logoSize) / 2;
+        
+        // Draw logo
+        tCtx.drawImage(img, startX, startY, logoSize, logoSize);
+        
+        // Draw text
+        tCtx.fillStyle = "white"; // Temporarily white for source-in
+        tCtx.textBaseline = "middle";
+        tCtx.fillText("DashCompass", startX + logoSize + spacing, canvas.height / 2);
+      }
 
       tCtx.globalCompositeOperation = 'source-in';
       
-      // If primary background, symbol is black/white (let's go with black for contrast)
-      // Otherwise, symbol is primary color
       if (variant === 'primary-bg') {
         tCtx.fillStyle = "#000000";
+      } else if (variant === 'white') {
+        tCtx.fillStyle = primaryColor;
       } else {
         tCtx.fillStyle = primaryColor;
       }
       
       tCtx.fillRect(0, 0, canvas.width, canvas.height);
-
       ctx.drawImage(tempCanvas, 0, 0);
 
       const link = document.createElement("a");
-      link.download = `dashcompass-logo-${variant}.png`;
+      link.download = `dashcompass-logo-${variant}-${aspect.replace(':', '-')}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
       toast.success("Logo baixado com sucesso!");
