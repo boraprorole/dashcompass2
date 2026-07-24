@@ -77,34 +77,38 @@ function ProfilePage() {
     try {
       let fileToUpload = file;
 
-      // Se a imagem for maior que 1MB ou não for WebP, vamos processar
-      // (Usamos 1MB como gatilho para garantir que o resultado final WebP seja bem otimizado)
+      // Processamento de imagem (se necessário)
       if (file.size > 1 * 1024 * 1024 || file.type !== "image/webp") {
         const options = {
-          maxSizeMB: 1, // Alvo de 1MB para o avatar
+          maxSizeMB: 1,
           maxWidthOrHeight: 1024,
-          useWebWorker: false, // Desabilitado webWorker temporariamente para debug de compatibilidade
+          useWebWorker: false,
           fileType: "image/webp",
           initialQuality: 0.85,
         };
         
         toast.info("Otimizando imagem...");
         try {
-          fileToUpload = await imageCompression(file, options);
+          const compressedFile = await imageCompression(file, options);
+          // Criar um novo arquivo com o tipo correto caso o retorno seja apenas um Blob
+          fileToUpload = new File([compressedFile], `avatar.${compressedFile.type.split('/')[1]}`, {
+            type: compressedFile.type,
+          });
         } catch (compressionError) {
-          console.error("Erro na compressão, tentando upload original:", compressionError);
-          // Se a compressão falhar, tentamos usar o arquivo original em vez de travar
+          console.error("Erro na compressão:", compressionError);
           fileToUpload = file;
         }
       }
 
-      const fileName = `${user.id}/${Date.now()}.${fileToUpload.type === 'image/webp' ? 'webp' : file.name.split('.').pop()}`;
+      const fileExt = fileToUpload.type.split("/")[1] || "webp";
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
       const filePath = fileName;
 
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(filePath, fileToUpload, {
-          contentType: fileToUpload.type || "image/webp",
+          contentType: fileToUpload.type,
+          cacheControl: "3600",
           upsert: true
         });
 
@@ -125,8 +129,12 @@ function ProfilePage() {
 
       toast.success("Foto de perfil atualizada!");
     } catch (error: any) {
-      console.error("Erro no upload/compressão:", error);
-      toast.error("Erro ao processar imagem.");
+      console.error("Erro detalhado no upload:", {
+        message: error.message,
+        error: error,
+        stack: error.stack
+      });
+      toast.error(`Erro: ${error.message || "Erro ao processar imagem."}`);
     } finally {
       setUploading(false);
     }
