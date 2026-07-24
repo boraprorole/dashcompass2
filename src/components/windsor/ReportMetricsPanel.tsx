@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { supabase } from "@/integrations/supabase/client";
 import type { DateRange } from "react-day-picker";
 import {
   getReportWindsorMetrics,
@@ -24,6 +25,8 @@ import { UnorteMetaCsvPanel } from "@/components/meta/UnorteMetaCsvPanel";
 import { UnorteGoogleAdsCsvPanel } from "@/components/google/UnorteGoogleAdsCsvPanel";
 import { UnorteCrmCsvPanel } from "@/components/crm/UnorteCrmCsvPanel";
 import { UnorteAnaliseGeralPanel } from "@/components/analysis/UnorteAnaliseGeralPanel";
+import { GoogleAdsPanel } from "@/components/google/GoogleAdsPanel";
+import { GoogleSearchConsolePanel } from "@/components/google/GoogleSearchConsolePanel";
 import { listGoogleAdsDatasets } from "@/lib/googleads-csv.functions";
 import {
   Select,
@@ -169,6 +172,7 @@ const PRIMARY_FIELDS: Record<string, string[]> = {
   facebook: ["page_fans", "page_reach", "page_impressions", "page_engaged_users", "page_post_engagements", "page_views_total"],
   facebook_ads: ["ctr", "cpm", "cost_per_action_type_lead", "actions_lead", "cpc", "spend", "reach", "impressions", "clicks", "conversions", "roas"],
   adwords: ["cost", "impressions", "clicks", "ctr", "average_cpc", "conversions", "conversion_value", "cost_per_conversion"],
+  google_ads: ["cost", "impressions", "clicks", "ctr", "average_cpc", "conversions", "conversion_value", "cost_per_conversion"],
   ga4: ["users", "sessions", "screenPageViews", "engagementRate", "conversions", "totalRevenue"],
   tiktok: ["spend", "reach", "impressions", "clicks", "video_views", "ctr", "cpm", "follows"],
   linkedin: ["cost", "impressions", "clicks", "ctr", "reactions", "shares", "follows", "video_views"],
@@ -309,6 +313,20 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
   });
 
   const fetchSearchConsole = useServerFn(getReportSearchConsoleTop);
+  const { data: gscUnifiedConn } = useQuery({
+    queryKey: ["gsc-unified-conn", reportId],
+    queryFn: async () => {
+      const { data } = await supabase.from("gsc_connections" as any).select("id").eq("report_id", reportId).maybeSingle();
+      return data;
+    }
+  });
+  const { data: gadsUnifiedConn } = useQuery({
+    queryKey: ["gads-unified-conn", reportId],
+    queryFn: async () => {
+      const { data } = await supabase.from("google_ads_connections" as any).select("id").eq("report_id", reportId).maybeSingle();
+      return data;
+    }
+  });
   const searchConsoleQ = useQuery({
     queryKey: ["report-searchconsole-top", reportId, rangeKey],
     queryFn: () => fetchSearchConsole({ data: { reportId, ...rangeArgs, limit: 10 } }),
@@ -563,6 +581,20 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
         const renderGoogle = () => (
           <div className="space-y-5">
             {hasGa && gaQ.data && <Ga4Section data={gaQ.data} />}
+            {gadsUnifiedConn && (
+              <GoogleAdsPanel 
+                reportId={reportId} 
+                dateFrom={rangeArgs.dateFrom} 
+                dateTo={rangeArgs.dateTo} 
+              />
+            )}
+            {gscUnifiedConn && (
+              <GoogleSearchConsolePanel 
+                reportId={reportId} 
+                dateFrom={rangeArgs.dateFrom} 
+                dateTo={rangeArgs.dateTo} 
+              />
+            )}
             {scGroup && renderGroup(scGroup)}
             {scGroup && searchConsoleQ.data && searchConsoleQ.data.length > 0 && (
               <SearchConsoleSection
@@ -586,7 +618,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
           | { kind: "crm-csv-unorte"; key: string; label: string }
           | { kind: "analise-geral-unorte"; key: string; label: string };
 
-        const hasGoogleTab = hasGa || !!scGroup || !!emvQ.data;
+        const hasGoogleTab = hasGa || !!scGroup || !!emvQ.data || !!gscUnifiedConn || !!gadsUnifiedConn;
 
         const items: TabItem[] = [
           ...(reportId === "1231f578-3057-4167-a705-5c45b526bf53"
@@ -599,7 +631,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
             group: g,
           })),
           ...(hasGoogleTab
-            ? [{ kind: "google" as const, key: "google-suite", label: "Google Analytics + Search Console + AI" }]
+            ? [{ kind: "google" as const, key: "google-suite", label: "Google Ecosystem (GA4, GSC, Ads)" }]
             : []),
           ...((gadsCsvQ.data ?? []).length > 0
             ? [{ kind: "gads-csv" as const, key: "gads-csv", label: "Google Ads (CSV)" }]

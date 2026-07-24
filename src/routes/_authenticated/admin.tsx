@@ -21,6 +21,7 @@ import { RDStationConnectionsManager } from "@/components/rdstation/RDStationCon
 import { LinkedInConnectionsManager } from "@/components/linkedin/LinkedInConnectionsManager";
 import { PipedriveConnectionsManager } from "@/components/pipedrive/PipedriveConnectionsManager";
 import { GoogleAdsCsvManager } from "@/components/googleads/GoogleAdsCsvManager";
+import { GoogleUnifiedManager } from "@/components/google/GoogleUnifiedManager";
 import { WindsorSettingsTab } from "@/components/windsor/WindsorSettingsTab";
 import { AdminAITab } from "@/components/ai/AdminAITab";
 import { AdminDemandasTab } from "@/components/demandas/AdminDemandasTab";
@@ -512,10 +513,10 @@ function ReportsTab() {
                     <details className="group mt-2">
                       <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
                         <Link2 className="mr-1 inline h-3 w-3" />
-                        Google Analytics 4 (OAuth)
+                        Google Ecosystem (OAuth: GA4, GSC, GAds)
                       </summary>
                       <div className="mt-3">
-                        <GaConnectionsManager reportId={r.id} />
+                        <GoogleUnifiedManager reportId={r.id} />
                       </div>
                     </details>
 
@@ -1255,10 +1256,10 @@ function CompaniesTab() {
           <details className="group mt-2">
             <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
               <Link2 className="mr-1 inline h-3 w-3" />
-              Google Analytics 4 (OAuth)
+              Google Ecosystem (OAuth: GA4, GSC, GAds)
             </summary>
             <div className="mt-2">
-              <GaConnectionsManager reportId={r.id} />
+              <GoogleUnifiedManager reportId={r.id} />
             </div>
           </details>
 

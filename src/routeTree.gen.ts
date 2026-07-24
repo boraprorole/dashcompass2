@@ -38,6 +38,7 @@ import { Route as ApiPublicRdstationOauthCallbackRouteImport } from './routes/ap
 import { Route as ApiPublicPipedriveOauthCallbackRouteImport } from './routes/api/public/pipedrive.oauth.callback'
 import { Route as ApiPublicMetaOauthCallbackRouteImport } from './routes/api/public/meta.oauth.callback'
 import { Route as ApiPublicLinkedinOauthCallbackRouteImport } from './routes/api/public/linkedin.oauth.callback'
+import { Route as ApiPublicGoogleOauthCallbackRouteImport } from './routes/api/public/google.oauth.callback'
 import { Route as ApiPublicGaOauthCallbackRouteImport } from './routes/api/public/ga.oauth.callback'
 
 const TermsRoute = TermsRouteImport.update({
@@ -193,6 +194,12 @@ const ApiPublicLinkedinOauthCallbackRoute =
     path: '/api/public/linkedin/oauth/callback',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicGoogleOauthCallbackRoute =
+  ApiPublicGoogleOauthCallbackRouteImport.update({
+    id: '/api/public/google/oauth/callback',
+    path: '/api/public/google/oauth/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicGaOauthCallbackRoute =
   ApiPublicGaOauthCallbackRouteImport.update({
     id: '/api/public/ga/oauth/callback',
@@ -226,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/api/ai/chat': typeof ApiAiChatRoute
   '/reports/': typeof AuthenticatedReportsIndexRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
+  '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
   '/api/public/meta/oauth/callback': typeof ApiPublicMetaOauthCallbackRoute
   '/api/public/pipedrive/oauth/callback': typeof ApiPublicPipedriveOauthCallbackRoute
@@ -257,6 +265,7 @@ export interface FileRoutesByTo {
   '/api/ai/chat': typeof ApiAiChatRoute
   '/reports': typeof AuthenticatedReportsIndexRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
+  '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
   '/api/public/meta/oauth/callback': typeof ApiPublicMetaOauthCallbackRoute
   '/api/public/pipedrive/oauth/callback': typeof ApiPublicPipedriveOauthCallbackRoute
@@ -290,6 +299,7 @@ export interface FileRoutesById {
   '/api/ai/chat': typeof ApiAiChatRoute
   '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
+  '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
   '/api/public/meta/oauth/callback': typeof ApiPublicMetaOauthCallbackRoute
   '/api/public/pipedrive/oauth/callback': typeof ApiPublicPipedriveOauthCallbackRoute
@@ -323,6 +333,7 @@ export interface FileRouteTypes {
     | '/api/ai/chat'
     | '/reports/'
     | '/api/public/ga/oauth/callback'
+    | '/api/public/google/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
     | '/api/public/meta/oauth/callback'
     | '/api/public/pipedrive/oauth/callback'
@@ -354,6 +365,7 @@ export interface FileRouteTypes {
     | '/api/ai/chat'
     | '/reports'
     | '/api/public/ga/oauth/callback'
+    | '/api/public/google/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
     | '/api/public/meta/oauth/callback'
     | '/api/public/pipedrive/oauth/callback'
@@ -386,6 +398,7 @@ export interface FileRouteTypes {
     | '/api/ai/chat'
     | '/_authenticated/reports/'
     | '/api/public/ga/oauth/callback'
+    | '/api/public/google/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
     | '/api/public/meta/oauth/callback'
     | '/api/public/pipedrive/oauth/callback'
@@ -408,6 +421,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiAiChatRoute: typeof ApiAiChatRoute
   ApiPublicGaOauthCallbackRoute: typeof ApiPublicGaOauthCallbackRoute
+  ApiPublicGoogleOauthCallbackRoute: typeof ApiPublicGoogleOauthCallbackRoute
   ApiPublicLinkedinOauthCallbackRoute: typeof ApiPublicLinkedinOauthCallbackRoute
   ApiPublicMetaOauthCallbackRoute: typeof ApiPublicMetaOauthCallbackRoute
   ApiPublicPipedriveOauthCallbackRoute: typeof ApiPublicPipedriveOauthCallbackRoute
@@ -619,6 +633,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicLinkedinOauthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/google/oauth/callback': {
+      id: '/api/public/google/oauth/callback'
+      path: '/api/public/google/oauth/callback'
+      fullPath: '/api/public/google/oauth/callback'
+      preLoaderRoute: typeof ApiPublicGoogleOauthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/ga/oauth/callback': {
       id: '/api/public/ga/oauth/callback'
       path: '/api/public/ga/oauth/callback'
@@ -678,6 +699,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiAiChatRoute: ApiAiChatRoute,
   ApiPublicGaOauthCallbackRoute: ApiPublicGaOauthCallbackRoute,
+  ApiPublicGoogleOauthCallbackRoute: ApiPublicGoogleOauthCallbackRoute,
   ApiPublicLinkedinOauthCallbackRoute: ApiPublicLinkedinOauthCallbackRoute,
   ApiPublicMetaOauthCallbackRoute: ApiPublicMetaOauthCallbackRoute,
   ApiPublicPipedriveOauthCallbackRoute: ApiPublicPipedriveOauthCallbackRoute,
