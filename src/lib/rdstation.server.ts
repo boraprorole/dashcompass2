@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const RD_BASE = "https://api.rd.services";
-const RD_OAUTH_ORIGIN = "https://dashboard.marsala.ag";
+const RD_OAUTH_ORIGIN = "https://www.dashcompass.com";
 
 export function getRdRedirectUri() {
   return `${RD_OAUTH_ORIGIN}/api/public/rdstation/oauth/callback`;

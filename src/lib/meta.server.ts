@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const FB_GRAPH_VERSION = "v25.0";
-const FB_OAUTH_ORIGIN = "https://dashboard.marsala.ag";
+const FB_OAUTH_ORIGIN = "https://www.dashcompass.com";
 
 // Scopes: Instagram Insights + Facebook Pages + Meta Ads (read)
 export const META_SCOPES = [

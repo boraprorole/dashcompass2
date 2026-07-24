@@ -43,7 +43,7 @@ export const GA_SCOPES = [
   "https://www.googleapis.com/auth/adwords",
 ].join(" ");
 
-const GA_OAUTH_ORIGIN = "https://dashboard.marsala.ag";
+const GA_OAUTH_ORIGIN = "https://www.dashcompass.com";
 
 export function getRedirectUri(_origin?: string) {
   return `${GA_OAUTH_ORIGIN}/api/public/ga/oauth/callback`;
