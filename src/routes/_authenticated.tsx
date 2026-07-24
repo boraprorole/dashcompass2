@@ -152,8 +152,8 @@ function AuthenticatedLayout() {
           </div>
           <Button 
             variant="ghost" 
-            size="sm" 
-            className={cn("w-full justify-start", isCollapsed && "justify-center px-0")} 
+            size="default"
+            className={cn("w-full justify-start mt-2", isCollapsed && "justify-center px-0")} 
             onClick={signOut}
           >
             <LogOut className={cn("h-4 w-4", !isCollapsed && "mr-2")} /> 
