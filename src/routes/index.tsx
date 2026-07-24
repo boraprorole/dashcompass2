@@ -13,8 +13,9 @@ export const Route = createFileRoute("/")({
       lang: (search.lang as string) || "pt",
     };
   },
-  head: ({ search }) => {
-    const isEn = search.lang === "en";
+  head: (context) => {
+    // @ts-ignore - search is present at runtime via validateSearch
+    const isEn = context.search?.lang === "en";
     return {
       meta: [
         { title: isEn ? "DashCompass — Marketing Data Integration & Dashboard Platform" : "DashCompass — Plataforma de Integração de Dados e Dashboards" },
