@@ -41,7 +41,7 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AuthenticatedLayout() {
-  const { user, isAdmin, isTeam, isConexoes, signOut } = useAuth();
+  const { user, isAdmin, isAdminGlobal, isTeam, isConexoes, signOut } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [isCollapsed, setIsCollapsed] = useState(false);
 
