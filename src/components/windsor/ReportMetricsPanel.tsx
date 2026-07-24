@@ -316,14 +316,14 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
   const { data: gscUnifiedConn } = useQuery({
     queryKey: ["gsc-unified-conn", reportId],
     queryFn: async () => {
-      const { data } = await supabase.from("gsc_connections").select("id").eq("report_id", reportId).maybeSingle();
+      const { data } = await supabase.from("gsc_connections" as any).select("id").eq("report_id", reportId).maybeSingle();
       return data;
     }
   });
   const { data: gadsUnifiedConn } = useQuery({
     queryKey: ["gads-unified-conn", reportId],
     queryFn: async () => {
-      const { data } = await supabase.from("gads_connections").select("id").eq("report_id", reportId).maybeSingle();
+      const { data } = await supabase.from("google_ads_connections" as any).select("id").eq("report_id", reportId).maybeSingle();
       return data;
     }
   });
