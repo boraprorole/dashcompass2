@@ -64,7 +64,15 @@ export async function listReportsAdminImpl(callerId: string) {
 
 export async function createReportImpl(
   callerId: string,
-  input: { title?: string; company_id?: string | null; description?: string | null; url?: string | null; embed_code?: string | null; logo_url?: string | null },
+  input: { 
+    title?: string; 
+    company_id?: string | null; 
+    description?: string | null; 
+    url?: string | null; 
+    embed_code?: string | null; 
+    logo_url?: string | null;
+    agency_id?: string | null;
+  },
 ) {
   await assertAdmin(callerId);
   const { data, error } = await supabaseAdmin
@@ -77,10 +85,28 @@ export async function createReportImpl(
       embed_code: input.embed_code ?? null,
       logo_url: input.logo_url ?? null,
       created_by: callerId,
+      agency_id: input.agency_id ?? null,
     })
     .select("id")
     .single();
   if (error) throw new Error(error.message);
+
+  // Inserir automaticamente o agency_id da empresa se não fornecido
+  if (input.company_id && !input.agency_id) {
+    const { data: company } = await supabaseAdmin
+      .from("companies")
+      .select("agency_id")
+      .eq("id", input.company_id)
+      .single();
+    
+    if (company?.agency_id) {
+      await supabaseAdmin
+        .from("reports")
+        .update({ agency_id: company.agency_id })
+        .eq("id", data.id);
+    }
+  }
+
   return { id: data.id };
 }
 
