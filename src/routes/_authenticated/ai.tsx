@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { UIMessage } from "ai";
@@ -31,6 +31,12 @@ import {
 } from "@/lib/ai.functions";
 
 export const Route = createFileRoute("/_authenticated/ai")({
+  beforeLoad: async () => {
+    const { data, error } = await supabase.from("app_features").select("enabled").eq("key", "/ai").maybeSingle();
+    if (error || (data && !data.enabled)) {
+      throw redirect({ to: "/reports" });
+    }
+  },
   component: AiPage,
 });
 

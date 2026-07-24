@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, Link2 } from "lucide-react";
@@ -6,6 +7,12 @@ import { listAccessibleReports } from "@/lib/meta.functions";
 import { MetaConnectionsManager } from "@/components/meta/MetaConnectionsManager";
 
 export const Route = createFileRoute("/_authenticated/conexoes")({
+  beforeLoad: async () => {
+    const { data, error } = await supabase.from("app_features").select("enabled").eq("key", "/conexoes").maybeSingle();
+    if (error || (data && !data.enabled)) {
+      throw redirect({ to: "/reports" });
+    }
+  },
   component: ConexoesPage,
 });
 
