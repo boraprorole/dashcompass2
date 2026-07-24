@@ -335,7 +335,7 @@ function LandingPage() {
       <section id="pricing" className="py-24 bg-card/30">
         <div className="container mx-auto px-6 text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">Escolha seu plano.</h2>
-          <p className="text-xl text-white/50">Comece com o que precisa e evolua no seu ritmo.</p>
+          <p className="text-xl text-white/50">Maximize o ROI do seu marketing com a inteligência do DashCompass.</p>
         </div>
 
         <div className="container mx-auto px-6 grid lg:grid-cols-4 gap-6">
