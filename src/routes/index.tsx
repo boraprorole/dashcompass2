@@ -231,10 +231,10 @@ function LandingPage() {
 
           <div className="hidden md:flex items-center gap-4">
             <Link to="/login" className="text-sm font-medium text-white/60 hover:text-white transition-colors">
-              Entrar
+              {isEn ? "Login" : "Entrar"}
             </Link>
             <Button asChild className="rounded-full bg-primary text-black hover:bg-primary/90 px-6 font-bold h-10">
-              <Link to="/login" search={{ mode: 'signup' }}>Começar agora</Link>
+              <Link to="/login" search={{ mode: 'signup' }}>{isEn ? "Start now" : "Começar agora"}</Link>
             </Button>
           </div>
 
