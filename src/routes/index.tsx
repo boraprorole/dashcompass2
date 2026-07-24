@@ -464,7 +464,7 @@ function LandingPage() {
                 <h3 className="text-lg font-bold text-white/60 mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-bold tracking-tight">{plan.price}</span>
-                  {plan.price.includes("R$") && <span className="text-white/40 text-sm">/mês</span>}
+                  {!plan.price.includes("On request") && !plan.price.includes("Sob consulta") && <span className="text-white/40 text-sm">/{isEn ? "month" : "mês"}</span>}
                 </div>
                 <p className="text-sm text-white/40 mt-4">{plan.description}</p>
               </div>
