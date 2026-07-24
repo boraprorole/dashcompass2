@@ -186,22 +186,19 @@ function AdminPage() {
           <ScheduleConfigTab />
         </TabsContent>
         <TabsContent value="windsor">
-          <WindsorSettingsTab />
+          <AgencySettingsTab type="windsor" />
         </TabsContent>
         <TabsContent value="ai">
-          <AdminAITab />
+          <AgencySettingsTab type="ai" />
         </TabsContent>
         <TabsContent value="demandas">
           <AdminDemandasTab />
-        </TabsContent>
-        <TabsContent value="rdstation">
-          <AdminRDStationTab />
         </TabsContent>
         <TabsContent value="mcp">
           <AdminMcpTab />
         </TabsContent>
         <TabsContent value="news">
-          <NewsSettingsTab />
+          <AgencySettingsTab type="news" />
         </TabsContent>
       </Tabs>
     </div>
