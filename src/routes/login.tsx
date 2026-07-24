@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { Logo } from "@/components/Logo";
 import { motion, AnimatePresence } from "framer-motion";
 import bgVideoAsset from "@/assets/login-bg.mp4.asset.json";
 import logoAsset from "@/assets/dashcompass-logo.svg.asset.json";
@@ -181,24 +182,12 @@ function LoginPage() {
         className="relative z-30 w-full max-w-[480px] px-6"
       >
         <div className="flex flex-col space-y-8 py-8 md:py-12">
-          <div className="flex items-center justify-center gap-4 mb-12">
-            <div className="relative flex items-center justify-center h-10 w-10">
-              <div 
-                className="h-full w-full bg-primary"
-                style={{ 
-                  WebkitMaskImage: `url(${logoAsset.url})`,
-                  maskImage: `url(${logoAsset.url})`,
-                  WebkitMaskRepeat: 'no-repeat',
-                  maskRepeat: 'no-repeat',
-                  WebkitMaskSize: 'contain',
-                  maskSize: 'contain',
-                  filter: 'drop-shadow(0 0 8px var(--primary-glow))'
-                }}
-              />
-            </div>
-            <h1 className="text-4xl font-bold tracking-tighter text-white leading-none translate-y-[4px]">
-              DashCompass
-            </h1>
+          <div className="flex justify-center mb-12">
+            <Logo 
+              iconClassName="h-10 w-10" 
+              textClassName="text-4xl"
+              className="gap-4"
+            />
           </div>
 
           <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")} className="w-full">

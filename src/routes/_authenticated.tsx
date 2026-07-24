@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getDemandasEnabled } from "@/lib/demandas.functions";
-import logoAsset from "@/assets/dashcompass-logo.svg.asset.json";
+import { Logo } from "@/components/Logo";
 
 
 export const Route = createFileRoute("/_authenticated")({
@@ -95,38 +95,13 @@ function AuthenticatedLayout() {
         >
           <div className="mb-8 flex items-center justify-between px-4">
             {!isCollapsed && (
-              <Link to="/reports" className="flex items-baseline gap-3 overflow-hidden">
-                <div 
-                  className="h-7 w-7 bg-primary self-center"
-                  style={{ 
-                    WebkitMaskImage: `url(${logoAsset.url})`,
-                    maskImage: `url(${logoAsset.url})`,
-                    WebkitMaskRepeat: 'no-repeat',
-                    maskRepeat: 'no-repeat',
-                    WebkitMaskSize: 'contain',
-                    maskSize: 'contain',
-                    filter: 'drop-shadow(0 0 8px var(--primary-glow))'
-                  }}
-                />
-                <span className="font-sans text-xl font-bold tracking-tighter text-white leading-none">
-                  DashCompass
-                </span>
+              <Link to="/reports" className="overflow-hidden">
+                <Logo textClassName="text-xl" />
               </Link>
             )}
             {isCollapsed && (
               <Link to="/reports" className="flex flex-1 items-center justify-center">
-                <div 
-                  className="h-8 w-8 bg-primary"
-                  style={{ 
-                    WebkitMaskImage: `url(${logoAsset.url})`,
-                    maskImage: `url(${logoAsset.url})`,
-                    WebkitMaskRepeat: 'no-repeat',
-                    maskRepeat: 'no-repeat',
-                    WebkitMaskSize: 'contain',
-                    maskSize: 'contain',
-                    filter: 'drop-shadow(0 0 8px var(--primary-glow))'
-                  }}
-                />
+                <Logo isCollapsed />
               </Link>
             )}
             <Button 
@@ -215,22 +190,8 @@ function AuthenticatedLayout() {
 
       {/* Mobile top bar */}
       <div className="glass fixed inset-x-0 top-0 z-20 flex items-center justify-between p-3 md:hidden">
-        <Link to="/reports" className="flex items-center gap-2">
-          <div 
-            className="h-6 w-6 bg-primary"
-            style={{ 
-              WebkitMaskImage: `url(${logoAsset.url})`,
-              maskImage: `url(${logoAsset.url})`,
-              WebkitMaskRepeat: 'no-repeat',
-              maskRepeat: 'no-repeat',
-              WebkitMaskSize: 'contain',
-              maskSize: 'contain',
-              filter: 'drop-shadow(0 0 6px var(--primary-glow))'
-            }}
-          />
-          <span className="font-sans text-lg font-bold tracking-tighter text-white">
-            DashCompass
-          </span>
+        <Link to="/reports">
+          <Logo iconClassName="h-6 w-6" textClassName="text-lg" className="gap-2" />
         </Link>
         <Button variant="ghost" size="sm" onClick={signOut}>
           <LogOut className="h-4 w-4" />
