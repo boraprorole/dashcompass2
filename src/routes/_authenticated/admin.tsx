@@ -1600,18 +1600,25 @@ function ScheduleConfigTab() {
 }
 
 function VisualIdTab() {
-  const { primaryColor: contextColor } = useAuth();
+  const { primaryColor: contextColor, isAdminGlobal, isAdminAgencia, agencyId } = useAuth();
   const [primaryColor, setPrimaryColor] = useState(contextColor || "#3DFC03");
   const [isSaving, setIsSaving] = useState(false);
 
   const handleUpdateColor = async () => {
     setIsSaving(true);
     try {
-      const { error } = await supabase
-        .from("app_settings")
-        .upsert({ key: "primary_color", value: primaryColor }, { onConflict: "key" });
-      
-      if (error) throw error;
+      if (isAdminGlobal) {
+        const { error } = await supabase
+          .from("app_settings")
+          .upsert({ key: "primary_color", value: primaryColor }, { onConflict: "key" });
+        if (error) throw error;
+      } else if (isAdminAgencia && agencyId) {
+        const { error } = await supabase
+          .from("agencies")
+          .update({ primary_color: primaryColor })
+          .eq("id", agencyId);
+        if (error) throw error;
+      }
 
       document.documentElement.style.setProperty("--primary", primaryColor);
       toast.success(`Identidade visual salva com sucesso!`);
