@@ -24,8 +24,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isTeam, setIsTeam] = useState(false);
   const [isConexoes, setIsConexoes] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [primaryColor, setPrimaryColor] = useState("#3DFC03");
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const loadSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("app_settings")
+        .select("value")
+        .eq("key", "primary_color")
+        .single();
+      
+      if (data?.value) {
+        const color = typeof data.value === "string" ? data.value : JSON.stringify(data.value).replace(/"/g, "");
+        setPrimaryColor(color);
+        document.documentElement.style.setProperty("--primary", color);
+      }
+    } catch (err) {
+      console.error("Erro ao carregar configurações:", err);
+    }
+  };
 
   const loadRoles = async (userId: string) => {
     const { data } = await supabase
