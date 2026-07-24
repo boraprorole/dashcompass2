@@ -177,23 +177,23 @@ function LoginPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative z-30 w-full max-w-[520px] px-4"
+        className="relative z-30 w-full max-w-[480px] px-6"
       >
-        <div className="flex flex-col space-y-12 py-12">
-          <div className="flex flex-col items-center mb-16">
-            <div className="h-20 w-20 rounded-[22px] bg-primary flex items-center justify-center shadow-[0_0_40px_rgba(61,252,3,0.3)] mb-8">
-              <Compass className="h-10 w-10 text-black stroke-[2.5px]" />
+        <div className="flex flex-col space-y-8 py-8 md:py-12">
+          <div className="flex flex-col items-center mb-8">
+            <div className="h-16 w-16 rounded-[20px] bg-primary flex items-center justify-center shadow-[0_0_30px_rgba(61,252,3,0.2)] mb-6">
+              <Compass className="h-8 w-8 text-black stroke-[2.5px]" />
             </div>
-            <h1 className="text-4xl font-bold tracking-tight text-white mb-4">
+            <h1 className="text-3xl font-bold tracking-tight text-white mb-3">
               DashCompass
             </h1>
             <p className="text-[16px] text-white/40 font-medium tracking-widest uppercase">
-              A nova geração de análise estratégica
+              A Inteligência Estratégica do seu Negócio
             </p>
           </div>
 
           <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 rounded-[18px] bg-white/[0.03] p-1.5 border border-white/[0.05] mb-12">
+            <TabsList className="grid w-full grid-cols-2 rounded-[18px] bg-white/[0.03] p-1.5 border border-white/[0.05] mb-8">
               <TabsTrigger 
                 value="signin"
                 className="rounded-[10px] py-2.5 data-[state=active]:bg-primary data-[state=active]:text-black text-white/60"
@@ -208,7 +208,7 @@ function LoginPage() {
               </TabsTrigger>
             </TabsList>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <AnimatePresence mode="wait">
                 {mode === "signup" && (
                   <motion.div 
@@ -225,7 +225,7 @@ function LoginPage() {
                       placeholder="Como podemos te chamar?"
                       autoComplete="name"
                       maxLength={80}
-                      className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 h-14 rounded-[18px] focus:ring-primary/20 transition-all duration-300 focus:border-primary/50"
+                      className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 h-12 rounded-[16px] focus:ring-primary/20 transition-all duration-300 focus:border-primary/50"
                     />
                   </motion.div>
                 )}
@@ -242,7 +242,7 @@ function LoginPage() {
                   autoComplete="email"
                   required
                   maxLength={255}
-                  className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 h-14 rounded-[18px] focus:ring-primary/20 transition-all duration-300 focus:border-primary/50"
+                  className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 h-12 rounded-[16px] focus:ring-primary/20 transition-all duration-300 focus:border-primary/50"
                 />
               </div>
 
@@ -258,7 +258,7 @@ function LoginPage() {
                   required
                   minLength={6}
                   maxLength={72}
-                  className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 h-14 rounded-[18px] focus:ring-primary/20 transition-all duration-300 focus:border-primary/50"
+                  className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 h-12 rounded-[16px] focus:ring-primary/20 transition-all duration-300 focus:border-primary/50"
                 />
               </div>
 
@@ -285,7 +285,7 @@ function LoginPage() {
 
               <Button 
                 type="submit" 
-                className="w-full h-16 text-black bg-primary hover:bg-primary/90 rounded-[22px] text-[17px] font-bold shadow-[0_10px_30px_rgba(61,252,3,0.15)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-4" 
+                className="w-full h-14 text-black bg-primary hover:bg-primary/90 rounded-[20px] text-[16px] font-bold shadow-[0_10px_30px_rgba(61,252,3,0.15)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-2" 
                 size="lg" 
                 disabled={loading}
               >
