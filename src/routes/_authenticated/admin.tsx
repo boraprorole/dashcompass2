@@ -1116,11 +1116,13 @@ function CompaniesTab() {
 
       // Criar automaticamente um relatório com o mesmo nome da empresa
       const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error("Usuário não autenticado");
+
       const { error: reportError } = await supabase.from("reports").insert([
         {
           title: company.name as string,
           company_id: company.id,
-          created_by: userData.user?.id,
+          created_by: userData.user.id,
           agency_id: payload.agency_id || null,
         },
       ]);
