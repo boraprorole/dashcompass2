@@ -69,7 +69,7 @@ function AuthenticatedLayout() {
 
   return (
     <TooltipProvider>
-      <div className="relative flex min-h-screen w-full bg-background overflow-x-hidden">
+      <div className="relative flex min-h-screen w-full bg-background overflow-x-hidden p-10">
         {/* Sidebar */}
         <aside 
           className={cn(
