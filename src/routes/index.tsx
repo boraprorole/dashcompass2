@@ -420,20 +420,19 @@ function LandingPage() {
             </div>
           </div>
           <div className="order-1 md:order-2">
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">Sua IA, agora com <span className="text-primary italic">contexto real.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">{isEn ? "Your AI, now with" : "Sua IA, agora com"} <span className="text-primary italic">{isEn ? "real context." : "contexto real."}</span></h2>
             <p className="text-xl text-white/60 leading-relaxed mb-8">
-              Conecte o DashCompass ao ChatGPT ou Claude. Sua IA passa a entender suas métricas, campanhas e vendas. 
-              Pare de receber respostas genéricas e comece a ter um analista de dados 24h.
+              {isEn ? "Connect DashCompass to ChatGPT or Claude. Your AI starts understanding your metrics, campaigns, and sales. Stop getting generic answers and start having a 24h data analyst." : "Conecte o DashCompass ao ChatGPT ou Claude. Sua IA passa a entender suas métricas, campanhas e vendas. Pare de receber respostas genéricas e comece a ter um analista de dados 24h."}
             </p>
             <div className="flex items-center gap-6">
               <div className="flex flex-col">
                 <span className="text-3xl font-bold">10x</span>
-                <span className="text-xs text-white/30 uppercase tracking-widest">Mais rapidez</span>
+                <span className="text-xs text-white/30 uppercase tracking-widest">{isEn ? "Faster" : "Mais rapidez"}</span>
               </div>
               <div className="h-10 w-px bg-white/10" />
               <div className="flex flex-col">
                 <span className="text-3xl font-bold">100%</span>
-                <span className="text-xs text-white/30 uppercase tracking-widest">Baseado em dados</span>
+                <span className="text-xs text-white/30 uppercase tracking-widest">{isEn ? "Data-based" : "Baseado em dados"}</span>
               </div>
             </div>
           </div>
