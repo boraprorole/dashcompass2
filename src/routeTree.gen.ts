@@ -17,6 +17,7 @@ import { Route as LpRouteImport } from './routes/lp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthenticatedScheduleRouteImport } from './routes/_authenticated/schedule'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPrRouteImport } from './routes/_authenticated/pr'
@@ -76,6 +77,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedScheduleRoute = AuthenticatedScheduleRouteImport.update({
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/pr': typeof AuthenticatedPrRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/schedule': typeof AuthenticatedScheduleRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
@@ -243,6 +250,7 @@ export interface FileRoutesByTo {
   '/pr': typeof AuthenticatedPrRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/schedule': typeof AuthenticatedScheduleRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/_authenticated/pr': typeof AuthenticatedPrRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/schedule': typeof AuthenticatedScheduleRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | '/pr'
     | '/profile'
     | '/schedule'
+    | '/auth/callback'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/reports/$reportId'
@@ -337,6 +347,7 @@ export interface FileRouteTypes {
     | '/pr'
     | '/profile'
     | '/schedule'
+    | '/auth/callback'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/reports/$reportId'
@@ -368,6 +379,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pr'
     | '/_authenticated/profile'
     | '/_authenticated/schedule'
+    | '/auth/callback'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/reports/$reportId'
@@ -391,6 +403,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiAiChatRoute: typeof ApiAiChatRoute
@@ -457,6 +470,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/schedule': {
@@ -653,6 +673,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiAiChatRoute: ApiAiChatRoute,
