@@ -513,10 +513,10 @@ function ReportsTab() {
                     <details className="group mt-2">
                       <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
                         <Link2 className="mr-1 inline h-3 w-3" />
-                        Google Analytics 4 (OAuth)
+                        Google Ecosystem (OAuth: GA4, GSC, GAds)
                       </summary>
                       <div className="mt-3">
-                        <GaConnectionsManager reportId={r.id} />
+                        <GoogleUnifiedManager reportId={r.id} />
                       </div>
                     </details>
 
@@ -1256,10 +1256,10 @@ function CompaniesTab() {
           <details className="group mt-2">
             <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
               <Link2 className="mr-1 inline h-3 w-3" />
-              Google Analytics 4 (OAuth)
+              Google Ecosystem (OAuth: GA4, GSC, GAds)
             </summary>
             <div className="mt-2">
-              <GaConnectionsManager reportId={r.id} />
+              <GoogleUnifiedManager reportId={r.id} />
             </div>
           </details>
 
