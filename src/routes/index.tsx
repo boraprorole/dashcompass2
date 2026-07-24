@@ -8,18 +8,26 @@ import { ArrowRight, Play, CheckCircle2, ChevronRight, Menu, X } from "lucide-re
 import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "DashCompass — Marketing Data Integration & Dashboard Platform" },
-      { name: "description", content: "DashCompass is a professional marketing data integration platform. We unify Google Ads, Google Search Console, and Meta metrics into high-impact dashboards and AI-powered insights for agencies and businesses." },
-      { property: "og:title", content: "DashCompass — Marketing Data Integration & Dashboard Platform" },
-      { property: "og:description", content: "DashCompass is a professional marketing data integration platform. We unify Google Ads, Google Search Console, and Meta metrics into high-impact dashboards and AI-powered insights for agencies and businesses." },
-    ],
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      lang: (search.lang as string) || "pt",
+    };
+  },
+  head: (context) => {
+    // @ts-ignore - search is present at runtime via validateSearch
+    const isEn = context.search?.lang === "en";
+    return {
+      meta: [
+        { title: isEn ? "DashCompass — Marketing Data Integration & Dashboard Platform" : "DashCompass — Plataforma de Integração de Dados e Dashboards" },
+        { name: "description", content: isEn ? "DashCompass is a professional marketing data integration platform. We unify Google Ads, Google Search Console, and Meta metrics into high-impact dashboards and AI-powered insights for agencies and businesses." : "O DashCompass é uma plataforma profissional de marketing analytics. Nossa finalidade é unificar dados de Google Ads, Google Search Console, Meta e LinkedIn em um único dashboard inteligente." },
+        { property: "og:title", content: "DashCompass — Marketing Data Integration & Dashboard Platform" },
+        { property: "og:description", content: isEn ? "DashCompass is a professional marketing data integration platform." : "O DashCompass é uma plataforma profissional de marketing analytics." },
+      ],
+    };
+  },
   beforeLoad: async () => {
     const { data } = await supabase.auth.getSession();
     if (data.session) {
-      // Opcional: Descomente para redirecionar usuários logados automaticamente
       // throw redirect({ to: "/reports" });
     }
   },
@@ -27,25 +35,93 @@ export const Route = createFileRoute("/")({
 });
 
 function LandingPage() {
+  const { lang } = Route.useSearch();
+  const isEn = lang === "en";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
-    
-    // Auto-scroll logic for demo or visual emphasis if needed
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
+  const navLinks = isEn ? [
+    { name: "Product", href: "#features" },
+    { name: "Integrations", href: "#integrations" },
+    { name: "AI", href: "#ai" },
+    { name: "Pricing", href: "#pricing" },
+  ] : [
     { name: "Produto", href: "#features" },
     { name: "Integrações", href: "#integrations" },
     { name: "IA", href: "#ai" },
     { name: "Preços", href: "#pricing" },
   ];
 
-  const plans = [
+  const plans = isEn ? [
+    {
+      name: "Starter",
+      price: "$29",
+      description: "For professionals and small businesses.",
+      features: [
+        "Up to 1 company",
+        "Up to 5 data connections",
+        "Real-time dashboard",
+        "AI connected to your data",
+        "Unlimited reports",
+        "Email support",
+      ],
+      buttonText: "Start now",
+      highlight: false,
+    },
+    {
+      name: "Agency",
+      price: "$99",
+      description: "For growing agencies.",
+      features: [
+        "Up to 10 companies",
+        "Up to 100 connections",
+        "White Label",
+        "AI for all clients",
+        "Unlimited reports",
+        "User management",
+        "Priority support",
+      ],
+      buttonText: "Choose Agency",
+      highlight: true,
+    },
+    {
+      name: "Agency Pro",
+      price: "$249",
+      description: "High capacity for teams.",
+      features: [
+        "Up to 20 companies",
+        "Up to 200 connections",
+        "Full White Label",
+        "Advanced AI*",
+        "Influencer management",
+        "Report library",
+        "API access",
+      ],
+      buttonText: "Choose Pro",
+      highlight: false,
+    },
+    {
+      name: "Enterprise",
+      price: "On request",
+      description: "Large scale operations.",
+      features: [
+        "Unlimited companies",
+        "Unlimited connections",
+        "Enterprise AI",
+        "Custom SLA",
+        "Success manager",
+        "Dedicated infrastructure",
+      ],
+      buttonText: "Contact sales",
+      highlight: false,
+    },
+  ] : [
     {
       name: "Starter",
       price: "R$ 99",
@@ -112,6 +188,24 @@ function LandingPage() {
 
   return (
     <div className="relative min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-black">
+      {/* Language Switcher */}
+      <div className="fixed top-6 right-24 z-[60] flex gap-2">
+        <Link 
+          to="/" 
+          search={{ lang: 'pt' }}
+          className={`px-3 py-1 rounded-full text-xs font-bold transition-all border ${!isEn ? "bg-primary text-black border-primary" : "bg-black/50 text-white border-white/10 hover:border-white/30"}`}
+        >
+          PT
+        </Link>
+        <Link 
+          to="/" 
+          search={{ lang: 'en' }}
+          className={`px-3 py-1 rounded-full text-xs font-bold transition-all border ${isEn ? "bg-primary text-black border-primary" : "bg-black/50 text-white border-white/10 hover:border-white/30"}`}
+        >
+          EN
+        </Link>
+      </div>
+
       {/* Navigation */}
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
@@ -137,10 +231,10 @@ function LandingPage() {
 
           <div className="hidden md:flex items-center gap-4">
             <Link to="/login" className="text-sm font-medium text-white/60 hover:text-white transition-colors">
-              Entrar
+              {isEn ? "Login" : "Entrar"}
             </Link>
             <Button asChild className="rounded-full bg-primary text-black hover:bg-primary/90 px-6 font-bold h-10">
-              <Link to="/login" search={{ mode: 'signup' }}>Começar agora</Link>
+              <Link to="/login" search={{ mode: 'signup' }}>{isEn ? "Start now" : "Começar agora"}</Link>
             </Button>
           </div>
 
@@ -167,9 +261,9 @@ function LandingPage() {
               </a>
             ))}
             <div className="pt-4 flex flex-col gap-4 border-t border-white/5">
-              <Link to="/login" className="text-white/70 py-2">Entrar</Link>
+              <Link to="/login" className="text-white/70 py-2">{isEn ? "Login" : "Entrar"}</Link>
               <Button asChild className="w-full bg-primary text-black font-bold h-12">
-                <Link to="/login">Criar conta</Link>
+                <Link to="/login">{isEn ? "Create account" : "Criar conta"}</Link>
               </Button>
             </div>
           </motion.div>
@@ -196,8 +290,8 @@ function LandingPage() {
           >
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9] mb-8">
               <span className="sr-only">DashCompass</span>
-              <span className="text-white block">Toda direção</span>
-              <span className="text-primary italic block mt-4">começa com dados.</span>
+              <span className="text-white block">{isEn ? "Every direction" : "Toda direção"}</span>
+              <span className="text-primary italic block mt-4">{isEn ? "starts with data." : "começa com dados."}</span>
             </h1>
             <p className="sr-only">
               O DashCompass é uma plataforma profissional de marketing analytics. Nossa finalidade é unificar dados de Google Ads, Google Search Console, Meta e LinkedIn em um único dashboard inteligente, permitindo que empresas e agências analisem performance e otimizem investimentos com o auxílio de IA.
@@ -207,10 +301,10 @@ function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <Button asChild size="lg" className="h-14 px-8 rounded-full bg-primary text-black font-bold text-lg hover:bg-primary/90 transition-all hover:scale-105">
-                <Link to="/login">Começar agora <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                <Link to="/login">{isEn ? "Start now" : "Começar agora"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
               <Button variant="ghost" size="lg" className="h-14 px-8 rounded-full text-white font-semibold hover:bg-white/5 border border-white/10">
-                Ver demonstração <Play className="ml-2 h-4 w-4 fill-white" />
+                {isEn ? "See demo" : "Ver demonstração"} <Play className="ml-2 h-4 w-4 fill-white" />
               </Button>
             </div>
 
@@ -236,14 +330,19 @@ function LandingPage() {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-20 items-center">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">Os dados já existem. <br/><span className="text-white/40">O problema é encontrá-los.</span></h2>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">{isEn ? "Data already exists." : "Os dados já existem."} <br/><span className="text-white/40">{isEn ? "The problem is finding them." : "O problema é encontrá-los."}</span></h2>
               <div className="space-y-6">
-                {[
+                {(isEn ? [
+                  "Data scattered across dozens of platforms.",
+                  "Confusing dashboards and obsolete spreadsheets.",
+                  "Wasting time searching for answers.",
+                  "Decisions based on intuition, not facts."
+                ] : [
                   "Dados espalhados em dezenas de plataformas.",
                   "Dashboards confusos e planilhas obsoletas.",
                   "Perda de tempo procurando por respostas.",
                   "Decisões baseadas em intuição, não em fatos."
-                ].map((text, i) => (
+                ]).map((text, i) => (
                   <div key={i} className="flex items-start gap-4">
                     <CheckCircle2 className="h-6 w-6 text-primary shrink-0 mt-0.5" />
                     <p className="text-lg text-white/70">{text}</p>
@@ -264,7 +363,7 @@ function LandingPage() {
                       <div className="h-1.5 w-32 bg-primary/20 rounded-full overflow-hidden mx-auto mb-4">
                         <div className="h-full bg-primary animate-shimmer" style={{ width: '60%' }} />
                       </div>
-                      <p className="text-white/40 font-mono text-sm tracking-widest uppercase">Análise Inteligente de Dados</p>
+                      <p className="text-white/40 font-mono text-sm tracking-widest uppercase">{isEn ? "Intelligent Data Analysis" : "Análise Inteligente de Dados"}</p>
                     </div>
                   </div>
                </div>
@@ -276,8 +375,8 @@ function LandingPage() {
       {/* Connection Section */}
       <section id="features" className="py-24 bg-card/30">
         <div className="container mx-auto px-6 text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Tudo conectado.</h2>
-          <p className="text-xl text-white/50 max-w-2xl mx-auto">O DashCompass organiza campanhas, tráfego e resultados em uma única visão unificada.</p>
+          <h2 className="text-4xl font-bold mb-4">{isEn ? "Everything connected." : "Tudo conectado."}</h2>
+          <p className="text-xl text-white/50 max-w-2xl mx-auto">{isEn ? "DashCompass organizes campaigns, traffic, and results in a single unified view." : "O DashCompass organiza campanhas, tráfego e resultados em uma única visão unificada."}</p>
         </div>
         
         <div className="container mx-auto px-6 grid md:grid-cols-3 gap-8">
@@ -300,13 +399,19 @@ function LandingPage() {
         <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
           <div className="order-2 md:order-1 relative">
             <div className="space-y-4 font-mono text-sm">
-              {[
+              {(isEn ? [
+                "Which campaign brought more sales?",
+                "Why did my CPA increase yesterday?",
+                "Which influencer generated more conversions?",
+                "Compare this month with the previous one.",
+                "Where should I invest more budget?"
+              ] : [
                 "Qual campanha trouxe mais vendas?",
                 "Por que meu CPA aumentou ontem?",
                 "Qual influenciador gerou mais conversões?",
                 "Compare este mês com o anterior.",
                 "Onde devo investir mais orçamento?"
-              ].map((q, i) => (
+              ]).map((q, i) => (
                 <div key={i} className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-between group cursor-default">
                   <span>{q}</span>
                   <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -315,31 +420,29 @@ function LandingPage() {
             </div>
           </div>
           <div className="order-1 md:order-2">
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">Sua IA, agora com <span className="text-primary italic">contexto real.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">{isEn ? "Your AI, now with" : "Sua IA, agora com"} <span className="text-primary italic">{isEn ? "real context." : "contexto real."}</span></h2>
             <p className="text-xl text-white/60 leading-relaxed mb-8">
-              Conecte o DashCompass ao ChatGPT ou Claude. Sua IA passa a entender suas métricas, campanhas e vendas. 
-              Pare de receber respostas genéricas e comece a ter um analista de dados 24h.
+              {isEn ? "Connect DashCompass to ChatGPT or Claude. Your AI starts understanding your metrics, campaigns, and sales. Stop getting generic answers and start having a 24h data analyst." : "Conecte o DashCompass ao ChatGPT ou Claude. Sua IA passa a entender suas métricas, campanhas e vendas. Pare de receber respostas genéricas e comece a ter um analista de dados 24h."}
             </p>
             <div className="flex items-center gap-6">
               <div className="flex flex-col">
                 <span className="text-3xl font-bold">10x</span>
-                <span className="text-xs text-white/30 uppercase tracking-widest">Mais rapidez</span>
+                <span className="text-xs text-white/30 uppercase tracking-widest">{isEn ? "Faster" : "Mais rapidez"}</span>
               </div>
               <div className="h-10 w-px bg-white/10" />
               <div className="flex flex-col">
                 <span className="text-3xl font-bold">100%</span>
-                <span className="text-xs text-white/30 uppercase tracking-widest">Baseado em dados</span>
+                <span className="text-xs text-white/30 uppercase tracking-widest">{isEn ? "Data-based" : "Baseado em dados"}</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Section */}
       <section id="pricing" className="py-24 bg-card/30">
         <div className="container mx-auto px-6 text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Escolha seu plano.</h2>
-          <p className="text-xl text-white/50">Maximize o ROI do seu marketing com a inteligência do DashCompass.</p>
+          <h2 className="text-4xl font-bold mb-4">{isEn ? "Choose your plan." : "Escolha seu plano."}</h2>
+          <p className="text-xl text-white/50">{isEn ? "Maximize your marketing ROI with DashCompass intelligence." : "Maximize o ROI do seu marketing com a inteligência do DashCompass."}</p>
         </div>
 
         <div className="container mx-auto px-6 grid lg:grid-cols-4 gap-6">
@@ -353,15 +456,15 @@ function LandingPage() {
               }`}
             >
               {plan.highlight && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
-                  Mais Escolhido
-                </div>
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                {isEn ? "Most Popular" : "Mais Escolhido"}
+              </div>
               )}
               <div className="mb-8">
                 <h3 className="text-lg font-bold text-white/60 mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-bold tracking-tight">{plan.price}</span>
-                  {plan.price.includes("R$") && <span className="text-white/40 text-sm">/mês</span>}
+                  {!plan.price.includes("On request") && !plan.price.includes("Sob consulta") && <span className="text-white/40 text-sm">/{isEn ? "month" : "mês"}</span>}
                 </div>
                 <p className="text-sm text-white/40 mt-4">{plan.description}</p>
               </div>
@@ -394,15 +497,15 @@ function LandingPage() {
       <section className="py-32 border-t border-white/5">
         <div className="container mx-auto px-6 text-center max-w-4xl">
           <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 italic">
-            Seus dados merecem <br />
-            <span className="text-primary italic">mais do que dashboards.</span>
+            {isEn ? "Your data deserves" : "Seus dados merecem"} <br />
+            <span className="text-primary italic">{isEn ? "more than dashboards." : "mais do que dashboards."}</span>
           </h2>
           <p className="text-xl text-white/50 mb-12">
-            Eles merecem inteligência e direção. Comece hoje a transformar métricas em resultados reais.
+            {isEn ? "They deserve intelligence and direction. Start transforming metrics into real results today." : "Eles merecem inteligência e direção. Comece hoje a transformar métricas em resultados reais."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Button asChild size="lg" className="h-16 px-10 rounded-full bg-primary text-black font-bold text-xl hover:bg-primary/90 transition-all hover:scale-105">
-              <Link to="/login">Começar agora</Link>
+              <Link to="/login">{isEn ? "Start now" : "Começar agora"}</Link>
             </Button>
           </div>
         </div>
@@ -416,13 +519,13 @@ function LandingPage() {
               <Logo iconClassName="h-6 w-6" textClassName="text-lg" />
             </div>
             <div className="flex items-center gap-8 text-sm text-white/40">
-              <Link to="/terms" className="hover:text-primary transition-colors">Termos</Link>
-              <Link to="/privacy" className="hover:text-primary transition-colors">Privacidade</Link>
-              <Link to="/login" className="hover:text-primary transition-colors">Acesso</Link>
+              <Link to="/terms" className="hover:text-primary transition-colors">{isEn ? "Terms" : "Termos"}</Link>
+              <Link to="/privacy" className="hover:text-primary transition-colors">{isEn ? "Privacy" : "Privacidade"}</Link>
+              <Link to="/login" className="hover:text-primary transition-colors">{isEn ? "Access" : "Acesso"}</Link>
             </div>
           </div>
           <div className="pt-8 border-t border-white/5 text-center">
-            <p className="text-xs text-white/20 mb-2">© 2026 DashCompass. Projetado para clareza.</p>
+            <p className="text-xs text-white/20 mb-2">© 2026 DashCompass. {isEn ? "Designed for clarity." : "Projetado para clareza."}</p>
             <div className="space-y-1">
               <p className="text-[10px] text-white/10 uppercase tracking-widest font-bold">The Fcking Company LLC</p>
               <p className="text-[10px] text-white/10">30 N Gould st ste N sheridan wy 82801</p>
