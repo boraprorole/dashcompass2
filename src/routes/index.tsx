@@ -375,8 +375,8 @@ function LandingPage() {
       {/* Connection Section */}
       <section id="features" className="py-24 bg-card/30">
         <div className="container mx-auto px-6 text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Tudo conectado.</h2>
-          <p className="text-xl text-white/50 max-w-2xl mx-auto">O DashCompass organiza campanhas, tráfego e resultados em uma única visão unificada.</p>
+          <h2 className="text-4xl font-bold mb-4">{isEn ? "Everything connected." : "Tudo conectado."}</h2>
+          <p className="text-xl text-white/50 max-w-2xl mx-auto">{isEn ? "DashCompass organizes campaigns, traffic, and results in a single unified view." : "O DashCompass organiza campanhas, tráfego e resultados em uma única visão unificada."}</p>
         </div>
         
         <div className="container mx-auto px-6 grid md:grid-cols-3 gap-8">
