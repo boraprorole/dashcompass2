@@ -180,9 +180,14 @@ function LoginPage() {
         className="relative z-30 w-full max-w-[480px] px-6"
       >
         <div className="flex flex-col space-y-8 py-8 md:py-12">
-          <div className="flex items-center justify-center space-x-3 mb-12">
-            <Compass className="h-10 w-10 text-primary stroke-[1.5px]" />
-            <h1 className="text-4xl font-bold tracking-tighter text-white leading-none">
+          <div className="flex items-center justify-center gap-4 mb-12">
+            <div className="relative flex items-center justify-center h-10 w-10">
+              {/* Círculo externo com traço mais forte */}
+              <div className="absolute inset-0 rounded-full border-[2.5px] border-primary shadow-[0_0_15px_rgba(61,252,3,0.3)]" />
+              {/* Ponteiro interno com traço mais fino */}
+              <Compass className="h-6 w-6 text-primary stroke-[1.5px] relative z-10" />
+            </div>
+            <h1 className="text-4xl font-bold tracking-tighter text-white leading-none mt-[2px]">
               DashCompass
             </h1>
           </div>
