@@ -27,7 +27,7 @@ import { AdminDemandasTab } from "@/components/demandas/AdminDemandasTab";
 import { AdminRDStationTab } from "@/components/rdstation/AdminRDStationTab";
 import { AdminMcpTab } from "@/components/mcp/AdminMcpTab";
 import { NewsSettingsTab } from "@/components/news/NewsSettingsTab";
-import { Sparkles, Radio, Newspaper, Palette } from "lucide-react";
+import { Sparkles, Radio, Newspaper } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -81,8 +81,11 @@ import {
   Key,
   Plug,
   ClipboardList,
+  Palette,
+  Settings,
 
 } from "lucide-react";
+
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -133,9 +136,13 @@ function AdminPage() {
           <TabsTrigger value="visual" className="gap-2">
             <Palette className="h-4 w-4" /> ID Visual
           </TabsTrigger>
+          <TabsTrigger value="features" className="gap-2">
+            <Settings className="h-4 w-4" /> Funções
+          </TabsTrigger>
           <TabsTrigger value="schedule" className="gap-2">
             <CalendarDays className="h-4 w-4" /> Cronograma
           </TabsTrigger>
+
           <TabsTrigger value="windsor" className="gap-2">
             <Key className="h-4 w-4" /> Windsor
           </TabsTrigger>
@@ -166,6 +173,10 @@ function AdminPage() {
         <TabsContent value="visual">
           <VisualIdTab />
         </TabsContent>
+        <TabsContent value="features">
+          <FeaturesTab />
+        </TabsContent>
+
 
         <TabsContent value="schedule">
           <ScheduleConfigTab />
@@ -1646,4 +1657,64 @@ function VisualIdTab() {
     </div>
   );
 }
+
+function FeaturesTab() {
+  const qc = useQueryClient();
+  const { data: features, isLoading } = useQuery({
+    queryKey: ["app-features"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("app_features").select("*").order("label");
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: async ({ key, enabled }: { key: string; enabled: boolean }) => {
+      const { error } = await supabase.from("app_features").update({ enabled }).eq("key", key);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Função atualizada com sucesso.");
+      qc.invalidateQueries({ queryKey: ["app-features"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <div className="glass-strong p-8 rounded-3xl space-y-6">
+      <div className="flex items-center gap-3 mb-2">
+        <Settings className="h-5 w-5 text-primary" />
+        <h3 className="text-xl font-semibold">Gerenciar Funções</h3>
+      </div>
+      
+      <p className="text-sm text-muted-foreground max-w-lg">
+        Habilite ou desabilite as funcionalidades que aparecem na barra lateral para os usuários.
+      </p>
+
+      {isLoading ? (
+        <div className="flex items-center justify-center p-12 text-muted-foreground">
+          <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Carregando...
+        </div>
+      ) : (
+        <div className="grid gap-4 pt-4">
+          {features?.map((f) => (
+            <div key={f.key} className="flex items-center justify-between p-4 rounded-2xl bg-[#111] border border-border">
+              <div>
+                <p className="font-medium">{f.label}</p>
+                <p className="text-xs text-muted-foreground">{f.key}</p>
+              </div>
+              <Switch 
+                checked={f.enabled} 
+                disabled={mutation.isPending}
+                onCheckedChange={(checked) => mutation.mutate({ key: f.key, enabled: checked })}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 

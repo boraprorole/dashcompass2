@@ -139,6 +139,27 @@ export type Database = {
           },
         ]
       }
+      app_features: {
+        Row: {
+          enabled: boolean
+          key: string
+          label: string
+          updated_at: string | null
+        }
+        Insert: {
+          enabled?: boolean
+          key: string
+          label: string
+          updated_at?: string | null
+        }
+        Update: {
+          enabled?: boolean
+          key?: string
+          label?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       app_settings: {
         Row: {
           key: string

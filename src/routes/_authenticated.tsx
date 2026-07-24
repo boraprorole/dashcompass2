@@ -54,18 +54,33 @@ function AuthenticatedLayout() {
   const canSeeDemandas = demandasEnabled && isTeam;
   const canSeeConexoes = isConexoes;
 
+  const { data: features } = useQuery({
+    queryKey: ["app-features"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("app_features").select("*");
+      if (error) throw error;
+      return data;
+    },
+    staleTime: 60_000,
+  });
+
+  const isEnabled = (key: string) => {
+    const feature = features?.find(f => f.key === key);
+    return feature ? feature.enabled : true;
+  };
 
   const nav = [
-    { to: "/reports", label: "Relatórios", icon: FileText },
-    ...((isAdmin || isTeam) ? [{ to: "/pr", label: "PR & Clipping", icon: Newspaper }] : []),
-    { to: "/entregas", label: "Entregas", icon: PackageCheck },
-    { to: "/schedule", label: "Cronograma", icon: CalendarDays },
-    ...(canSeeDemandas ? [{ to: "/demandas", label: "Demandas", icon: ClipboardList }] : []),
-    ...(canSeeConexoes ? [{ to: "/conexoes", label: "Conexões", icon: Link2 }] : []),
-    ...(isAdmin ? [{ to: "/ai", label: "Compass AI", icon: Sparkles }] : []),
-    { to: "/profile", label: "Perfil", icon: UserCircle },
+    ...(isEnabled("/reports") ? [{ to: "/reports", label: "Relatórios", icon: FileText }] : []),
+    ...((isAdmin || isTeam) && isEnabled("/pr") ? [{ to: "/pr", label: "PR & Clipping", icon: Newspaper }] : []),
+    ...(isEnabled("/entregas") ? [{ to: "/entregas", label: "Entregas", icon: PackageCheck }] : []),
+    ...(isEnabled("/schedule") ? [{ to: "/schedule", label: "Cronograma", icon: CalendarDays }] : []),
+    ...(canSeeDemandas && isEnabled("/demandas") ? [{ to: "/demandas", label: "Demandas", icon: ClipboardList }] : []),
+    ...(canSeeConexoes && isEnabled("/conexoes") ? [{ to: "/conexoes", label: "Conexões", icon: Link2 }] : []),
+    ...(isAdmin && isEnabled("/ai") ? [{ to: "/ai", label: "Compass AI", icon: Sparkles }] : []),
+    ...(isEnabled("/profile") ? [{ to: "/profile", label: "Perfil", icon: UserCircle }] : []),
     ...(isAdmin ? [{ to: "/admin", label: "Admin", icon: Shield }] : []),
   ];
+
 
   return (
     <TooltipProvider>
