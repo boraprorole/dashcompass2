@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Camera, User } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
@@ -21,6 +21,8 @@ function ProfilePage() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -43,7 +45,10 @@ function ProfilePage() {
     setSaving(true);
     const { error } = await supabase
       .from("profiles")
-      .update({ display_name: displayName.trim().slice(0, 80), avatar_url: avatarUrl.trim().slice(0, 500) || null })
+      .update({ 
+        display_name: displayName.trim().slice(0, 80), 
+        avatar_url: avatarUrl 
+      })
       .eq("id", user.id);
     setSaving(false);
     if (error) {
@@ -51,6 +56,61 @@ function ProfilePage() {
       return;
     }
     toast.success("Perfil atualizado!");
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validar tipo de arquivo
+    if (!file.type.startsWith("image/")) {
+      toast.error("Por favor, selecione uma imagem.");
+      return;
+    }
+
+    // Validar tamanho (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("A imagem deve ter menos de 2MB.");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}/${Math.random()}.${fileExt}`;
+      const filePath = fileName;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(filePath);
+
+      setAvatarUrl(publicUrl);
+      
+      // Atualizar perfil imediatamente
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({ avatar_url: publicUrl })
+        .eq("id", user.id);
+
+      if (updateError) throw updateError;
+
+      toast.success("Foto de perfil atualizada!");
+    } catch (error: any) {
+      console.error("Erro no upload:", error);
+      toast.error("Erro ao fazer upload da imagem.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -61,46 +121,73 @@ function ProfilePage() {
       </header>
 
       <div className="glass-strong rounded-3xl p-8">
-        <div className="mb-6 flex items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-primary/15 text-2xl font-semibold text-primary">
-            {avatarUrl ? (
-              <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
-            ) : (
-              displayName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || "U"
-            )}
+        <div className="mb-8 flex flex-col items-center gap-6 md:flex-row md:items-start">
+          <div className="relative group">
+            <button
+              onClick={handleAvatarClick}
+              disabled={uploading}
+              className="relative flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-primary/15 transition-all hover:bg-primary/25 disabled:opacity-50"
+              title="Mudar foto de perfil"
+            >
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex flex-col items-center text-primary">
+                  {displayName ? (
+                    <span className="text-4xl font-bold">{displayName[0].toUpperCase()}</span>
+                  ) : (
+                    <User className="h-12 w-12" />
+                  )}
+                </div>
+              )}
+              
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                {uploading ? (
+                  <Loader2 className="h-8 w-8 animate-spin text-white" />
+                ) : (
+                  <Camera className="h-8 w-8 text-white" />
+                )}
+              </div>
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              className="hidden"
+            />
           </div>
-          <div className="min-w-0">
-            <p className="truncate font-medium">{user?.email}</p>
-            <p className="text-xs text-muted-foreground">
-              {isAdmin ? "Administrador" : "Usuário"}
-            </p>
+
+          <div className="min-w-0 flex-1 pt-2 text-center md:text-left">
+            <h2 className="text-xl font-bold">{displayName || user?.email?.split('@')[0]}</h2>
+            <p className="text-sm text-muted-foreground">{user?.email}</p>
+            <div className="mt-2 flex justify-center md:justify-start">
+              <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary uppercase tracking-wider">
+                {isAdmin ? "Administrador" : "Usuário"}
+              </span>
+            </div>
           </div>
         </div>
 
-        <form onSubmit={handleSave} className="space-y-4">
+        <form onSubmit={handleSave} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="display_name">Nome de exibição</Label>
+            <Label htmlFor="display_name" className="text-xs uppercase tracking-widest text-muted-foreground">Nome de exibição</Label>
             <Input
               id="display_name"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
+              placeholder="Seu nome completo"
               maxLength={80}
               disabled={loading}
+              className="h-12 rounded-xl bg-background/50 border-border/50 focus:border-primary/50"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="avatar_url">URL do avatar</Label>
-            <Input
-              id="avatar_url"
-              type="url"
-              value={avatarUrl}
-              onChange={(e) => setAvatarUrl(e.target.value)}
-              placeholder="https://..."
-              maxLength={500}
-              disabled={loading}
-            />
-          </div>
-          <Button type="submit" disabled={saving || loading}>
+          
+          <Button 
+            type="submit" 
+            disabled={saving || loading || uploading}
+            className="w-full md:w-auto h-11 px-8 rounded-xl"
+          >
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Salvar alterações
           </Button>
