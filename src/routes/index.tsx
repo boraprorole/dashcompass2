@@ -332,12 +332,17 @@ function LandingPage() {
             <div>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">{isEn ? "Data already exists." : "Os dados já existem."} <br/><span className="text-white/40">{isEn ? "The problem is finding them." : "O problema é encontrá-los."}</span></h2>
               <div className="space-y-6">
-                {[
+                {(isEn ? [
+                  "Data scattered across dozens of platforms.",
+                  "Confusing dashboards and obsolete spreadsheets.",
+                  "Wasting time searching for answers.",
+                  "Decisions based on intuition, not facts."
+                ] : [
                   "Dados espalhados em dezenas de plataformas.",
                   "Dashboards confusos e planilhas obsoletas.",
                   "Perda de tempo procurando por respostas.",
                   "Decisões baseadas em intuição, não em fatos."
-                ].map((text, i) => (
+                ]).map((text, i) => (
                   <div key={i} className="flex items-start gap-4">
                     <CheckCircle2 className="h-6 w-6 text-primary shrink-0 mt-0.5" />
                     <p className="text-lg text-white/70">{text}</p>
