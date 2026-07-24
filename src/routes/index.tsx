@@ -363,7 +363,7 @@ function LandingPage() {
                       <div className="h-1.5 w-32 bg-primary/20 rounded-full overflow-hidden mx-auto mb-4">
                         <div className="h-full bg-primary animate-shimmer" style={{ width: '60%' }} />
                       </div>
-                      <p className="text-white/40 font-mono text-sm tracking-widest uppercase">Análise Inteligente de Dados</p>
+                      <p className="text-white/40 font-mono text-sm tracking-widest uppercase">{isEn ? "Intelligent Data Analysis" : "Análise Inteligente de Dados"}</p>
                     </div>
                   </div>
                </div>
