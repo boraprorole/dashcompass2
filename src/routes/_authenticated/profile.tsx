@@ -120,11 +120,21 @@ function ProfilePage() {
         .from("profiles")
         .getPublicUrl(filePath);
 
-      setAvatarUrl(publicUrl);
+      // Get signed URL instead of public URL because bucket is private
+      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+        .from("profiles")
+        .createSignedUrl(filePath, 31536000); // 1 year expiry
+
+      if (signedUrlError) throw signedUrlError;
+
+      const finalUrl = signedUrlData.signedUrl;
+      console.log("Signed URL for storage:", finalUrl);
+
+      setAvatarUrl(finalUrl);
       
       const { error: updateError } = await supabase
         .from("profiles")
-        .update({ avatar_url: publicUrl })
+        .update({ avatar_url: finalUrl })
         .eq("id", user.id);
 
       if (updateError) throw updateError;

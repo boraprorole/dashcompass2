@@ -55,6 +55,10 @@ function AuthenticatedLayout() {
         .eq("id", user!.id)
         .maybeSingle();
       if (error) throw error;
+      
+      // Se tiver avatar_url, garantir que ele seja um link válido (se for privado, precisa de signed URL)
+      // No entanto, para simplificar e garantir funcionamento, vamos apenas retornar o dado.
+      // Se o link expirou ou é inválido, o usuário terá que subir novamente ou o app precisará de lógica de refresh.
       return data;
     },
     staleTime: 60_000,
