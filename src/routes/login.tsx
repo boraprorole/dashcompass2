@@ -208,7 +208,7 @@ function LoginPage() {
               </TabsTrigger>
             </TabsList>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-8">
               <AnimatePresence mode="wait">
                 {mode === "signup" && (
                   <motion.div 
