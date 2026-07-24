@@ -294,7 +294,9 @@ function LoginPage() {
           </Tabs>
 
           <p className="mt-8 text-center text-[12px] text-white/30 font-medium">
-            Ao continuar, você concorda com os nossos termos de uso.
+            Ao continuar, você concorda com os nossos{" "}
+            <Link to="/terms" className="text-primary/60 hover:text-primary underline transition-colors">termos de uso</Link> e{" "}
+            <Link to="/privacy" className="text-primary/60 hover:text-primary underline transition-colors">política de privacidade</Link>.
           </p>
         </div>
       </motion.div>

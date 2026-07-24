@@ -204,6 +204,13 @@ function AuthenticatedLayout() {
             <LogOut className={cn("h-4 w-4", !isCollapsed && "mr-2")} /> 
             {!isCollapsed && <span>Sair</span>}
           </Button>
+
+          {!isCollapsed && (
+            <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 px-2 text-[10px] text-muted-foreground/50 font-medium uppercase tracking-widest">
+              <Link to="/terms" className="hover:text-primary transition-colors">Termos</Link>
+              <Link to="/privacy" className="hover:text-primary transition-colors">Privacidade</Link>
+            </div>
+          )}
         </div>
       </aside>
 
