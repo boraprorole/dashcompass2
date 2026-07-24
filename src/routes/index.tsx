@@ -381,9 +381,9 @@ function LandingPage() {
         
         <div className="container mx-auto px-6 grid md:grid-cols-3 gap-8">
           {[
-            { title: "Sempre atualizado", desc: "Dados em tempo real. Sem apertar F5 ou esperar por exportações manuais." },
-            { title: "Sempre disponível", desc: "Acesse de qualquer lugar. Compartilhe com sua equipe ou clientes instantaneamente." },
-            { title: "Menos ruído", desc: "Filtramos o que não importa. Veja apenas os KPIs que movem o ponteiro do negócio." }
+            { title: isEn ? "Always updated" : "Sempre atualizado", desc: isEn ? "Real-time data. No refreshing or waiting for manual exports." : "Dados em tempo real. Sem apertar F5 ou esperar por exportações manuais." },
+            { title: isEn ? "Always available" : "Sempre disponível", desc: isEn ? "Access from anywhere. Share with your team or clients instantly." : "Acesse de qualquer lugar. Compartilhe com sua equipe ou clientes instantaneamente." },
+            { title: isEn ? "Less noise" : "Menos ruído", desc: isEn ? "We filter what doesn't matter. See only the KPIs that move the needle." : "Filtramos o que não importa. Veja apenas os KPIs que movem o ponteiro do negócio." }
           ].map((feature, i) => (
             <div key={i} className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/20 transition-all hover:-translate-y-1">
               <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
