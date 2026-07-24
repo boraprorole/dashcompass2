@@ -217,7 +217,7 @@ function LoginPage() {
                     exit={{ opacity: 0, height: 0 }}
                     className="space-y-2 overflow-hidden"
                   >
-                    <Label htmlFor="displayName" className="text-sm font-medium text-white/80">Nome</Label>
+                    <Label htmlFor="displayName" className="text-sm font-semibold text-white/50 ml-1">NOME</Label>
                     <Input
                       id="displayName"
                       value={displayName}
@@ -225,7 +225,7 @@ function LoginPage() {
                       placeholder="Como podemos te chamar?"
                       autoComplete="name"
                       maxLength={80}
-                      className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-[14px] focus:ring-primary/20"
+                      className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 h-14 rounded-[18px] focus:ring-primary/20 transition-all duration-300 focus:border-primary/50"
                     />
                   </motion.div>
                 )}
