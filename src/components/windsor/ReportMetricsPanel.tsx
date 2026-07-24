@@ -243,8 +243,8 @@ function DeltaBadge({ value }: { value: number | null }) {
   const Icon = up ? ArrowUpRight : ArrowDownRight;
   return (
     <span
-      className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
-        up ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-rose-500/15 text-rose-600 dark:text-rose-400"
+      className={`inline-flex items-center gap-0.5 rounded-full px-2 py-1 text-[11px] font-bold ${
+        up ? "bg-black/10 text-black" : "bg-black/20 text-black"
       }`}
     >
       <Icon className="h-3 w-3" />
