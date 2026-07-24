@@ -187,9 +187,6 @@ function LoginPage() {
             <h1 className="text-3xl font-bold tracking-tight text-white mb-3">
               DashCompass
             </h1>
-            <p className="text-[16px] text-white/40 font-medium tracking-widest uppercase">
-              A Inteligência Estratégica do seu Negócio
-            </p>
           </div>
 
           <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")} className="w-full">
