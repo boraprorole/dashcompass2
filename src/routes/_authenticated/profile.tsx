@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, Camera, User } from "lucide-react";
+import imageCompression from "browser-image-compression";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
@@ -72,21 +73,34 @@ function ProfilePage() {
       return;
     }
 
-    // Validar tamanho (max 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error("A imagem deve ter menos de 2MB.");
-      return;
-    }
-
     setUploading(true);
     try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${user.id}/${Math.random()}.${fileExt}`;
+      let fileToUpload = file;
+
+      // Se a imagem for maior que 1MB ou não for WebP, vamos processar
+      // (Usamos 1MB como gatilho para garantir que o resultado final WebP seja bem otimizado)
+      if (file.size > 1 * 1024 * 1024 || file.type !== "image/webp") {
+        const options = {
+          maxSizeMB: 1, // Alvo de 1MB para o avatar
+          maxWidthOrHeight: 1024,
+          useWebWorker: true,
+          fileType: "image/webp" as string,
+          initialQuality: 0.85,
+        };
+        
+        toast.info("Otimizando imagem...");
+        fileToUpload = await imageCompression(file, options);
+      }
+
+      const fileName = `${user.id}/${Date.now()}.webp`;
       const filePath = fileName;
 
       const { error: uploadError } = await supabase.storage
         .from("avatars")
-        .upload(filePath, file);
+        .upload(filePath, fileToUpload, {
+          contentType: "image/webp",
+          upsert: true
+        });
 
       if (uploadError) throw uploadError;
 
@@ -96,7 +110,6 @@ function ProfilePage() {
 
       setAvatarUrl(publicUrl);
       
-      // Atualizar perfil imediatamente
       const { error: updateError } = await supabase
         .from("profiles")
         .update({ avatar_url: publicUrl })
@@ -106,8 +119,8 @@ function ProfilePage() {
 
       toast.success("Foto de perfil atualizada!");
     } catch (error: any) {
-      console.error("Erro no upload:", error);
-      toast.error("Erro ao fazer upload da imagem.");
+      console.error("Erro no upload/compressão:", error);
+      toast.error("Erro ao processar imagem.");
     } finally {
       setUploading(false);
     }
