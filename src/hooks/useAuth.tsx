@@ -32,9 +32,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .select("role")
       .eq("user_id", userId);
     const roles = new Set((data ?? []).map((r) => r.role));
-    setIsAdmin(roles.has("admin"));
-    setIsTeam(roles.has("team"));
-    setIsConexoes(roles.has("conexoes"));
+    setIsAdmin(roles.has("admin") || roles.has("admin_global") || roles.has("admin_agencia"));
+    setIsTeam(roles.has("team") || roles.has("equipe") || roles.has("admin_global") || roles.has("admin_agencia"));
+    setIsConexoes(roles.has("conexoes") || roles.has("admin_global"));
   };
 
   useEffect(() => {
