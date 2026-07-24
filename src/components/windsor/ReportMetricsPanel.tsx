@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { supabase } from "@/integrations/supabase/client";
 import type { DateRange } from "react-day-picker";
 import {
   getReportWindsorMetrics,
@@ -580,6 +581,20 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
         const renderGoogle = () => (
           <div className="space-y-5">
             {hasGa && gaQ.data && <Ga4Section data={gaQ.data} />}
+            {gadsUnifiedConn && (
+              <GoogleAdsPanel 
+                reportId={reportId} 
+                dateFrom={rangeArgs.dateFrom} 
+                dateTo={rangeArgs.dateTo} 
+              />
+            )}
+            {gscUnifiedConn && (
+              <GoogleSearchConsolePanel 
+                reportId={reportId} 
+                dateFrom={rangeArgs.dateFrom} 
+                dateTo={rangeArgs.dateTo} 
+              />
+            )}
             {scGroup && renderGroup(scGroup)}
             {scGroup && searchConsoleQ.data && searchConsoleQ.data.length > 0 && (
               <SearchConsoleSection
@@ -603,7 +618,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
           | { kind: "crm-csv-unorte"; key: string; label: string }
           | { kind: "analise-geral-unorte"; key: string; label: string };
 
-        const hasGoogleTab = hasGa || !!scGroup || !!emvQ.data;
+        const hasGoogleTab = hasGa || !!scGroup || !!emvQ.data || !!gscUnifiedConn || !!gadsUnifiedConn;
 
         const items: TabItem[] = [
           ...(reportId === "1231f578-3057-4167-a705-5c45b526bf53"
@@ -616,7 +631,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
             group: g,
           })),
           ...(hasGoogleTab
-            ? [{ kind: "google" as const, key: "google-suite", label: "Google Analytics + Search Console + AI" }]
+            ? [{ kind: "google" as const, key: "google-suite", label: "Google Ecosystem (GA4, GSC, Ads)" }]
             : []),
           ...((gadsCsvQ.data ?? []).length > 0
             ? [{ kind: "gads-csv" as const, key: "gads-csv", label: "Google Ads (CSV)" }]
