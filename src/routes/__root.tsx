@@ -86,7 +86,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
       <head><HeadContent /></head>
-      <body>
+      <body className="bg-dot-grid">
         {children}
         <Scripts />
       </body>

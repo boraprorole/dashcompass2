@@ -144,4 +144,14 @@
     box-shadow: var(--shadow-elevated);
   }
   .shadow-elevated { box-shadow: var(--shadow-elevated); }
+  
+  .bg-dot-grid {
+    background-color: var(--background);
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
+    background-attachment: fixed;
+  }
 }
