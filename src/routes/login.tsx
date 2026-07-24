@@ -307,14 +307,11 @@ function LoginPage() {
           </p>
         </div>
       </motion.div>
-    </div>
-  );
-
       <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
-        <DialogContent>
+        <DialogContent className="bg-[#171717] border-white/10 text-white">
           <DialogHeader>
             <DialogTitle>Redefinir senha</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-white/60">
               Informe seu email e enviaremos um link para criar uma nova senha.
             </DialogDescription>
           </DialogHeader>
@@ -330,13 +327,14 @@ function LoginPage() {
                 autoComplete="email"
                 required
                 maxLength={255}
+                className="bg-white/5 border-white/10 text-white"
               />
             </div>
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => setForgotOpen(false)}>
+              <Button type="button" variant="ghost" onClick={() => setForgotOpen(false)} className="text-white/60 hover:text-white">
                 Cancelar
               </Button>
-              <Button type="submit" disabled={forgotLoading}>
+              <Button type="submit" disabled={forgotLoading} className="bg-primary text-black hover:bg-primary/90">
                 {forgotLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Enviar link
               </Button>
