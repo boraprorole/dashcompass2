@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Loader2, Chrome } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { motion, AnimatePresence } from "framer-motion";
-import bgVideoAsset from "@/assets/login-bg.mp4.asset.json";
+import bgVideoAsset from "@/assets/login-bg-v2.mp4.asset.json";
 import logoAsset from "@/assets/dashcompass-logo.svg.asset.json";
 
 
