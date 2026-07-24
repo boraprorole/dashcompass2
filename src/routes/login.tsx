@@ -152,8 +152,9 @@ function LoginPage() {
             </span>
           </div>
           <p className="text-[14px] text-muted-foreground/60 uppercase tracking-widest font-medium">
-            Minimalist Data Intelligence
+            Inteligência de Dados Minimalista
           </p>
+
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-20 max-w-6xl w-full items-center">
