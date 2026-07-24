@@ -603,10 +603,15 @@ function ReportsTab() {
 }
 
 function CompanySelect({ value, onValueChange }: { value: string; onValueChange: (v: string) => void }) {
+  const { isAdminGlobal, agencyId } = useAuth();
   const { data: companies } = useQuery({
     queryKey: ["admin-companies"],
     queryFn: async () => {
-      const { data } = await supabase.from("companies").select("id, name").order("name");
+      const query = supabase.from("companies").select("id, name").order("name");
+      if (!isAdminGlobal && agencyId) {
+        query.eq("agency_id", agencyId);
+      }
+      const { data } = await query;
       return data || [];
     },
   });
