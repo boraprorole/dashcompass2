@@ -69,12 +69,12 @@ function AuthenticatedLayout() {
 
   return (
     <TooltipProvider>
-      <div className="relative flex min-h-screen w-full bg-background overflow-x-hidden">
+      <div className="relative flex min-h-screen w-full bg-background overflow-x-hidden p-10">
         {/* Sidebar */}
         <aside 
           className={cn(
-            "sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-background py-8 transition-all duration-300 md:flex",
-            isCollapsed ? "w-[80px]" : "w-64"
+            "sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-sidebar py-10 transition-all duration-300 md:flex",
+            isCollapsed ? "w-[92px]" : "w-[240px]"
           )}
         >
           <div className="mb-8 flex items-center justify-between">
@@ -110,7 +110,7 @@ function AuthenticatedLayout() {
                 key={item.to}
                 to={item.to}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
+                  "flex items-center gap-3 rounded-[18px] px-5 py-4 text-sm font-medium transition-all duration-200",
                   active
                     ? "bg-primary text-black"
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground",

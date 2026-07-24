@@ -7,8 +7,8 @@
 
 @theme inline {
   --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
   --radius-xl: 24px;
   --radius-2xl: 32px;
   --radius-3xl: 40px;
@@ -47,53 +47,49 @@
 }
 
 :root {
-  --radius: 20px;
-  --primary: #3dfc03;
-
-  /* Premium SaaS Minimalist Palette */
   --background: #080808;
-  --secondary-bg: #111111;
-  --foreground: #ffffff;
+  --foreground: #FFFFFF;
   
-  --card: #151515;
-  --card-foreground: #ffffff;
+  --card: #171717;
+  --card-foreground: #FFFFFF;
   
   --popover: #111111;
-  --popover-foreground: #ffffff;
+  --popover-foreground: #FFFFFF;
   
+  --primary: #3DFC03;
   --primary-foreground: #000000;
   --primary-glow: rgba(61, 252, 3, 0.4);
   
-  --secondary: #1d1d1d;
-  --secondary-foreground: #ffffff;
+  --secondary: #202020;
+  --secondary-foreground: #FFFFFF;
   
   --muted: #111111;
-  --muted-foreground: #a1a1aa;
+  --muted-foreground: #A5A5A5;
   
-  --accent: #1d1d1d;
-  --accent-foreground: #ffffff;
+  --accent: #202020;
+  --accent-foreground: #FFFFFF;
   
-  --destructive: #ff5252;
-  --destructive-foreground: #ffffff;
+  --destructive: #FF5252;
+  --destructive-foreground: #FFFFFF;
   
-  --border: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.05);
   --input: #111111;
-  --ring: rgba(61, 252, 3, 0.5);
+  --ring: rgba(61, 252, 3, 0.3);
   
-  --glass: rgba(21, 21, 21, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass: rgba(23, 23, 23, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.05);
   
-  --sidebar: #080808;
-  --sidebar-foreground: #a1a1aa;
-  --sidebar-primary: #3dfc03;
+  --sidebar: #0B0B0B;
+  --sidebar-foreground: #A5A5A5;
+  --sidebar-primary: #3DFC03;
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #151515;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: rgba(255, 255, 255, 0.06);
-  --sidebar-ring: rgba(61, 252, 3, 0.3);
+  --sidebar-accent: #171717;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: rgba(255, 255, 255, 0.05);
+  --sidebar-ring: rgba(61, 252, 3, 0.2);
 
-  --shadow-glass: 0 8px 24px rgba(0,0,0,0.25);
-  --shadow-elevated: 0 8px 24px rgba(0,0,0,0.25);
+  --shadow-glass: 0 4px 12px rgba(0,0,0,0.15);
+  --shadow-elevated: 0 8px 32px rgba(0,0,0,0.3);
 }
 
 .dark {
@@ -122,10 +118,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1 { font-size: 36px; font-weight: 600; letter-spacing: -0.02em; }
-  h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
-  h3 { font-size: 20px; font-weight: 600; }
-  p { font-size: 15px; color: var(--muted-foreground); }
+  h1 { font-size: 52px; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 32px; }
+  h2 { font-size: 38px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 24px; }
+  h3 { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; }
+  p { font-size: 16px; color: var(--muted-foreground); line-height: 1.6; }
 }
 
 @layer utilities {
@@ -148,10 +144,10 @@
   .bg-dot-grid {
     background-color: var(--background);
     background-image: radial-gradient(
-      rgba(255, 255, 255, 0.05) 1px,
+      rgba(255, 255, 255, 0.06) 1px,
       transparent 1px
     );
-    background-size: 24px 24px;
+    background-size: 22px 22px;
     background-attachment: fixed;
   }
 }

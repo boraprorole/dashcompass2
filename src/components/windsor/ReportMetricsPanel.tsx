@@ -243,8 +243,8 @@ function DeltaBadge({ value }: { value: number | null }) {
   const Icon = up ? ArrowUpRight : ArrowDownRight;
   return (
     <span
-      className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
-        up ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-rose-500/15 text-rose-600 dark:text-rose-400"
+      className={`inline-flex items-center gap-0.5 rounded-full px-2 py-1 text-[11px] font-bold ${
+        up ? "bg-black/10 text-black" : "bg-black/20 text-black"
       }`}
     >
       <Icon className="h-3 w-3" />
@@ -1014,12 +1014,12 @@ function ConnectorDashboard({
   );
 }
 
-const LINE_COLORS = ["#6c0e28", "#c9a84c", "#2d8a9e", "#e85d3a", "#4f46e5", "#0d7a5f"];
+const LINE_COLORS = ["#3DFC03", "#FFFFFF", "#A5A5A5", "#6F6F6F"];
 
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-border/40 bg-background/60 p-3">
-      <h3 className="mb-2 text-xs font-semibold text-muted-foreground">{title}</h3>
+    <div className="rounded-[22px] border border-border bg-card p-8">
+      <h3 className="mb-4 text-sm font-semibold text-muted-foreground uppercase tracking-widest">{title}</h3>
       {children}
     </div>
   );
@@ -1041,14 +1041,15 @@ function KpiCard({
   const d = delta(value, previous ?? null);
   const hasSpark = sparkline.length > 1 && sparkline.some((r) => typeof r[field] === "number");
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-border/40 bg-gradient-to-br from-background/80 to-background/40 p-3 transition-shadow hover:shadow-lg">
+    <div className="group relative overflow-hidden rounded-[22px] bg-primary p-8 transition-shadow hover:shadow-lg">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="truncate text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
-          <p className="mt-1 text-xl font-bold tabular-nums">{formatValue(field, value)}</p>
+          <p className="truncate text-[13px] uppercase tracking-wider text-black font-semibold">{label}</p>
+          <p className="mt-2 text-[52px] font-bold tabular-nums text-black leading-none">{formatValue(field, value)}</p>
         </div>
         <DeltaBadge value={d} />
       </div>
+      {/* Sparkline adjusted for light context if needed, but keeping primary-styled one for now */}
       {hasSpark && (
         <div className="mt-2 h-10">
           <ResponsiveContainer width="100%" height="100%">
