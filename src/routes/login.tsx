@@ -188,7 +188,15 @@ function LoginPage() {
                 alt="DashCompass Logo" 
                 className="h-full w-full object-contain"
                 style={{ 
-                  filter: 'brightness(0) saturate(100%) invert(84%) sepia(85%) saturate(4646%) hue-rotate(46deg) brightness(102%) contrast(105%) drop-shadow(0 0 8px rgba(61,252,3,0.3))' 
+                  filter: 'brightness(0) invert(1) sepia(1) saturate(10000%) hue-rotate(0deg)',
+                  backgroundColor: 'var(--primary)',
+                  WebkitMaskImage: `url(${logoAsset.url})`,
+                  maskImage: `url(${logoAsset.url})`,
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskSize: 'contain',
+                  maskSize: 'contain',
+                  filter: 'drop-shadow(0 0 8px var(--primary-glow))'
                 }}
               />
             </div>
