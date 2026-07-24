@@ -107,7 +107,7 @@ function ProfilePage() {
       console.log("Iniciando upload para:", filePath, "Tipo:", fileToUpload.type);
 
       const { error: uploadError } = await supabase.storage
-        .from("avatars")
+        .from("profiles")
         .upload(filePath, fileToUpload, {
           contentType: fileToUpload.type,
           cacheControl: "3600",
