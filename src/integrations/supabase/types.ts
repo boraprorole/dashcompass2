@@ -271,24 +271,35 @@ export type Database = {
       }
       companies: {
         Row: {
+          agency_id: string | null
           created_at: string
           id: string
           name: string
           updated_at: string
         }
         Insert: {
+          agency_id?: string | null
           created_at?: string
           id?: string
           name: string
           updated_at?: string
         }
         Update: {
+          agency_id?: string | null
           created_at?: string
           id?: string
           name?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "companies_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       demandas: {
         Row: {
