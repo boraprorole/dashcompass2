@@ -114,6 +114,21 @@ export const Route = createFileRoute("/_authenticated/admin")({
 function AdminPage() {
   const { isAdminGlobal, isAdminAgencia } = useAuth();
 
+  const { data: features } = useQuery({
+    queryKey: ["app-features"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("app_features").select("*");
+      if (error) throw error;
+      return data;
+    },
+    staleTime: 60_000,
+  });
+
+  const isEnabled = (key: string) => {
+    const feature = features?.find(f => f.key === key);
+    return feature ? feature.enabled : true;
+  };
+
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <header className="flex items-center gap-3">
@@ -149,9 +164,11 @@ function AdminPage() {
             </TabsTrigger>
           )}
 
-          <TabsTrigger value="schedule" className="gap-2">
-            <CalendarDays className="h-4 w-4" /> Cronograma
-          </TabsTrigger>
+          {isEnabled("/schedule") && (
+            <TabsTrigger value="schedule" className="gap-2">
+              <CalendarDays className="h-4 w-4" /> Cronograma
+            </TabsTrigger>
+          )}
 
           <TabsTrigger value="windsor" className="gap-2">
             <Key className="h-4 w-4" /> Windsor
@@ -159,9 +176,13 @@ function AdminPage() {
           <TabsTrigger value="ai" className="gap-2">
             <Sparkles className="h-4 w-4" /> AI
           </TabsTrigger>
-          <TabsTrigger value="demandas" className="gap-2">
-            <ClipboardList className="h-4 w-4" /> Demandas
-          </TabsTrigger>
+          
+          {isEnabled("/demandas") && (
+            <TabsTrigger value="demandas" className="gap-2">
+              <ClipboardList className="h-4 w-4" /> Demandas
+            </TabsTrigger>
+          )}
+
           <TabsTrigger value="mcp" className="gap-2">
             <Radio className="h-4 w-4" /> MCP
           </TabsTrigger>
