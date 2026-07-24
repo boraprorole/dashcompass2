@@ -1601,6 +1601,12 @@ function VisualIdTab() {
   const [primaryColor, setPrimaryColor] = useState(contextColor || "#3DFC03");
   const [isSaving, setIsSaving] = useState(false);
 
+  useEffect(() => {
+    if (contextColor) {
+      setPrimaryColor(contextColor);
+    }
+  }, [contextColor]);
+
   const handleUpdateColor = async () => {
     setIsSaving(true);
     try {
@@ -1619,6 +1625,8 @@ function VisualIdTab() {
 
       document.documentElement.style.setProperty("--primary", primaryColor);
       toast.success(`Identidade visual salva com sucesso!`);
+      // Re-fetch configuration globally
+      window.location.reload();
     } catch (err: any) {
       console.error("Erro ao salvar cor:", err);
       toast.error("Erro ao salvar identidade visual.");
