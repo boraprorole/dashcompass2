@@ -497,11 +497,11 @@ function LandingPage() {
       <section className="py-32 border-t border-white/5">
         <div className="container mx-auto px-6 text-center max-w-4xl">
           <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 italic">
-            Seus dados merecem <br />
-            <span className="text-primary italic">mais do que dashboards.</span>
+            {isEn ? "Your data deserves" : "Seus dados merecem"} <br />
+            <span className="text-primary italic">{isEn ? "more than dashboards." : "mais do que dashboards."}</span>
           </h2>
           <p className="text-xl text-white/50 mb-12">
-            Eles merecem inteligência e direção. Comece hoje a transformar métricas em resultados reais.
+            {isEn ? "They deserve intelligence and direction. Start transforming metrics into real results today." : "Eles merecem inteligência e direção. Comece hoje a transformar métricas em resultados reais."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Button asChild size="lg" className="h-16 px-10 rounded-full bg-primary text-black font-bold text-xl hover:bg-primary/90 transition-all hover:scale-105">
