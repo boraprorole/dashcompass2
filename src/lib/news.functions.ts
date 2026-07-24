@@ -23,7 +23,7 @@ export const searchNews = createServerFn({ method: "POST" })
       apiKey = setting?.value ?? undefined;
     }
 
-    const userAgent = "MarsalaDashboard/1.0 (+https://marsaladashboard.lovable.app)";
+    const userAgent = "DashCompassDashboard/1.0 (+https://dashcompass.lovable.app)";
     const headers: Record<string, string> = { "User-Agent": userAgent };
     if (apiKey) headers["X-Api-Key"] = apiKey;
 

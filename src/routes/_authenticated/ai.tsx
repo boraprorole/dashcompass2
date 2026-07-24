@@ -113,7 +113,7 @@ function AiPage() {
       <aside className="hidden w-64 shrink-0 flex-col rounded-2xl border border-border/50 bg-card/70 p-3 md:flex">
         <div className="mb-3 flex items-center gap-2 px-1">
           <Sparkles className="h-4 w-4 text-primary" />
-          <span className="text-sm font-semibold">Marsala AI</span>
+          <span className="text-sm font-semibold">Compass AI</span>
         </div>
         <Button size="sm" className="mb-3 gap-2" onClick={newThread}>
           <MessageSquarePlus className="h-4 w-4" /> Nova conversa

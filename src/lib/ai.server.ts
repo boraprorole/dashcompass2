@@ -114,7 +114,7 @@ export async function buildModel(provider: AiProvider, modelId: string) {
 /* ---------- System prompts per mode ---------- */
 
 export function systemPromptFor(mode: AiMode, hasReport: boolean, reportName?: string | null) {
-  const base = `Você é o Marsala AI, assistente da agência Marsala. Responda em português do Brasil, seja objetivo, use markdown, tabelas e bullets quando ajudar. Nunca invente dados: se precisar de números, chame as ferramentas.
+  const base = `Você é o Compass AI, assistente do sistema DashCompass. Responda em português do Brasil, seja objetivo, use markdown, tabelas e bullets quando ajudar. Nunca invente dados: se precisar de números, chame as ferramentas.
 
 IMPORTANTE — memória de conversa: você SEMPRE recebe o histórico completo desta conversa (todas as mensagens anteriores do usuário, suas respostas anteriores e os resultados das ferramentas já executadas). Antes de responder ou chamar uma ferramenta, releia o histórico e:
 - reutilize dados já buscados em turnos anteriores em vez de repetir a mesma chamada de ferramenta;

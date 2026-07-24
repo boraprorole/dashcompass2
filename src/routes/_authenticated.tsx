@@ -22,8 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getDemandasEnabled } from "@/lib/demandas.functions";
-import logoMarsala from "@/assets/logo-marsala.png";
-import logoIcon from "@/assets/logo-marsala.png";
+
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ location }) => {
@@ -63,7 +62,7 @@ function AuthenticatedLayout() {
     { to: "/schedule", label: "Cronograma", icon: CalendarDays },
     ...(canSeeDemandas ? [{ to: "/demandas", label: "Demandas", icon: ClipboardList }] : []),
     ...(canSeeConexoes ? [{ to: "/conexoes", label: "Conexões", icon: Link2 }] : []),
-    ...(isAdmin ? [{ to: "/ai", label: "Marsala AI", icon: Sparkles }] : []),
+    ...(isAdmin ? [{ to: "/ai", label: "Compass AI", icon: Sparkles }] : []),
     { to: "/profile", label: "Perfil", icon: UserCircle },
     ...(isAdmin ? [{ to: "/admin", label: "Admin", icon: Shield }] : []),
   ];
@@ -84,11 +83,9 @@ function AuthenticatedLayout() {
           <div className="mb-8 flex items-center justify-between">
             {!isCollapsed && (
               <Link to="/reports" className="flex flex-1 items-center justify-center overflow-hidden">
-                <img
-                  src={logoMarsala}
-                  alt="Marsala — Marketing estratégico"
-                  className="h-24 w-auto object-contain"
-                />
+                <span className="font-serif text-2xl italic tracking-widest text-primary">
+                  DASHCOMPASS
+                </span>
               </Link>
             )}
             <Button 
@@ -104,11 +101,7 @@ function AuthenticatedLayout() {
           
           {isCollapsed && (
             <div className="mb-8 flex items-center justify-center overflow-hidden">
-               <img
-                src={logoIcon}
-                alt="Logo"
-                className="h-8 w-8 object-contain"
-              />
+               <span className="font-serif text-xl italic text-primary">D</span>
             </div>
           )}
 
@@ -175,11 +168,9 @@ function AuthenticatedLayout() {
       {/* Mobile top bar */}
       <div className="glass fixed inset-x-0 top-0 z-20 flex items-center justify-between p-3 md:hidden">
         <Link to="/reports" className="flex items-center">
-          <img
-            src={logoMarsala}
-            alt="Marsala"
-            className="h-16 w-auto object-contain"
-          />
+          <span className="font-serif text-xl italic tracking-widest text-primary">
+            DASHCOMPASS
+          </span>
         </Link>
         <Button variant="ghost" size="sm" onClick={signOut}>
           <LogOut className="h-4 w-4" />

@@ -11,9 +11,9 @@
   },
   "mcp": {
     "server": {
-      "name": "marsala-dashboard-mcp",
+      "name": "dashcompass-dashboard-mcp",
       "version": "0.1.0",
-      "title": "Marsala Dashboard"
+      "title": "DashCompass Dashboard"
     },
     "tools": [
       {

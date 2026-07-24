@@ -236,7 +236,7 @@ function AgentsSection() {
         </div>
       ) : !agentsQ.data?.length ? (
         <div className="rounded-xl border border-dashed border-border/60 p-6 text-center text-sm text-muted-foreground">
-          Nenhum agente configurado. Crie o primeiro para padronizar o comportamento do Marsala AI.
+          Nenhum agente configurado. Crie o primeiro para padronizar o comportamento do Compass AI.
         </div>
       ) : (
         <div className="grid gap-3 md:grid-cols-2">

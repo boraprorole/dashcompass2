@@ -4,13 +4,13 @@ export const Route = createFileRoute("/lp")({
   component: LandingPage,
   head: () => ({
     meta: [
-      { title: "Marsala Dashboard · Inteligência de marca em tempo real" },
+      { title: "DashCompass · Inteligência de marca em tempo real" },
       {
         name: "description",
         content:
-          "Dashboard de análise em tempo real, presença de marca em IAs generativas e Earned Media de SEO orgânico. A camada de inteligência que decide junto com você.",
+          "Dashboard de análise em tempo real, presença de marca em IAs generativas e Earned Media de SEO orgânico.",
       },
-      { property: "og:title", content: "Marsala Dashboard · Inteligência em tempo real" },
+      { property: "og:title", content: "DashCompass · Inteligência em tempo real" },
       {
         property: "og:description",
         content:
@@ -45,7 +45,7 @@ function Nav() {
     <nav className="relative z-10 flex items-center justify-between px-6 py-6 md:px-14">
       <div className="flex items-baseline gap-3">
         <span className="font-serif text-2xl italic tracking-widest text-white/95">
-          MARSALA
+          DASHCOMPASS
         </span>
         <span className="hidden text-xs uppercase tracking-[0.25em] text-white/60 md:inline">
           dashboard
@@ -113,7 +113,7 @@ const modulos = [
   {
     tag: "04",
     title: "Consultoria embarcada",
-    lead: "Marsala AI",
+    lead: "Compass AI",
     body: "Um analista sênior dentro do dashboard. Cruza seus dados, aponta gaps, sugere próximos passos. Não é chatbot — é leitura de negócio.",
   },
 ];
@@ -145,7 +145,7 @@ function LandingPage() {
         <Nav />
         <div className="relative z-10 mx-auto max-w-6xl px-6 pb-32 pt-16 md:px-14 md:pt-24">
           <p className="mb-8 text-xs uppercase tracking-[0.35em] text-white/60">
-            / Marsala Dashboard
+            / DashCompass Dashboard
           </p>
           <h1 className="max-w-4xl font-serif text-5xl leading-[1.05] tracking-tight md:text-7xl">
             Construindo valor.{" "}
@@ -292,7 +292,7 @@ function LandingPage() {
               },
               {
                 n: "03",
-                t: "Marsala AI aponta o passo",
+                t: "Compass AI aponta o passo",
                 d: "Um analista sênior lê tudo isso e te devolve prioridade — no idioma do C-level.",
               },
             ].map((s) => (
