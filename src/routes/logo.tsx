@@ -177,6 +177,36 @@ function LogoPage() {
                 <Download className="h-4 w-4" /> Baixar PNG
               </Button>
             </div>
+          </div>
+
+          {/* Primary Background Variant */}
+          <div className="glass-strong flex flex-col items-center space-y-6 rounded-none p-6 transition-transform hover:scale-[1.02] sm:col-span-2 lg:col-span-1">
+            <div 
+              className="flex aspect-square w-full items-center justify-center"
+              style={{ backgroundColor: primaryColor }}
+            >
+              <div 
+                className="h-1/2 w-1/2 bg-black" 
+                style={{ 
+                  WebkitMaskImage: `url(${logoAsset.url})`,
+                  maskImage: `url(${logoAsset.url})`,
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskSize: 'contain',
+                  maskSize: 'contain'
+                }}
+              />
+            </div>
+            <div className="w-full space-y-3">
+              <h3 className="text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">Símbolo Preto / Fundo Admin</h3>
+              <Button 
+                onClick={() => downloadPng('primary-bg')} 
+                className="w-full gap-2 rounded-none bg-white text-black hover:bg-white/90"
+              >
+                <Download className="h-4 w-4" /> Baixar PNG
+              </Button>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-6">
@@ -272,35 +302,6 @@ function LogoPage() {
                   <Download className="h-4 w-4" /> Baixar PNG
                 </Button>
               </div>
-            </div>
-          </div>
-
-          {/* Primary Background Variant */}
-          <div className="glass-strong flex flex-col items-center space-y-6 rounded-none p-6 transition-transform hover:scale-[1.02] sm:col-span-2 lg:col-span-1">
-            <div 
-              className="flex aspect-square w-full items-center justify-center"
-              style={{ backgroundColor: primaryColor }}
-            >
-              <div 
-                className="h-1/2 w-1/2 bg-black" 
-                style={{ 
-                  WebkitMaskImage: `url(${logoAsset.url})`,
-                  maskImage: `url(${logoAsset.url})`,
-                  WebkitMaskRepeat: 'no-repeat',
-                  maskRepeat: 'no-repeat',
-                  WebkitMaskSize: 'contain',
-                  maskSize: 'contain'
-                }}
-              />
-            </div>
-            <div className="w-full space-y-3">
-              <h3 className="text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">Símbolo Preto / Fundo Admin</h3>
-              <Button 
-                onClick={() => downloadPng('primary-bg')} 
-                className="w-full gap-2 rounded-none bg-white text-black hover:bg-white/90"
-              >
-                <Download className="h-4 w-4" /> Baixar PNG
-              </Button>
             </div>
           </div>
         </div>
