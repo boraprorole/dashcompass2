@@ -456,9 +456,9 @@ function LandingPage() {
               }`}
             >
               {plan.highlight && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
-                  Mais Escolhido
-                </div>
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                {isEn ? "Most Popular" : "Mais Escolhido"}
+              </div>
               )}
               <div className="mb-8">
                 <h3 className="text-lg font-bold text-white/60 mb-2">{plan.name}</h3>
