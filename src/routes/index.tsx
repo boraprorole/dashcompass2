@@ -312,10 +312,14 @@ function LandingPage() {
               <span className="text-primary italic block mt-4">{isEn ? "starts with data." : "começa com dados."}</span>
             </h1>
             <p className="sr-only">
-              O DashCompass é uma plataforma profissional de marketing analytics. Nossa finalidade é unificar dados de Google Ads, Google Search Console, Meta e LinkedIn em um único dashboard inteligente, permitindo que empresas e agências analisem performance e otimizem investimentos com o auxílio de IA.
+              {isEn 
+                ? "DashCompass is a professional marketing analytics platform. Our purpose is to unify data from Google Ads, Google Search Console, Meta and LinkedIn into a single intelligent dashboard, allowing companies and agencies to analyze performance and optimize investments with the help of AI."
+                : "O DashCompass é uma plataforma profissional de marketing analytics. Nossa finalidade é unificar dados de Google Ads, Google Search Console, Meta e LinkedIn em um único dashboard inteligente, permitindo que empresas e agências analisem performance e otimizem investimentos com o auxílio de IA."}
             </p>
             <p className="text-xl md:text-2xl text-white/60 max-w-2xl leading-relaxed mb-10">
-              O <strong>DashCompass</strong> reúne os dados das principais plataformas de marketing em um só lugar. Sua equipe acompanha métricas, analisa resultados e faz perguntas à IA usando o contexto do próprio negócio.
+              {isEn 
+                ? <><strong>DashCompass</strong> brings together data from the leading marketing platforms in one place. Your team tracks metrics, analyzes results, and asks the AI questions using the context of their own business.</>
+                : <>O <strong>DashCompass</strong> reúne os dados das principais plataformas de marketing em um só lugar. Sua equipe acompanha métricas, analisa resultados e faz perguntas à IA usando o contexto do próprio negócio.</>}
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <Button asChild size="lg" className="h-14 px-8 rounded-full bg-primary text-black font-bold text-lg hover:bg-primary/90 transition-all hover:scale-105">
