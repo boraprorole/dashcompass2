@@ -10,10 +10,10 @@ import { useState, useEffect } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "DashCompass — Data-Driven Decisions Platform" },
-      { name: "description", content: "DashCompass is a marketing data integration platform that unifies Google Ads, Search Console, and Meta metrics into high-impact dashboards for agencies and businesses." },
-      { property: "og:title", content: "DashCompass — Unified Marketing Intelligence" },
-      { property: "og:description", content: "The central hub for your marketing data. Connect your platforms, analyze with AI, and grow with clarity." },
+      { title: "DashCompass — Marketing Data Integration & Dashboard Platform" },
+      { name: "description", content: "DashCompass is a professional marketing data integration platform. We unify Google Ads, Google Search Console, and Meta metrics into high-impact dashboards and AI-powered insights for agencies and businesses." },
+      { property: "og:title", content: "DashCompass — Unified Marketing Intelligence Platform" },
+      { property: "og:description", content: "The central hub for your marketing data. Connect GA4, GSC, and Ads, analyze with AI, and grow your business with clarity." },
     ],
   }),
   beforeLoad: async () => {
@@ -199,7 +199,7 @@ function LandingPage() {
               <span className="text-primary italic text-4xl md:text-6xl lg:text-7xl block mt-4">Toda direção começa com dados.</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/60 max-w-2xl leading-relaxed mb-10">
-              O DashCompass é uma plataforma unificada de inteligência de marketing. Conecte suas contas de <strong>Google Ads, Search Console, Facebook e LinkedIn</strong> para transformar métricas complexas em decisões claras de negócio com o auxílio de nossa IA especializada.
+              O <strong>DashCompass</strong> é uma plataforma profissional de integração e visualização de dados de marketing. Unificamos métricas do <strong>Google Ads, Google Search Console, Facebook e LinkedIn</strong> em dashboards de alto impacto para agências e empresas tomarem decisões baseadas em inteligência real.
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <Button asChild size="lg" className="h-14 px-8 rounded-full bg-primary text-black font-bold text-lg hover:bg-primary/90 transition-all hover:scale-105">
