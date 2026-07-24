@@ -188,23 +188,7 @@ function LandingPage() {
 
   return (
     <div className="relative min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-black">
-      {/* Language Switcher */}
-      <div className="fixed top-6 right-24 z-[60] flex gap-2">
-        <Link 
-          to="/" 
-          search={{ lang: 'pt' }}
-          className={`px-3 py-1 rounded-full text-xs font-bold transition-all border ${!isEn ? "bg-primary text-black border-primary" : "bg-black/50 text-white border-white/10 hover:border-white/30"}`}
-        >
-          PT
-        </Link>
-        <Link 
-          to="/" 
-          search={{ lang: 'en' }}
-          className={`px-3 py-1 rounded-full text-xs font-bold transition-all border ${isEn ? "bg-primary text-black border-primary" : "bg-black/50 text-white border-white/10 hover:border-white/30"}`}
-        >
-          EN
-        </Link>
-      </div>
+      {/* Language Switcher - Removed from absolute fixed position, now in Nav */}
 
       {/* Navigation */}
       <nav 
@@ -230,6 +214,22 @@ function LandingPage() {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
+            <div className="flex bg-white/5 rounded-full p-1 border border-white/10">
+              <Link 
+                to="/" 
+                search={{ lang: 'pt' }}
+                className={`px-3 py-1 rounded-full text-[10px] font-bold transition-all ${!isEn ? "bg-primary text-black" : "text-white/40 hover:text-white"}`}
+              >
+                PT
+              </Link>
+              <Link 
+                to="/" 
+                search={{ lang: 'en' }}
+                className={`px-3 py-1 rounded-full text-[10px] font-bold transition-all ${isEn ? "bg-primary text-black" : "text-white/40 hover:text-white"}`}
+              >
+                EN
+              </Link>
+            </div>
             <Link to="/login" className="text-sm font-medium text-white/60 hover:text-white transition-colors">
               {isEn ? "Login" : "Entrar"}
             </Link>
@@ -261,8 +261,26 @@ function LandingPage() {
               </a>
             ))}
             <div className="pt-4 flex flex-col gap-4 border-t border-white/5">
-              <Link to="/login" className="text-white/70 py-2">{isEn ? "Login" : "Entrar"}</Link>
-              <Button asChild className="w-full bg-primary text-black font-bold h-12">
+              <div className="flex bg-white/5 rounded-lg p-1 border border-white/10 w-fit">
+                <Link 
+                  to="/" 
+                  search={{ lang: 'pt' }}
+                  className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${!isEn ? "bg-primary text-black" : "text-white/40"}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Português
+                </Link>
+                <Link 
+                  to="/" 
+                  search={{ lang: 'en' }}
+                  className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${isEn ? "bg-primary text-black" : "text-white/40"}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  English
+                </Link>
+              </div>
+              <Link to="/login" className="text-white/70 py-2" onClick={() => setIsMenuOpen(false)}>{isEn ? "Login" : "Entrar"}</Link>
+              <Button asChild className="w-full bg-primary text-black font-bold h-12" onClick={() => setIsMenuOpen(false)}>
                 <Link to="/login">{isEn ? "Create account" : "Criar conta"}</Link>
               </Button>
             </div>
@@ -381,9 +399,9 @@ function LandingPage() {
         
         <div className="container mx-auto px-6 grid md:grid-cols-3 gap-8">
           {[
-            { title: "Sempre atualizado", desc: "Dados em tempo real. Sem apertar F5 ou esperar por exportações manuais." },
-            { title: "Sempre disponível", desc: "Acesse de qualquer lugar. Compartilhe com sua equipe ou clientes instantaneamente." },
-            { title: "Menos ruído", desc: "Filtramos o que não importa. Veja apenas os KPIs que movem o ponteiro do negócio." }
+            { title: isEn ? "Always updated" : "Sempre atualizado", desc: isEn ? "Real-time data. No refreshing or waiting for manual exports." : "Dados em tempo real. Sem apertar F5 ou esperar por exportações manuais." },
+            { title: isEn ? "Always available" : "Sempre disponível", desc: isEn ? "Access from anywhere. Share with your team or clients instantly." : "Acesse de qualquer lugar. Compartilhe com sua equipe ou clientes instantaneamente." },
+            { title: isEn ? "Less noise" : "Menos ruído", desc: isEn ? "We filter what doesn't matter. See only the KPIs that move the needle." : "Filtramos o que não importa. Veja apenas os KPIs que movem o ponteiro do negócio." }
           ].map((feature, i) => (
             <div key={i} className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/20 transition-all hover:-translate-y-1">
               <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
