@@ -247,8 +247,17 @@ function LandingPage() {
                <div className="absolute inset-0 bg-dot-grid opacity-20" />
                <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center p-8 space-y-4">
-                    <div className="text-6xl font-bold text-primary animate-pulse">∞</div>
-                    <p className="text-white/40 font-mono text-sm tracking-widest uppercase">Processando bilhões de data-points</p>
+                    <img 
+                      src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3" 
+                      alt="Data analytics visualization" 
+                      className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="relative z-10">
+                      <div className="h-1.5 w-32 bg-primary/20 rounded-full overflow-hidden mx-auto mb-4">
+                        <div className="h-full bg-primary animate-shimmer" style={{ width: '60%' }} />
+                      </div>
+                      <p className="text-white/40 font-mono text-sm tracking-widest uppercase">Análise Inteligente de Dados</p>
+                    </div>
                   </div>
                </div>
             </div>
