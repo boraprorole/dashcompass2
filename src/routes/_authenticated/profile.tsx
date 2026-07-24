@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, Camera, User } from "lucide-react";
+import imageCompression from "browser-image-compression";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
