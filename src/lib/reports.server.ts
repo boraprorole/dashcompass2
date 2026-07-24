@@ -112,7 +112,16 @@ export async function createReportImpl(
 
 export async function updateReportImpl(
   callerId: string,
-  input: { id: string; title?: string; company_id?: string | null; description?: string | null; url?: string | null; embed_code?: string | null; logo_url?: string | null },
+  input: { 
+    id: string; 
+    title?: string; 
+    company_id?: string | null; 
+    description?: string | null; 
+    url?: string | null; 
+    embed_code?: string | null; 
+    logo_url?: string | null;
+    agency_id?: string | null;
+  },
 ) {
   await assertAdmin(callerId);
   const { error } = await supabaseAdmin
@@ -124,6 +133,7 @@ export async function updateReportImpl(
       url: input.url ?? null,
       embed_code: input.embed_code ?? null,
       logo_url: input.logo_url ?? null,
+      agency_id: input.agency_id ?? null,
     })
     .eq("id", input.id);
   if (error) throw new Error(error.message);
