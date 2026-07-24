@@ -24,6 +24,8 @@ import { UnorteMetaCsvPanel } from "@/components/meta/UnorteMetaCsvPanel";
 import { UnorteGoogleAdsCsvPanel } from "@/components/google/UnorteGoogleAdsCsvPanel";
 import { UnorteCrmCsvPanel } from "@/components/crm/UnorteCrmCsvPanel";
 import { UnorteAnaliseGeralPanel } from "@/components/analysis/UnorteAnaliseGeralPanel";
+import { GoogleAdsPanel } from "@/components/google/GoogleAdsPanel";
+import { GoogleSearchConsolePanel } from "@/components/google/GoogleSearchConsolePanel";
 import { listGoogleAdsDatasets } from "@/lib/googleads-csv.functions";
 import {
   Select,
@@ -169,6 +171,7 @@ const PRIMARY_FIELDS: Record<string, string[]> = {
   facebook: ["page_fans", "page_reach", "page_impressions", "page_engaged_users", "page_post_engagements", "page_views_total"],
   facebook_ads: ["ctr", "cpm", "cost_per_action_type_lead", "actions_lead", "cpc", "spend", "reach", "impressions", "clicks", "conversions", "roas"],
   adwords: ["cost", "impressions", "clicks", "ctr", "average_cpc", "conversions", "conversion_value", "cost_per_conversion"],
+  google_ads: ["cost", "impressions", "clicks", "ctr", "average_cpc", "conversions", "conversion_value", "cost_per_conversion"],
   ga4: ["users", "sessions", "screenPageViews", "engagementRate", "conversions", "totalRevenue"],
   tiktok: ["spend", "reach", "impressions", "clicks", "video_views", "ctr", "cpm", "follows"],
   linkedin: ["cost", "impressions", "clicks", "ctr", "reactions", "shares", "follows", "video_views"],
@@ -309,6 +312,20 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
   });
 
   const fetchSearchConsole = useServerFn(getReportSearchConsoleTop);
+  const { data: gscUnifiedConn } = useQuery({
+    queryKey: ["gsc-unified-conn", reportId],
+    queryFn: async () => {
+      const { data } = await supabase.from("gsc_connections").select("id").eq("report_id", reportId).maybeSingle();
+      return data;
+    }
+  });
+  const { data: gadsUnifiedConn } = useQuery({
+    queryKey: ["gads-unified-conn", reportId],
+    queryFn: async () => {
+      const { data } = await supabase.from("gads_connections").select("id").eq("report_id", reportId).maybeSingle();
+      return data;
+    }
+  });
   const searchConsoleQ = useQuery({
     queryKey: ["report-searchconsole-top", reportId, rangeKey],
     queryFn: () => fetchSearchConsole({ data: { reportId, ...rangeArgs, limit: 10 } }),
