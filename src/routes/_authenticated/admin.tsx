@@ -87,6 +87,7 @@ import {
 } from "lucide-react";
 
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -1652,8 +1653,9 @@ function VisualIdTab() {
         </div>
 
         <div className="pt-4">
-          <Button onClick={handleUpdateColor}>
-            Salvar Alterações
+          <Button onClick={handleUpdateColor} disabled={isSaving}>
+            {isSaving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            {isSaving ? "Salvando..." : "Salvar Alterações"}
           </Button>
         </div>
       </div>
