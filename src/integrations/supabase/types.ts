@@ -501,6 +501,44 @@ export type Database = {
           },
         ]
       }
+      google_ads_connections: {
+        Row: {
+          created_at: string | null
+          customer_id: string | null
+          google_email: string | null
+          id: string
+          refresh_token: string
+          report_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          customer_id?: string | null
+          google_email?: string | null
+          id?: string
+          refresh_token: string
+          report_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          customer_id?: string | null
+          google_email?: string | null
+          id?: string
+          refresh_token?: string
+          report_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_ads_connections_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: true
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       google_ads_datasets: {
         Row: {
           company_id: string
@@ -544,6 +582,44 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gsc_connections: {
+        Row: {
+          created_at: string | null
+          google_email: string | null
+          id: string
+          refresh_token: string
+          report_id: string
+          site_url: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          google_email?: string | null
+          id?: string
+          refresh_token: string
+          report_id: string
+          site_url?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          google_email?: string | null
+          id?: string
+          refresh_token?: string
+          report_id?: string
+          site_url?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gsc_connections_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: true
+            referencedRelation: "reports"
             referencedColumns: ["id"]
           },
         ]
