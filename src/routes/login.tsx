@@ -169,9 +169,10 @@ function LoginPage() {
             </div>
             <div className="h-px w-24 bg-primary/20" />
             <p className="text-18px text-muted-foreground/60 uppercase tracking-[0.2em] font-medium max-w-lg">
-              The next generation of <br />
-              <span className="text-white">strategic marketing analysis</span>
+              A nova geração de <br />
+              <span className="text-white">análise estratégica de marketing</span>
             </p>
+
           </div>
 
 
