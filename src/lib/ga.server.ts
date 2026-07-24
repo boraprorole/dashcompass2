@@ -155,9 +155,8 @@ export async function assertAdminGa(userId: string) {
     .from("user_roles")
     .select("role")
     .eq("user_id", userId)
-    .eq("role", "admin")
-    .maybeSingle();
-  if (!data) throw new Error("Forbidden: admin only");
+    .in("role", ["admin", "admin_global", "admin_agencia"]);
+  if (!data || data.length === 0) throw new Error("Forbidden: admin only");
 }
 
 export async function listGaConnectionsImpl(userId: string, reportId: string) {
