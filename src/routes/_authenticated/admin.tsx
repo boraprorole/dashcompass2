@@ -87,6 +87,7 @@ import {
 } from "lucide-react";
 
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -1596,12 +1597,27 @@ function ScheduleConfigTab() {
 }
 
 function VisualIdTab() {
-  const [primaryColor, setPrimaryColor] = useState("#3DFC03");
+  const { primaryColor: contextColor } = useAuth();
+  const [primaryColor, setPrimaryColor] = useState(contextColor || "#3DFC03");
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleUpdateColor = () => {
-    document.documentElement.style.setProperty("--primary", primaryColor);
-    // Em um cenário real, salvaríamos isso no banco para persistência
-    toast.success(`Identidade visual atualizada para ${primaryColor}`);
+  const handleUpdateColor = async () => {
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from("app_settings")
+        .upsert({ key: "primary_color", value: primaryColor }, { onConflict: "key" });
+      
+      if (error) throw error;
+
+      document.documentElement.style.setProperty("--primary", primaryColor);
+      toast.success(`Identidade visual salva com sucesso!`);
+    } catch (err: any) {
+      console.error("Erro ao salvar cor:", err);
+      toast.error("Erro ao salvar identidade visual.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -1637,8 +1653,9 @@ function VisualIdTab() {
         </div>
 
         <div className="pt-4">
-          <Button onClick={handleUpdateColor}>
-            Salvar Alterações
+          <Button onClick={handleUpdateColor} disabled={isSaving}>
+            {isSaving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            {isSaving ? "Salvando..." : "Salvar Alterações"}
           </Button>
         </div>
       </div>

@@ -11,6 +11,7 @@ interface AuthContextValue {
   isTeam: boolean;
   isConexoes: boolean;
   loading: boolean;
+  primaryColor: string;
   signOut: () => Promise<void>;
 }
 
@@ -23,8 +24,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isTeam, setIsTeam] = useState(false);
   const [isConexoes, setIsConexoes] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [primaryColor, setPrimaryColor] = useState("#3DFC03");
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const loadSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("app_settings")
+        .select("value")
+        .eq("key", "primary_color")
+        .single();
+      
+      if (data?.value) {
+        const color = typeof data.value === "string" ? data.value : JSON.stringify(data.value).replace(/"/g, "");
+        setPrimaryColor(color);
+        document.documentElement.style.setProperty("--primary", color);
+      }
+    } catch (err) {
+      console.error("Erro ao carregar configurações:", err);
+    }
+  };
 
   const loadRoles = async (userId: string) => {
     const { data } = await supabase
@@ -38,6 +58,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    loadSettings();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
       setUser(newSession?.user ?? null);
@@ -69,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, isAdmin, isTeam, isConexoes, loading, signOut }}>
+    <AuthContext.Provider value={{ user, session, isAdmin, isTeam, isConexoes, loading, primaryColor, signOut }}>
       {children}
     </AuthContext.Provider>
   );
