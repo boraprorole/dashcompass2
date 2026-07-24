@@ -34,25 +34,93 @@ export const Route = createFileRoute("/")({
 });
 
 function LandingPage() {
+  const { lang } = Route.useSearch();
+  const isEn = lang === "en";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
-    
-    // Auto-scroll logic for demo or visual emphasis if needed
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
+  const navLinks = isEn ? [
+    { name: "Product", href: "#features" },
+    { name: "Integrations", href: "#integrations" },
+    { name: "AI", href: "#ai" },
+    { name: "Pricing", href: "#pricing" },
+  ] : [
     { name: "Produto", href: "#features" },
     { name: "Integrações", href: "#integrations" },
     { name: "IA", href: "#ai" },
     { name: "Preços", href: "#pricing" },
   ];
 
-  const plans = [
+  const plans = isEn ? [
+    {
+      name: "Starter",
+      price: "$29",
+      description: "For professionals and small businesses.",
+      features: [
+        "Up to 1 company",
+        "Up to 5 data connections",
+        "Real-time dashboard",
+        "AI connected to your data",
+        "Unlimited reports",
+        "Email support",
+      ],
+      buttonText: "Start now",
+      highlight: false,
+    },
+    {
+      name: "Agency",
+      price: "$99",
+      description: "For growing agencies.",
+      features: [
+        "Up to 10 companies",
+        "Up to 100 connections",
+        "White Label",
+        "AI for all clients",
+        "Unlimited reports",
+        "User management",
+        "Priority support",
+      ],
+      buttonText: "Choose Agency",
+      highlight: true,
+    },
+    {
+      name: "Agency Pro",
+      price: "$249",
+      description: "High capacity for teams.",
+      features: [
+        "Up to 20 companies",
+        "Up to 200 connections",
+        "Full White Label",
+        "Advanced AI*",
+        "Influencer management",
+        "Report library",
+        "API access",
+      ],
+      buttonText: "Choose Pro",
+      highlight: false,
+    },
+    {
+      name: "Enterprise",
+      price: "On request",
+      description: "Large scale operations.",
+      features: [
+        "Unlimited companies",
+        "Unlimited connections",
+        "Enterprise AI",
+        "Custom SLA",
+        "Success manager",
+        "Dedicated infrastructure",
+      ],
+      buttonText: "Contact sales",
+      highlight: false,
+    },
+  ] : [
     {
       name: "Starter",
       price: "R$ 99",
@@ -119,6 +187,24 @@ function LandingPage() {
 
   return (
     <div className="relative min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-black">
+      {/* Language Switcher */}
+      <div className="fixed top-6 right-24 z-[60] flex gap-2">
+        <Link 
+          to="/" 
+          search={{ lang: 'pt' }}
+          className={`px-3 py-1 rounded-full text-xs font-bold transition-all border ${!isEn ? "bg-primary text-black border-primary" : "bg-black/50 text-white border-white/10 hover:border-white/30"}`}
+        >
+          PT
+        </Link>
+        <Link 
+          to="/" 
+          search={{ lang: 'en' }}
+          className={`px-3 py-1 rounded-full text-xs font-bold transition-all border ${isEn ? "bg-primary text-black border-primary" : "bg-black/50 text-white border-white/10 hover:border-white/30"}`}
+        >
+          EN
+        </Link>
+      </div>
+
       {/* Navigation */}
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
