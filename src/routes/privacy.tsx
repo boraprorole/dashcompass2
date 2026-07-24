@@ -29,17 +29,23 @@ function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">3. Compartilhamento de Dados</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-4">3. Uso de Dados do Google</h2>
+            <p>O uso das informações recebidas das APIs do Google pelo DashCompass obedecerá à <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Política de Dados do Usuário dos Serviços de API do Google</a>, incluindo os requisitos de Uso Limitado.</p>
+            <p>Acessamos seus dados do <strong>Google Search Console</strong> e <strong>Google Ads</strong> exclusivamente para exibir métricas de performance em seu dashboard privado. Não compartilhamos esses dados com terceiros e não os utilizamos para fins publicitários ou treinamento de modelos de IA externos.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-foreground mb-4">4. Compartilhamento de Dados</h2>
             <p>Não vendemos seus dados pessoais. Podemos compartilhar informações com fornecedores de serviços que nos ajudam a operar nossa plataforma, sempre sob contratos de confidencialidade.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">4. Segurança</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-4">5. Segurança</h2>
             <p>Implementamos medidas de segurança técnicas e organizacionais para proteger seus dados contra acesso não autorizado ou perda.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">5. Seus Direitos</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-4">6. Seus Direitos</h2>
             <p>Você tem o direito de acessar, corrigir ou excluir seus dados pessoais a qualquer momento através das configurações de perfil ou entrando em contato conosco.</p>
           </section>
         </div>
