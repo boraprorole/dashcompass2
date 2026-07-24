@@ -88,6 +88,12 @@ export const Route = createFileRoute("/_authenticated/schedule")({
   head: () => ({
     meta: [{ title: "Cronograma" }],
   }),
+  beforeLoad: async () => {
+    const { data, error } = await supabase.from("app_features").select("enabled").eq("key", "/schedule").maybeSingle();
+    if (error || (data && !data.enabled)) {
+      throw redirect({ to: "/reports" });
+    }
+  },
   component: SchedulePage,
 });
 
