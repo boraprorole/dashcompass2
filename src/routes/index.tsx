@@ -290,8 +290,8 @@ function LandingPage() {
           >
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9] mb-8">
               <span className="sr-only">DashCompass</span>
-              <span className="text-white block">Toda direção</span>
-              <span className="text-primary italic block mt-4">começa com dados.</span>
+              <span className="text-white block">{isEn ? "Every direction" : "Toda direção"}</span>
+              <span className="text-primary italic block mt-4">{isEn ? "starts with data." : "começa com dados."}</span>
             </h1>
             <p className="sr-only">
               O DashCompass é uma plataforma profissional de marketing analytics. Nossa finalidade é unificar dados de Google Ads, Google Search Console, Meta e LinkedIn em um único dashboard inteligente, permitindo que empresas e agências analisem performance e otimizem investimentos com o auxílio de IA.
