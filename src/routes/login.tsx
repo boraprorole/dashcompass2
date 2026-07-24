@@ -1,5 +1,6 @@
 import { createFileRoute, redirect, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
+import { lovable } from "@/integrations/lovable";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Chrome } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { motion, AnimatePresence } from "framer-motion";
 import bgVideoAsset from "@/assets/login-bg.mp4.asset.json";
@@ -141,6 +142,19 @@ function LoginPage() {
       showError(translateAuthError(err?.message ?? "Erro inesperado. Tente novamente."));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: `${window.location.origin}/reports`,
+      });
+      if (result.error) {
+        showError(translateAuthError(result.error.message));
+      }
+    } catch (err: any) {
+      showError(translateAuthError(err?.message ?? "Erro inesperado ao conectar com Google."));
     }
   };
 
@@ -289,6 +303,25 @@ function LoginPage() {
               >
                 {loading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
                 {mode === "signin" ? "Acessar DashCompass" : "Criar minha conta"}
+              </Button>
+
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-white/10" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-[#080808] px-2 text-white/30">Ou continue com</span>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleGoogleLogin}
+                className="w-full h-14 bg-white/[0.03] border-white/10 text-white hover:bg-white/[0.08] hover:text-white rounded-[20px] font-semibold transition-all duration-300"
+              >
+                <Chrome className="mr-2 h-5 w-5" />
+                Google
               </Button>
             </form>
           </Tabs>
