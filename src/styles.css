@@ -6,12 +6,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-3xl: 40px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -42,61 +42,58 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: "Inter", sans-serif;
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 20px;
+  --primary: #3dfc03;
 
-  /* Modern Dark Cyber Theme */
-  --background: oklch(0.12 0.015 285);      /* Very dark blue/black */
-  --foreground: oklch(0.98 0.01 285);
+  /* Premium SaaS Minimalist Palette */
+  --background: #080808;
+  --secondary-bg: #111111;
+  --foreground: #ffffff;
   
-  --card: oklch(0.16 0.02 285 / 80%);
-  --card-foreground: oklch(0.98 0.01 285);
+  --card: #151515;
+  --card-foreground: #ffffff;
   
-  --popover: oklch(0.16 0.02 285);
-  --popover-foreground: oklch(0.98 0.01 285);
+  --popover: #111111;
+  --popover-foreground: #ffffff;
   
-  --primary: #3dfc03;                      /* Requested Primary Color #3dfc03 */
-  --primary-foreground: oklch(0.15 0.02 110);
+  --primary-foreground: #000000;
   --primary-glow: rgba(61, 252, 3, 0.4);
   
-  --secondary: oklch(0.25 0.03 285);
-  --secondary-foreground: oklch(0.98 0.01 285);
+  --secondary: #1d1d1d;
+  --secondary-foreground: #ffffff;
   
-  --muted: oklch(0.20 0.02 285);
-  --muted-foreground: oklch(0.65 0.02 285);
+  --muted: #111111;
+  --muted-foreground: #a1a1aa;
   
-  --accent: oklch(0.30 0.04 285);
-  --accent-foreground: oklch(0.98 0.01 285);
+  --accent: #1d1d1d;
+  --accent-foreground: #ffffff;
   
-  --destructive: oklch(0.55 0.20 25);
-  --destructive-foreground: oklch(0.98 0.01 285);
+  --destructive: #ff5252;
+  --destructive-foreground: #ffffff;
   
-  --border: oklch(0.98 0.01 285 / 10%);
-  --input: oklch(0.98 0.01 285 / 5%);
+  --border: rgba(255, 255, 255, 0.06);
+  --input: #111111;
   --ring: rgba(61, 252, 3, 0.5);
   
-  --glass: oklch(0.16 0.02 285 / 60%);
-  --glass-border: oklch(0.98 0.01 285 / 15%);
+  --glass: rgba(21, 21, 21, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.06);
   
-  --sidebar: oklch(0.14 0.015 285);
-  --sidebar-foreground: oklch(0.98 0.01 285);
+  --sidebar: #080808;
+  --sidebar-foreground: #a1a1aa;
   --sidebar-primary: #3dfc03;
-  --sidebar-primary-foreground: oklch(0.15 0.02 110);
-  --sidebar-accent: oklch(0.25 0.03 285);
-  --sidebar-accent-foreground: oklch(0.98 0.01 285);
-  --sidebar-border: oklch(0.98 0.01 285 / 8%);
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #151515;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
   --sidebar-ring: rgba(61, 252, 3, 0.3);
 
-  --gradient-mesh: radial-gradient(at 0% 0%, rgba(61, 252, 3, 0.15) 0px, transparent 50%),
-                   radial-gradient(at 100% 0%, oklch(0.30 0.10 285 / 20%) 0px, transparent 50%),
-                   radial-gradient(at 100% 100%, rgba(61, 252, 3, 0.10) 0px, transparent 50%),
-                   radial-gradient(at 0% 100%, oklch(0.20 0.05 285 / 15%) 0px, transparent 50%);
-
-  --shadow-glass: 0 8px 32px oklch(0 0 0 / 40%),
-                  inset 0 1px 1px oklch(1 0 0 / 10%);
-  --shadow-elevated: 0 20px 60px -10px oklch(0 0 0 / 60%);
+  --shadow-glass: 0 8px 24px rgba(0,0,0,0.25);
+  --shadow-elevated: 0 8px 24px rgba(0,0,0,0.25);
 }
 
 .dark {
@@ -104,23 +101,31 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * { 
+    border-color: var(--color-border);
+    border-width: 0px;
+    border-style: solid;
+  }
 
   html, body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     min-height: 100%;
+    font-family: var(--font-sans);
   }
 
   body {
-    background-image: 
-      linear-gradient(to right, oklch(0.98 0.01 285 / 3%) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(0.98 0.01 285 / 3%) 1px, transparent 1px),
-      var(--gradient-mesh);
+    background-image: none;
     background-attachment: fixed;
-    background-size: 40px 40px, 40px 40px, cover;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  h1 { font-size: 36px; font-weight: 600; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  h3 { font-size: 20px; font-weight: 600; }
+  p { font-size: 15px; color: var(--muted-foreground); }
 }
 
 @layer utilities {
