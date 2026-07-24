@@ -3,6 +3,7 @@ import { exchangeCode, fetchGoogleEmail, verifyState } from "@/lib/ga.server";
 import { saveGscConnection } from "@/lib/gsc.server";
 import { saveGadsConnection } from "@/lib/gads.server";
 import { saveOauthConnection } from "@/lib/ga.server";
+import { getGoogleRedirectUri } from "@/lib/google_auth.server";
 
 function html(body: string, status = 200) {
   return new Response(
