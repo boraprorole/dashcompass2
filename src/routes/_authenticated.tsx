@@ -45,6 +45,21 @@ function AuthenticatedLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url")
+        .eq("id", user!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    staleTime: 60_000,
+  });
+
   const getDemandasFn = useServerFn(getDemandasEnabled);
   const demandasQ = useQuery({
     queryKey: ["demandas-enabled"],
@@ -166,8 +181,12 @@ function AuthenticatedLayout() {
 
         <div className={cn("mt-auto border-t border-border pt-6 px-4")}>
           <div className={cn("flex items-center gap-3", isCollapsed ? "flex-col mb-4" : "mb-4")}>
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
-              {user?.email?.[0]?.toUpperCase() ?? "U"}
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/15 text-sm font-semibold text-primary">
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+              ) : (
+                profile?.display_name?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? "U"
+              )}
             </div>
             {!isCollapsed && (
               <div className="min-w-0 flex-1">
