@@ -214,6 +214,22 @@ function LandingPage() {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
+            <div className="flex bg-white/5 rounded-full p-1 border border-white/10">
+              <Link 
+                to="/" 
+                search={{ lang: 'pt' }}
+                className={`px-3 py-1 rounded-full text-[10px] font-bold transition-all ${!isEn ? "bg-primary text-black" : "text-white/40 hover:text-white"}`}
+              >
+                PT
+              </Link>
+              <Link 
+                to="/" 
+                search={{ lang: 'en' }}
+                className={`px-3 py-1 rounded-full text-[10px] font-bold transition-all ${isEn ? "bg-primary text-black" : "text-white/40 hover:text-white"}`}
+              >
+                EN
+              </Link>
+            </div>
             <Link to="/login" className="text-sm font-medium text-white/60 hover:text-white transition-colors">
               {isEn ? "Login" : "Entrar"}
             </Link>
