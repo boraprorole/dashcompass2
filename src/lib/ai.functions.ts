@@ -50,7 +50,7 @@ export const createAiThread = createServerFn({ method: "POST" })
 
     // Default to the flagged default agent if none provided
     let agentId = data.agentId ?? null;
-    let provider = data.provider ?? "anthropic";
+    let provider = data.provider ?? "openai";
     let model = data.model ?? AI_MODELS[provider][0].id;
     let mode = data.mode ?? "general";
     let agentName: string | null = null;

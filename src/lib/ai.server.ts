@@ -25,6 +25,7 @@ export const AI_MODELS: Record<AiProvider, { id: string; label: string }[]> = {
     { id: "claude-opus-4-1-20250805", label: "Claude Opus 4.1" },
   ],
   openai: [
+    { id: "gpt-5-nano", label: "GPT-5 nano" },
     { id: "gpt-4o", label: "GPT-4o" },
     { id: "gpt-4o-mini", label: "GPT-4o mini" },
     { id: "gpt-4.1", label: "GPT-4.1" },
