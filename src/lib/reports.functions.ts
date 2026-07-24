@@ -26,6 +26,7 @@ export const createReport = createServerFn({ method: "POST" })
       url: z.string().url().max(2000).optional().nullable().or(z.literal("")),
       embed_code: z.string().max(10000).optional().nullable(),
       logo_url: z.string().url().max(2000).optional().nullable().or(z.literal("")),
+      agency_id: z.string().uuid().optional().nullable(),
     }).parse(input),
   )
   .handler(async ({ context, data }) =>
@@ -36,6 +37,7 @@ export const createReport = createServerFn({ method: "POST" })
       url: data.url || null,
       embed_code: data.embed_code || null,
       logo_url: data.logo_url || null,
+      agency_id: data.agency_id || null,
     }),
   );
 
@@ -50,6 +52,7 @@ export const updateReport = createServerFn({ method: "POST" })
       url: z.string().url().max(2000).optional().nullable().or(z.literal("")),
       embed_code: z.string().max(10000).optional().nullable(),
       logo_url: z.string().url().max(2000).optional().nullable().or(z.literal("")),
+      agency_id: z.string().uuid().optional().nullable(),
     }).parse(input),
   )
   .handler(async ({ context, data }) =>
@@ -61,6 +64,7 @@ export const updateReport = createServerFn({ method: "POST" })
       url: data.url || null,
       embed_code: data.embed_code || null,
       logo_url: data.logo_url || null,
+      agency_id: data.agency_id || null,
     }),
   );
 
