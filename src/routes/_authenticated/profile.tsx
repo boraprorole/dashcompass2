@@ -129,8 +129,12 @@ function ProfilePage() {
 
       toast.success("Foto de perfil atualizada!");
     } catch (error: any) {
-      console.error("Erro no upload/compressão:", error);
-      toast.error("Erro ao processar imagem.");
+      console.error("Erro detalhado no upload:", {
+        message: error.message,
+        error: error,
+        stack: error.stack
+      });
+      toast.error(`Erro: ${error.message || "Erro ao processar imagem."}`);
     } finally {
       setUploading(false);
     }
