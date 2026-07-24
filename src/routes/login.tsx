@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Loader2, Compass } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import bgVideoAsset from "@/assets/login-bg.mp4.asset.json";
 
 
 export const Route = createFileRoute("/login")({
@@ -142,78 +144,102 @@ function LoginPage() {
 
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-dot-grid px-8 py-12">
-      <div className="relative w-full max-w-7xl flex flex-col items-center">
-        <div className="mb-12 text-center md:hidden">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Compass className="h-10 w-10 text-primary" />
-            <span className="font-sans text-36px font-bold tracking-tighter text-white">
-              DashCompass
-            </span>
+    <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center font-sans">
+      {/* Camada 1: Vídeo Background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 h-full w-full object-cover pointer-events-none"
+      >
+        <source src={bgVideoAsset.url} type="video/mp4" />
+      </video>
 
-          </div>
-          <p className="text-[14px] text-muted-foreground/60 uppercase tracking-widest font-medium">
-            Inteligência de Dados Minimalista
-          </p>
+      {/* Camada 2: Overlay Escuro */}
+      <div 
+        className="absolute inset-0 z-10 pointer-events-none" 
+        style={{ background: 'rgba(8, 8, 8, 0.72)' }} 
+      />
 
-        </div>
+      {/* Camada 3: Glass Blur Sutil */}
+      <div 
+        className="absolute inset-0 z-20 pointer-events-none" 
+        style={{ 
+          background: 'rgba(8, 8, 8, 0.18)',
+          backdropFilter: 'blur(14px)',
+          WebkitBackdropFilter: 'blur(14px)'
+        }} 
+      />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-20 max-w-6xl w-full items-center">
-          {/* Lado Esquerdo - Branding Minimalista */}
-          <div className="hidden md:flex flex-col justify-center space-y-6">
-            <div className="flex items-center gap-6 mb-2">
-              <div className="h-20 w-20 rounded-[22px] bg-primary flex items-center justify-center shadow-[0_0_40px_rgba(61,252,3,0.3)]">
-                <Compass className="h-10 w-10 text-black stroke-[2.5px]" />
-              </div>
-              <h1 className="text-64px font-bold tracking-tighter leading-none text-white">
-                Dash<span className="text-primary/90">Compass</span>
-              </h1>
-
+      {/* Camada 4: Interface de Login */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="relative z-30 w-full max-w-[520px] px-4"
+      >
+        <div 
+          className="rounded-[28px] border border-white/8 p-12 shadow-[0_20px_60px_rgba(0,0,0,0.35)] flex flex-col"
+          style={{
+            background: 'rgba(23, 23, 23, 0.72)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)'
+          }}
+        >
+          <div className="flex flex-col items-center mb-10">
+            <div className="h-16 w-16 rounded-[18px] bg-primary flex items-center justify-center shadow-[0_0_30px_rgba(61,252,3,0.3)] mb-6">
+              <Compass className="h-8 w-8 text-black stroke-[2.5px]" />
             </div>
-            <div className="h-px w-24 bg-primary/20" />
-            <p className="text-18px text-muted-foreground/60 uppercase tracking-[0.2em] font-medium max-w-lg">
-              A nova geração de <br />
-              <span className="text-white">análise estratégica de marketing</span>
+            <h1 className="text-3xl font-bold tracking-tight text-white mb-2">
+              DashCompass
+            </h1>
+            <p className="text-[14px] text-muted-foreground font-medium tracking-wide">
+              A nova geração de análise estratégica
             </p>
-
           </div>
 
-
-          {/* Lado Direito - Card de Login */}
-          <div className="rounded-[24px] border border-border bg-card p-12 shadow-glass flex flex-col justify-center">
-          <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")}>
-            <TabsList className="grid w-full grid-cols-2 rounded-[14px] bg-[#111] p-1 border border-border">
+          <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 rounded-[14px] bg-white/5 p-1 border border-white/5 mb-8">
               <TabsTrigger 
                 value="signin"
-                className="rounded-[10px] data-[state=active]:bg-primary data-[state=active]:text-black"
+                className="rounded-[10px] py-2.5 data-[state=active]:bg-primary data-[state=active]:text-black text-white/60"
               >
                 Entrar
               </TabsTrigger>
               <TabsTrigger 
                 value="signup"
-                className="rounded-[10px] data-[state=active]:bg-primary data-[state=active]:text-black"
+                className="rounded-[10px] py-2.5 data-[state=active]:bg-primary data-[state=active]:text-black text-white/60"
               >
                 Cadastrar
               </TabsTrigger>
             </TabsList>
 
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-              <TabsContent value="signup" className="m-0 space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="displayName" className="text-sm font-medium text-foreground/80">Nome</Label>
-                  <Input
-                    id="displayName"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="Como podemos te chamar?"
-                    autoComplete="name"
-                    maxLength={80}
-                  />
-                </div>
-              </TabsContent>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <AnimatePresence mode="wait">
+                {mode === "signup" && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="space-y-2 overflow-hidden"
+                  >
+                    <Label htmlFor="displayName" className="text-sm font-medium text-white/80">Nome</Label>
+                    <Input
+                      id="displayName"
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
+                      placeholder="Como podemos te chamar?"
+                      autoComplete="name"
+                      maxLength={80}
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-[14px] focus:ring-primary/20"
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-foreground/80">Email</Label>
+                <Label htmlFor="email" className="text-sm font-medium text-white/80">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -223,11 +249,12 @@ function LoginPage() {
                   autoComplete="email"
                   required
                   maxLength={255}
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-[14px] focus:ring-primary/20"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-foreground/80">Senha</Label>
+                <Label htmlFor="password" className="text-sm font-medium text-white/80">Senha</Label>
                 <Input
                   id="password"
                   type="password"
@@ -238,6 +265,7 @@ function LoginPage() {
                   required
                   minLength={6}
                   maxLength={72}
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-[14px] focus:ring-primary/20"
                 />
               </div>
 
@@ -246,7 +274,7 @@ function LoginPage() {
                   <button
                     type="button"
                     onClick={() => { setForgotEmail(email); setForgotOpen(true); }}
-                    className="text-xs text-primary hover:underline"
+                    className="text-xs text-primary hover:text-primary/80 transition-colors"
                   >
                     Esqueci minha senha
                   </button>
@@ -256,33 +284,34 @@ function LoginPage() {
               {errorMsg && (
                 <div
                   role="alert"
-                  className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+                  className="rounded-[14px] border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
                 >
                   {errorMsg}
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-12 text-[15px] font-bold" size="lg" disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {mode === "signin" ? "Entrar" : "Criar conta"}
+              <Button 
+                type="submit" 
+                className="w-full h-14 text-black bg-primary hover:bg-primary/90 rounded-[18px] text-[16px] font-bold shadow-[0_0_20px_rgba(61,252,3,0.2)]" 
+                size="lg" 
+                disabled={loading}
+              >
+                {loading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                {mode === "signin" ? "Acessar DashCompass" : "Criar minha conta"}
               </Button>
-
             </form>
           </Tabs>
+
+          <p className="mt-8 text-center text-[12px] text-white/30 font-medium">
+            Ao continuar, você concorda com os nossos termos de uso.
+          </p>
         </div>
-      </div>
-
-
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          Ao continuar, você concorda com os nossos termos de uso.
-        </p>
-      </div>
-
+      </motion.div>
       <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
-        <DialogContent>
+        <DialogContent className="bg-[#171717] border-white/10 text-white">
           <DialogHeader>
             <DialogTitle>Redefinir senha</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-white/60">
               Informe seu email e enviaremos um link para criar uma nova senha.
             </DialogDescription>
           </DialogHeader>
@@ -298,13 +327,14 @@ function LoginPage() {
                 autoComplete="email"
                 required
                 maxLength={255}
+                className="bg-white/5 border-white/10 text-white"
               />
             </div>
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => setForgotOpen(false)}>
+              <Button type="button" variant="ghost" onClick={() => setForgotOpen(false)} className="text-white/60 hover:text-white">
                 Cancelar
               </Button>
-              <Button type="submit" disabled={forgotLoading}>
+              <Button type="submit" disabled={forgotLoading} className="bg-primary text-black hover:bg-primary/90">
                 {forgotLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Enviar link
               </Button>
