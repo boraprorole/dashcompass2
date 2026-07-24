@@ -181,8 +181,8 @@ function LoginPage() {
       >
         <div className="flex flex-col space-y-8 py-8 md:py-12">
           <div className="flex items-center justify-center space-x-3 mb-12">
-            <Compass className="h-10 w-10 text-primary stroke-[2.5px]" />
-            <h1 className="text-4xl font-bold tracking-tighter text-white">
+            <Compass className="h-10 w-10 text-primary stroke-[1.5px]" />
+            <h1 className="text-4xl font-bold tracking-tighter text-white leading-none">
               DashCompass
             </h1>
           </div>
