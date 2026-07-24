@@ -307,24 +307,6 @@ function LoginPage() {
                 {mode === "signin" ? "Acessar DashCompass" : "Criar minha conta"}
               </Button>
 
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-white/10" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-[#080808] px-2 text-white/30">Ou continue com</span>
-                </div>
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleGoogleLogin}
-                className="w-full h-14 bg-white/[0.03] border-white/10 text-white hover:bg-white/[0.08] hover:text-white rounded-[20px] font-semibold transition-all duration-300"
-              >
-                <Chrome className="mr-2 h-5 w-5" />
-                Google
-              </Button>
             </form>
           </Tabs>
 
