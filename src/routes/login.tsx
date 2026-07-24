@@ -1,5 +1,6 @@
 import { createFileRoute, redirect, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
+import { lovable } from "@/integrations/lovable";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -146,14 +147,11 @@ function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/reports`,
-        },
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: `${window.location.origin}/reports`,
       });
-      if (error) {
-        showError(translateAuthError(error.message));
+      if (result.error) {
+        showError(translateAuthError(result.error.message));
       }
     } catch (err: any) {
       showError(translateAuthError(err?.message ?? "Erro inesperado ao conectar com Google."));
