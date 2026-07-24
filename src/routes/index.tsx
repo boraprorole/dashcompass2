@@ -12,8 +12,8 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "DashCompass — Marketing Data Integration & Dashboard Platform" },
       { name: "description", content: "DashCompass is a professional marketing data integration platform. We unify Google Ads, Google Search Console, and Meta metrics into high-impact dashboards and AI-powered insights for agencies and businesses." },
-      { property: "og:title", content: "DashCompass — Unified Marketing Intelligence Platform" },
-      { property: "og:description", content: "The central hub for your marketing data. Connect GA4, GSC, and Ads, analyze with AI, and grow your business with clarity." },
+      { property: "og:title", content: "DashCompass — Marketing Data Integration & Dashboard Platform" },
+      { property: "og:description", content: "DashCompass is a professional marketing data integration platform. We unify Google Ads, Google Search Console, and Meta metrics into high-impact dashboards and AI-powered insights for agencies and businesses." },
     ],
   }),
   beforeLoad: async () => {
