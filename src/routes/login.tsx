@@ -183,12 +183,16 @@ function LoginPage() {
         <div className="flex flex-col space-y-8 py-8 md:py-12">
           <div className="flex items-center justify-center gap-4 mb-12">
             <div className="relative flex items-center justify-center h-12 w-12">
-              <img 
-                src={logoAsset.url} 
-                alt="DashCompass Logo" 
-                className="h-full w-full object-contain"
+              <div 
+                className="h-full w-full bg-primary"
                 style={{ 
-                  filter: 'brightness(0) saturate(100%) invert(84%) sepia(85%) saturate(4646%) hue-rotate(46deg) brightness(102%) contrast(105%) drop-shadow(0 0 8px rgba(61,252,3,0.3))' 
+                  WebkitMaskImage: `url(${logoAsset.url})`,
+                  maskImage: `url(${logoAsset.url})`,
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskSize: 'contain',
+                  maskSize: 'contain',
+                  filter: 'drop-shadow(0 0 8px var(--primary-glow))'
                 }}
               />
             </div>
