@@ -83,7 +83,7 @@ function AuthenticatedLayout() {
           <div className="mb-8 flex items-center justify-between">
             {!isCollapsed && (
               <Link to="/reports" className="flex flex-1 items-center justify-center overflow-hidden">
-                <span className="font-serif text-2xl italic tracking-widest text-primary">
+                <span className="font-sans text-xl font-bold tracking-tighter text-primary">
                   DASHCOMPASS
                 </span>
               </Link>
@@ -101,7 +101,7 @@ function AuthenticatedLayout() {
           
           {isCollapsed && (
             <div className="mb-8 flex items-center justify-center overflow-hidden">
-               <span className="font-serif text-xl italic text-primary">D</span>
+               <span className="font-sans text-xl font-bold text-primary">D</span>
             </div>
           )}
 
@@ -168,7 +168,7 @@ function AuthenticatedLayout() {
       {/* Mobile top bar */}
       <div className="glass fixed inset-x-0 top-0 z-20 flex items-center justify-between p-3 md:hidden">
         <Link to="/reports" className="flex items-center">
-          <span className="font-serif text-xl italic tracking-widest text-primary">
+          <span className="font-sans text-xl font-bold tracking-tighter text-primary">
             DASHCOMPASS
           </span>
         </Link>
