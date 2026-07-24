@@ -36,7 +36,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loadSettings = async () => {
     try {
-      // Usar a chave anon_client para que qualquer usuário (mesmo deslogado) possa ler
       const { data, error } = await supabase
         .from("app_settings")
         .select("value")
@@ -47,9 +46,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const color = typeof data.value === "string" ? data.value : JSON.stringify(data.value).replace(/"/g, "");
         setPrimaryColor(color);
         document.documentElement.style.setProperty("--primary", color);
+        
+        // Calcular e definir --primary-glow
+        const r = parseInt(color.slice(1, 3), 16);
+        const g = parseInt(color.slice(3, 5), 16);
+        const b = parseInt(color.slice(5, 7), 16);
+        const primaryGlow = `rgba(${r}, ${g}, ${b}, 0.4)`;
+        document.documentElement.style.setProperty("--primary-glow", primaryGlow);
       } else {
-        // Fallback para a cor padrão se não houver configuração
         document.documentElement.style.setProperty("--primary", "#3DFC03");
+        document.documentElement.style.setProperty("--primary-glow", "rgba(61, 252, 3, 0.4)");
       }
     } catch (err) {
       console.error("Erro ao carregar configurações:", err);
