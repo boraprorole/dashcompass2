@@ -95,9 +95,9 @@ function AuthenticatedLayout() {
         >
           <div className="mb-8 flex items-center justify-between px-4">
             {!isCollapsed && (
-              <Link to="/reports" className="flex items-center gap-3 overflow-hidden">
+              <Link to="/reports" className="flex items-baseline gap-3 overflow-hidden">
                 <div 
-                  className="h-8 w-8 bg-primary"
+                  className="h-7 w-7 bg-primary self-center"
                   style={{ 
                     WebkitMaskImage: `url(${logoAsset.url})`,
                     maskImage: `url(${logoAsset.url})`,
@@ -108,7 +108,7 @@ function AuthenticatedLayout() {
                     filter: 'drop-shadow(0 0 8px var(--primary-glow))'
                   }}
                 />
-                <span className="font-sans text-xl font-bold tracking-tighter text-white leading-none translate-y-[1px]">
+                <span className="font-sans text-xl font-bold tracking-tighter text-white leading-none">
                   DashCompass
                 </span>
               </Link>
