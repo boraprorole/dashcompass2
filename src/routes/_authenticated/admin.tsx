@@ -27,7 +27,7 @@ import { AdminDemandasTab } from "@/components/demandas/AdminDemandasTab";
 import { AdminRDStationTab } from "@/components/rdstation/AdminRDStationTab";
 import { AdminMcpTab } from "@/components/mcp/AdminMcpTab";
 import { NewsSettingsTab } from "@/components/news/NewsSettingsTab";
-import { Sparkles, Radio, Newspaper, Palette } from "lucide-react";
+import { Sparkles, Radio, Newspaper } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
