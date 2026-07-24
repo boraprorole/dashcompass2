@@ -41,7 +41,7 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AuthenticatedLayout() {
-  const { user, isAdmin, isTeam, isConexoes, signOut } = useAuth();
+  const { user, isAdmin, isAdminGlobal, isTeam, isConexoes, signOut } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -79,7 +79,7 @@ function AuthenticatedLayout() {
     ...(canSeeConexoes && isEnabled("/conexoes") ? [{ to: "/conexoes", label: "Conexões", icon: Link2 }] : []),
     ...(isAdmin && isEnabled("/ai") ? [{ to: "/ai", label: "Compass AI", icon: Sparkles }] : []),
     ...(isEnabled("/profile") ? [{ to: "/profile", label: "Perfil", icon: UserCircle }] : []),
-    ...(isAdmin ? [{ to: "/admin", label: "Admin", icon: Shield }] : []),
+    ...(isAdmin ? [{ to: "/admin", label: isAdminGlobal ? "Admin Global" : "Admin Agência", icon: Shield }] : []),
   ];
 
 
