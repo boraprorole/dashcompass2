@@ -83,22 +83,28 @@ function ProfilePage() {
         const options = {
           maxSizeMB: 1, // Alvo de 1MB para o avatar
           maxWidthOrHeight: 1024,
-          useWebWorker: true,
-          fileType: "image/webp" as string,
+          useWebWorker: false, // Desabilitado webWorker temporariamente para debug de compatibilidade
+          fileType: "image/webp",
           initialQuality: 0.85,
         };
         
         toast.info("Otimizando imagem...");
-        fileToUpload = await imageCompression(file, options);
+        try {
+          fileToUpload = await imageCompression(file, options);
+        } catch (compressionError) {
+          console.error("Erro na compressão, tentando upload original:", compressionError);
+          // Se a compressão falhar, tentamos usar o arquivo original em vez de travar
+          fileToUpload = file;
+        }
       }
 
-      const fileName = `${user.id}/${Date.now()}.webp`;
+      const fileName = `${user.id}/${Date.now()}.${fileToUpload.type === 'image/webp' ? 'webp' : file.name.split('.').pop()}`;
       const filePath = fileName;
 
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(filePath, fileToUpload, {
-          contentType: "image/webp",
+          contentType: fileToUpload.type || "image/webp",
           upsert: true
         });
 
