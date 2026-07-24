@@ -104,7 +104,7 @@ function ProfilePage() {
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(filePath, fileToUpload, {
-          contentType: "image/webp",
+          contentType: fileToUpload.type || "image/webp",
           upsert: true
         });
 
