@@ -519,9 +519,9 @@ function LandingPage() {
               <Logo iconClassName="h-6 w-6" textClassName="text-lg" />
             </div>
             <div className="flex items-center gap-8 text-sm text-white/40">
-              <Link to="/terms" className="hover:text-primary transition-colors">Termos</Link>
-              <Link to="/privacy" className="hover:text-primary transition-colors">Privacidade</Link>
-              <Link to="/login" className="hover:text-primary transition-colors">Acesso</Link>
+              <Link to="/terms" className="hover:text-primary transition-colors">{isEn ? "Terms" : "Termos"}</Link>
+              <Link to="/privacy" className="hover:text-primary transition-colors">{isEn ? "Privacy" : "Privacidade"}</Link>
+              <Link to="/login" className="hover:text-primary transition-colors">{isEn ? "Access" : "Acesso"}</Link>
             </div>
           </div>
           <div className="pt-8 border-t border-white/5 text-center">
