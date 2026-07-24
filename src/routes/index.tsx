@@ -33,6 +33,8 @@ function LandingPage() {
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
+    
+    // Auto-scroll logic for demo or visual emphasis if needed
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
