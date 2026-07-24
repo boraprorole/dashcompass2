@@ -79,7 +79,7 @@ function AuthenticatedLayout() {
     ...(canSeeConexoes && isEnabled("/conexoes") ? [{ to: "/conexoes", label: "Conexões", icon: Link2 }] : []),
     ...(isAdmin && isEnabled("/ai") ? [{ to: "/ai", label: "Compass AI", icon: Sparkles }] : []),
     ...(isEnabled("/profile") ? [{ to: "/profile", label: "Perfil", icon: UserCircle }] : []),
-    ...(isAdmin ? [{ to: "/admin", label: "Admin", icon: Shield }] : []),
+    ...(isAdmin ? [{ to: "/admin", label: isAdminGlobal ? "Admin Global" : "Admin Agência", icon: Shield }] : []),
   ];
 
 

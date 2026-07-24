@@ -136,9 +136,12 @@ function AdminPage() {
           <TabsTrigger value="users" className="gap-2">
             <Users className="h-4 w-4" /> Usuários
           </TabsTrigger>
-          <TabsTrigger value="visual" className="gap-2">
-            <Palette className="h-4 w-4" /> ID Visual
-          </TabsTrigger>
+          
+          {isAdminGlobal && (
+            <TabsTrigger value="visual" className="gap-2">
+              <Palette className="h-4 w-4" /> ID Visual
+            </TabsTrigger>
+          )}
           
           {isAdminGlobal && (
             <TabsTrigger value="features" className="gap-2">
