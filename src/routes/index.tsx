@@ -188,23 +188,7 @@ function LandingPage() {
 
   return (
     <div className="relative min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-black">
-      {/* Language Switcher */}
-      <div className="fixed top-6 right-24 z-[60] flex gap-2">
-        <Link 
-          to="/" 
-          search={{ lang: 'pt' }}
-          className={`px-3 py-1 rounded-full text-xs font-bold transition-all border ${!isEn ? "bg-primary text-black border-primary" : "bg-black/50 text-white border-white/10 hover:border-white/30"}`}
-        >
-          PT
-        </Link>
-        <Link 
-          to="/" 
-          search={{ lang: 'en' }}
-          className={`px-3 py-1 rounded-full text-xs font-bold transition-all border ${isEn ? "bg-primary text-black border-primary" : "bg-black/50 text-white border-white/10 hover:border-white/30"}`}
-        >
-          EN
-        </Link>
-      </div>
+      {/* Language Switcher - Removed from absolute fixed position, now in Nav */}
 
       {/* Navigation */}
       <nav 
