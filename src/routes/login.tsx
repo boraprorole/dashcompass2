@@ -285,7 +285,7 @@ function LoginPage() {
 
               <Button 
                 type="submit" 
-                className="w-full h-14 text-black bg-primary hover:bg-primary/90 rounded-[18px] text-[16px] font-bold shadow-[0_0_20px_rgba(61,252,3,0.2)]" 
+                className="w-full h-16 text-black bg-primary hover:bg-primary/90 rounded-[22px] text-[17px] font-bold shadow-[0_10px_30px_rgba(61,252,3,0.15)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-4" 
                 size="lg" 
                 disabled={loading}
               >
