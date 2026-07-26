@@ -83,7 +83,9 @@ export async function setGscSite(userId: string, reportId: string, siteUrl: stri
 export async function listGoogleAdsCustomersForReport(userId: string, reportId: string) {
   await assertAdminGa(userId);
   const developerToken = process.env.GOOGLE_ADS_DEVELOPER_TOKEN;
-  if (!developerToken) throw new Error("GOOGLE_ADS_DEVELOPER_TOKEN não configurado");
+  if (!developerToken) {
+    throw new Error("GOOGLE_ADS_DEVELOPER_TOKEN não configurado");
+  }
   const loginCustomerId = process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID;
 
   const { data: conn } = await supabaseAdmin
@@ -91,7 +93,9 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
     .select("id, refresh_token, customer_id")
     .eq("report_id", reportId)
     .maybeSingle();
+  
   if (!conn) return { current: null, customers: [] as Array<{ customerId: string; descriptiveName: string }> };
+  
   const { access_token } = await refreshAccessToken(conn.refresh_token);
 
   const headers: Record<string, string> = {
@@ -105,7 +109,13 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
     "https://googleads.googleapis.com/v18/customers:listAccessibleCustomers",
     { headers },
   );
-  if (!listRes.ok) throw new Error(`Ads list: ${listRes.status} ${await listRes.text()}`);
+  
+  if (!listRes.ok) {
+    const errorText = await listRes.text();
+    console.error("Ads list error:", listRes.status, errorText);
+    throw new Error(`Ads list: ${listRes.status}. Verifique se o Developer Token e o Login Customer ID estão corretos.`);
+  }
+
   const listJson = (await listRes.json()) as { resourceNames?: string[] };
   const ids = (listJson.resourceNames ?? []).map((r) => r.replace("customers/", ""));
 
