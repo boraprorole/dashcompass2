@@ -74,7 +74,8 @@ export async function setGscSite(userId: string, reportId: string, siteUrl: stri
   const { error } = await supabaseAdmin
     .from("gsc_connections")
     .update({ site_url: siteUrl, updated_at: new Date().toISOString() })
-    .eq("report_id", reportId);
+    .eq("report_id", reportId)
+    .is("site_url", null);
   if (error) throw new Error(error.message);
   return { ok: true };
 }
@@ -154,7 +155,8 @@ export async function setGoogleAdsCustomer(userId: string, reportId: string, cus
   const { error } = await supabaseAdmin
     .from("google_ads_connections")
     .update({ customer_id: customerId, updated_at: new Date().toISOString() })
-    .eq("report_id", reportId);
+    .eq("report_id", reportId)
+    .is("customer_id", null);
   if (error) throw new Error(error.message);
   return { ok: true };
 }
