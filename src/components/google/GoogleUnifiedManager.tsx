@@ -207,9 +207,10 @@ function GaPicker({ reportId, onSaved }: { reportId: string; onSaved: () => void
 function GscPicker({ reportId, onSaved }: { reportId: string; onSaved: () => void }) {
   const list = useServerFn(listGscSites);
   const choose = useServerFn(chooseGscSite);
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["gsc-sites", reportId],
     queryFn: () => list({ data: { reportId } }),
+    staleTime: 0,
   });
   const mut = useMutation({
     mutationFn: (siteUrl: string) => choose({ data: { reportId, siteUrl } }),
@@ -241,9 +242,10 @@ function GscPicker({ reportId, onSaved }: { reportId: string; onSaved: () => voi
 function GadsPicker({ reportId, onSaved }: { reportId: string; onSaved: () => void }) {
   const list = useServerFn(listGoogleAdsCustomers);
   const choose = useServerFn(chooseGoogleAdsCustomer);
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["gads-customers", reportId],
     queryFn: () => list({ data: { reportId } }),
+    staleTime: 0,
   });
   const mut = useMutation({
     mutationFn: (customerId: string) => choose({ data: { reportId, customerId } }),
