@@ -221,7 +221,19 @@ function GscPicker({ reportId, onSaved }: { reportId: string; onSaved: () => voi
     onError: (e: Error) => toast.error(e.message),
   });
   if (isLoading) return <PickerSkeleton label="Carregando sites…" />;
-  if (error) return <PickerError message={(error as Error).message} />;
+  if (error) return (
+    <div className="space-y-2">
+      <PickerError message={(error as Error).message} />
+      <Button 
+        variant="outline" 
+        size="sm" 
+        className="w-full text-[10px] h-7"
+        onClick={() => refetch()}
+      >
+        Tentar novamente
+      </Button>
+    </div>
+  );
   return (
     <Select value={data?.current ?? undefined} onValueChange={(v) => mut.mutate(v)} disabled={mut.isPending}>
       <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Escolher site do GSC" /></SelectTrigger>
@@ -256,7 +268,19 @@ function GadsPicker({ reportId, onSaved }: { reportId: string; onSaved: () => vo
     onError: (e: Error) => toast.error(e.message),
   });
   if (isLoading) return <PickerSkeleton label="Carregando contas…" />;
-  if (error) return <PickerError message={(error as Error).message} />;
+  if (error) return (
+    <div className="space-y-2">
+      <PickerError message={(error as Error).message} />
+      <Button 
+        variant="outline" 
+        size="sm" 
+        className="w-full text-[10px] h-7"
+        onClick={() => refetch()}
+      >
+        Tentar novamente
+      </Button>
+    </div>
+  );
   return (
     <Select value={data?.current ?? undefined} onValueChange={(v) => mut.mutate(v)} disabled={mut.isPending}>
       <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Escolher conta do Google Ads" /></SelectTrigger>
