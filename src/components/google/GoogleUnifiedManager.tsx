@@ -30,9 +30,9 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
     queryKey: ["google-unified-conns", reportId],
     queryFn: async () => {
       const [ga, gsc, gads] = await Promise.all([
-        supabase.from("ga_connections").select("id, google_email, ga_property_id").eq("report_id", reportId).order("created_at", { ascending: false }),
-        supabase.from("gsc_connections").select("id, google_email, site_url").eq("report_id", reportId).order("created_at", { ascending: false }),
-        supabase.from("google_ads_connections").select("id, google_email, customer_id").eq("report_id", reportId).order("created_at", { ascending: false }),
+        supabase.from("ga_connections").select("id, google_email, ga_property_id, updated_at").eq("report_id", reportId).order("updated_at", { ascending: false }),
+        supabase.from("gsc_connections").select("id, google_email, site_url, updated_at").eq("report_id", reportId).order("updated_at", { ascending: false }),
+        supabase.from("google_ads_connections").select("id, google_email, customer_id, updated_at").eq("report_id", reportId).order("updated_at", { ascending: false }),
       ]);
       return {
         ga: ga.data || [],
