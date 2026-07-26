@@ -153,6 +153,7 @@ function ServiceCard({
 }
 
 function GaPicker({ reportId, onSaved }: { reportId: string; onSaved: () => void }) {
+  const qc = useQueryClient();
   const list = useServerFn(listGa4Properties);
   const choose = useServerFn(chooseGa4Property);
   const { data, isLoading, error, refetch } = useQuery({
@@ -169,7 +170,22 @@ function GaPicker({ reportId, onSaved }: { reportId: string; onSaved: () => void
     onError: (e: Error) => toast.error(e.message),
   });
   if (isLoading) return <PickerSkeleton label="Carregando propriedades…" />;
-  if (error) return <PickerError message={(error as Error).message} />;
+  if (error) return (
+    <div className="space-y-2">
+      <PickerError message={(error as Error).message} />
+      <Button 
+        variant="outline" 
+        size="sm" 
+        className="w-full text-[10px] h-7"
+        onClick={() => {
+          qc.invalidateQueries({ queryKey: ["ga4-properties", reportId] });
+          refetch();
+        }}
+      >
+        Tentar novamente
+      </Button>
+    </div>
+  );
   const current = data?.current && data.current !== "PENDING" ? data.current : undefined;
   return (
     <Select value={current} onValueChange={(v) => mut.mutate(v)} disabled={mut.isPending}>
