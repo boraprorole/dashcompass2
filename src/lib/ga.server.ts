@@ -520,6 +520,11 @@ export async function saveOauthConnection(opts: {
       .eq("id", existing[0].id);
     if (error) throw new Error(error.message);
   } else {
+    // We must try to reuse any existing 'PENDING' connection if it exists for this report,
+    // or insert a new one if it doesn't.
+    // However, ga_connections has UNIQUE (report_id, ga_property_id).
+    // If there's an existing row with ga_property_id='PENDING' and report_id=X,
+    // the UPDATE above would have caught it if it was the most recent.
     const { error } = await supabaseAdmin.from("ga_connections").insert({
       report_id: opts.reportId,
       refresh_token: opts.refreshToken,
@@ -528,6 +533,18 @@ export async function saveOauthConnection(opts: {
       label: "PENDING",
       updated_at: new Date().toISOString(),
     });
-    if (error) throw new Error(error.message);
+    // If insert fails due to unique constraint, we just try to update that specific one
+    if (error && error.code === "23505") {
+      await supabaseAdmin
+        .from("ga_connections")
+        .update({
+          refresh_token: opts.refreshToken,
+          google_email: opts.googleEmail,
+          updated_at: new Date().toISOString(),
+        })
+        .match({ report_id: opts.reportId, ga_property_id: "PENDING" });
+    } else if (error) {
+      throw new Error(error.message);
+    }
   }
 }
