@@ -9,7 +9,7 @@ export async function listGa4PropertiesForReport(userId: string, reportId: strin
     .from("ga_connections")
     .select("id, refresh_token, ga_property_id")
     .eq("report_id", reportId)
-    .order("created_at", { ascending: false })
+    .order("updated_at", { ascending: false })
     .limit(1)
     .maybeSingle();
   if (!conn) return { connectionId: null, current: null, properties: [] as Array<{ propertyId: string; displayName: string; account: string }> };
