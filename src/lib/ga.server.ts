@@ -501,13 +501,16 @@ export async function saveOauthConnection(opts: {
   await assertAdminGa(opts.userId);
   const { data, error } = await supabaseAdmin
     .from("ga_connections")
-    .insert({
-      report_id: opts.reportId,
-      ga_property_id: "PENDING",
-      label: opts.googleEmail ?? "Nova conexão",
-      google_email: opts.googleEmail,
-      refresh_token: opts.refreshToken,
-    })
+    .upsert(
+      {
+        report_id: opts.reportId,
+        ga_property_id: "PENDING",
+        label: opts.googleEmail ?? "Nova conexão",
+        google_email: opts.googleEmail,
+        refresh_token: opts.refreshToken,
+      },
+      { onConflict: "report_id, ga_property_id" },
+    )
     .select("id")
     .single();
   if (error) throw new Error(error.message);

@@ -43,8 +43,10 @@ export async function setGa4Property(userId: string, reportId: string, propertyI
   await assertAdminGa(userId);
   const { error } = await supabaseAdmin
     .from("ga_connections")
-    .update({ ga_property_id: propertyId, label: `GA4 ${propertyId}` })
-    .eq("report_id", reportId);
+    .upsert(
+      { report_id: reportId, ga_property_id: propertyId, label: `GA4 ${propertyId}` },
+      { onConflict: "report_id, ga_property_id" },
+    );
   if (error) throw new Error(error.message);
   return { ok: true };
 }
