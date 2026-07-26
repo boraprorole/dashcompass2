@@ -43,9 +43,8 @@ export async function setGa4Property(userId: string, reportId: string, propertyI
   await assertAdminGa(userId);
   const { error } = await supabaseAdmin
     .from("ga_connections")
-    .update({ ga_property_id: propertyId, label: `GA4 ${propertyId}` })
-    .eq("report_id", reportId)
-    .eq("ga_property_id", "PENDING");
+    .update({ ga_property_id: propertyId, label: `GA4 ${propertyId}`, updated_at: new Date().toISOString() })
+    .eq("report_id", reportId);
   if (error) throw new Error(error.message);
   return { ok: true };
 }
@@ -74,8 +73,7 @@ export async function setGscSite(userId: string, reportId: string, siteUrl: stri
   const { error } = await supabaseAdmin
     .from("gsc_connections")
     .update({ site_url: siteUrl, updated_at: new Date().toISOString() })
-    .eq("report_id", reportId)
-    .is("site_url", null);
+    .eq("report_id", reportId);
   if (error) throw new Error(error.message);
   return { ok: true };
 }
@@ -155,8 +153,7 @@ export async function setGoogleAdsCustomer(userId: string, reportId: string, cus
   const { error } = await supabaseAdmin
     .from("google_ads_connections")
     .update({ customer_id: customerId, updated_at: new Date().toISOString() })
-    .eq("report_id", reportId)
-    .is("customer_id", null);
+    .eq("report_id", reportId);
   if (error) throw new Error(error.message);
   return { ok: true };
 }
