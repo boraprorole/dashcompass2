@@ -499,16 +499,35 @@ export async function saveOauthConnection(opts: {
   googleEmail: string | null;
 }) {
   await assertAdminGa(opts.userId);
-  const { error } = await supabaseAdmin.from("ga_connections").upsert(
-    {
+  // First, look for an existing connection for this report.
+  // We prefer to update one that is either 'PENDING' or just the most recent one
+  // if we want to ensure only one connection exists per report.
+  const { data: existing } = await supabaseAdmin
+    .from("ga_connections")
+    .select("id")
+    .eq("report_id", opts.reportId)
+    .order("updated_at", { ascending: false })
+    .limit(1);
+
+  if (existing && existing.length > 0) {
+    const { error } = await supabaseAdmin
+      .from("ga_connections")
+      .update({
+        refresh_token: opts.refreshToken,
+        google_email: opts.googleEmail,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", existing[0].id);
+    if (error) throw new Error(error.message);
+  } else {
+    const { error } = await supabaseAdmin.from("ga_connections").insert({
       report_id: opts.reportId,
       refresh_token: opts.refreshToken,
       google_email: opts.googleEmail,
       ga_property_id: "PENDING",
       label: "PENDING",
       updated_at: new Date().toISOString(),
-    },
-    { onConflict: "report_id" },
-  );
-  if (error) throw new Error(error.message);
+    });
+    if (error) throw new Error(error.message);
+  }
 }
