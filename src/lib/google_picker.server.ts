@@ -106,7 +106,7 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
   if (loginCustomerId) headers["login-customer-id"] = loginCustomerId.replace(/-/g, "");
 
   const listRes = await fetch(
-    "https://googleads.googleapis.com/v18/customers:listAccessibleCustomers",
+    "https://googleads.googleapis.com/v16/customers:listAccessibleCustomers",
     { headers },
   );
   
@@ -124,7 +124,7 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
     ids.map(async (id) => {
       try {
         const r = await fetch(
-          `https://googleads.googleapis.com/v18/customers/${id}/googleAds:search`,
+          `https://googleads.googleapis.com/v16/customers/${id}/googleAds:search`,
           {
             method: "POST",
             headers,
