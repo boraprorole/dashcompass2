@@ -155,9 +155,10 @@ function ServiceCard({
 function GaPicker({ reportId, onSaved }: { reportId: string; onSaved: () => void }) {
   const list = useServerFn(listGa4Properties);
   const choose = useServerFn(chooseGa4Property);
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["ga4-properties", reportId],
     queryFn: () => list({ data: { reportId } }),
+    staleTime: 0, // Ensure we check for fresh data
   });
   const mut = useMutation({
     mutationFn: (propertyId: string) => choose({ data: { reportId, propertyId } }),
