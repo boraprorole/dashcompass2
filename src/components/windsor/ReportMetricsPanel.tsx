@@ -464,7 +464,9 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
           </div>
           <div>
             <h2 className="text-base font-semibold leading-tight">Dashboard de Performance</h2>
-            <p className="text-[11px] text-muted-foreground">Dados em tempo real · Windsor.ai</p>
+            <p className="text-[11px] text-muted-foreground">
+              Dados em tempo real · {hasGa || gscUnifiedConn || gadsUnifiedConn ? "Google oAuth" : "Windsor.ai"}
+            </p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
