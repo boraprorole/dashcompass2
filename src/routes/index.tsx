@@ -514,7 +514,7 @@ function LandingPage() {
                     : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
                 }`}
               >
-                <Link to="/cadastro-empresa">{plan.buttonText}</Link>
+                <Link to={isEn ? "/Company-registration" : "/cadastro-empresa"} search={{ lang: isEn ? 'en' : 'pt' }}>{plan.buttonText}</Link>
               </Button>
             </div>
           ))}
