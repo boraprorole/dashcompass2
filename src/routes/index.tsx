@@ -283,7 +283,9 @@ function LandingPage() {
               </div>
               <Link to="/login" className="text-white/70 py-2" onClick={() => setIsMenuOpen(false)}>{isEn ? "Login" : "Entrar"}</Link>
               <Button asChild className="w-full bg-primary text-black font-bold h-12" onClick={() => setIsMenuOpen(false)}>
-                <Link to="/login">{isEn ? "Create account" : "Criar conta"}</Link>
+                <Link to={isEn ? "/Company-registration" : "/cadastro-empresa"} search={{ lang: isEn ? 'en' : 'pt' }}>
+                  {isEn ? "Create account" : "Criar conta"}
+                </Link>
               </Button>
             </div>
           </motion.div>
