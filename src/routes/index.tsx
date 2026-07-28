@@ -234,7 +234,7 @@ function LandingPage() {
               {isEn ? "Login" : "Entrar"}
             </Link>
             <Button asChild className="rounded-full bg-primary text-black hover:bg-primary/90 px-6 font-bold h-10">
-              <Link to="/login" search={{ mode: 'signup' }}>{isEn ? "Start now" : "Começar agora"}</Link>
+              <Link to="/cadastro-empresa">{isEn ? "Start now" : "Começar agora"}</Link>
             </Button>
           </div>
 
@@ -323,7 +323,7 @@ function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <Button asChild size="lg" className="h-14 px-8 rounded-full bg-primary text-black font-bold text-lg hover:bg-primary/90 transition-all hover:scale-105">
-                <Link to="/login">{isEn ? "Start now" : "Começar agora"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                <Link to="/cadastro-empresa">{isEn ? "Start now" : "Começar agora"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
               <Button variant="ghost" size="lg" className="h-14 px-8 rounded-full text-white font-semibold hover:bg-white/5 border border-white/10">
                 {isEn ? "See demo" : "Ver demonstração"} <Play className="ml-2 h-4 w-4 fill-white" />
@@ -508,7 +508,7 @@ function LandingPage() {
                     : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
                 }`}
               >
-                <Link to="/login">{plan.buttonText}</Link>
+                <Link to="/cadastro-empresa">{plan.buttonText}</Link>
               </Button>
             </div>
           ))}
@@ -527,7 +527,7 @@ function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Button asChild size="lg" className="h-16 px-10 rounded-full bg-primary text-black font-bold text-xl hover:bg-primary/90 transition-all hover:scale-105">
-              <Link to="/login">{isEn ? "Start now" : "Começar agora"}</Link>
+              <Link to="/cadastro-empresa">{isEn ? "Start now" : "Começar agora"}</Link>
             </Button>
           </div>
         </div>

@@ -16,6 +16,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LpRouteImport } from './routes/lp'
 import { Route as LogoRouteImport } from './routes/logo'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as CadastroEmpresaRouteImport } from './routes/cadastro-empresa'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
@@ -75,6 +76,11 @@ const LogoRoute = LogoRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroEmpresaRoute = CadastroEmpresaRouteImport.update({
+  id: '/cadastro-empresa',
+  path: '/cadastro-empresa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -215,6 +221,7 @@ const ApiPublicGaOauthCallbackRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cadastro-empresa': typeof CadastroEmpresaRoute
   '/login': typeof LoginRoute
   '/logo': typeof LogoRoute
   '/lp': typeof LpRoute
@@ -248,6 +255,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cadastro-empresa': typeof CadastroEmpresaRoute
   '/login': typeof LoginRoute
   '/logo': typeof LogoRoute
   '/lp': typeof LpRoute
@@ -283,6 +291,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/cadastro-empresa': typeof CadastroEmpresaRoute
   '/login': typeof LoginRoute
   '/logo': typeof LogoRoute
   '/lp': typeof LpRoute
@@ -318,6 +327,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/cadastro-empresa'
     | '/login'
     | '/logo'
     | '/lp'
@@ -351,6 +361,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/cadastro-empresa'
     | '/login'
     | '/logo'
     | '/lp'
@@ -385,6 +396,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/cadastro-empresa'
     | '/login'
     | '/logo'
     | '/lp'
@@ -420,6 +432,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  CadastroEmpresaRoute: typeof CadastroEmpresaRoute
   LoginRoute: typeof LoginRoute
   LogoRoute: typeof LogoRoute
   LpRoute: typeof LpRoute
@@ -490,6 +503,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro-empresa': {
+      id: '/cadastro-empresa'
+      path: '/cadastro-empresa'
+      fullPath: '/cadastro-empresa'
+      preLoaderRoute: typeof CadastroEmpresaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -705,6 +725,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  CadastroEmpresaRoute: CadastroEmpresaRoute,
   LoginRoute: LoginRoute,
   LogoRoute: LogoRoute,
   LpRoute: LpRoute,
