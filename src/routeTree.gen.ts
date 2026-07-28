@@ -18,6 +18,7 @@ import { Route as LogoRouteImport } from './routes/logo'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CadastroEmpresaRouteImport } from './routes/cadastro-empresa'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as CompanyRegistrationRouteImport } from './routes/Company-registration'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthenticatedScheduleRouteImport } from './routes/_authenticated/schedule'
@@ -85,6 +86,11 @@ const CadastroEmpresaRoute = CadastroEmpresaRouteImport.update({
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyRegistrationRoute = CompanyRegistrationRouteImport.update({
+  id: '/Company-registration',
+  path: '/Company-registration',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -221,6 +227,7 @@ const ApiPublicGaOauthCallbackRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/Company-registration': typeof CompanyRegistrationRoute
   '/cadastro-empresa': typeof CadastroEmpresaRoute
   '/login': typeof LoginRoute
   '/logo': typeof LogoRoute
@@ -255,6 +262,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/Company-registration': typeof CompanyRegistrationRoute
   '/cadastro-empresa': typeof CadastroEmpresaRoute
   '/login': typeof LoginRoute
   '/logo': typeof LogoRoute
@@ -290,6 +298,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/Company-registration': typeof CompanyRegistrationRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/cadastro-empresa': typeof CadastroEmpresaRoute
   '/login': typeof LoginRoute
@@ -327,6 +336,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/Company-registration'
     | '/cadastro-empresa'
     | '/login'
     | '/logo'
@@ -361,6 +371,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/Company-registration'
     | '/cadastro-empresa'
     | '/login'
     | '/logo'
@@ -395,6 +406,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/Company-registration'
     | '/_authenticated'
     | '/cadastro-empresa'
     | '/login'
@@ -431,6 +443,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CompanyRegistrationRoute: typeof CompanyRegistrationRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   CadastroEmpresaRoute: typeof CadastroEmpresaRoute
   LoginRoute: typeof LoginRoute
@@ -517,6 +530,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Company-registration': {
+      id: '/Company-registration'
+      path: '/Company-registration'
+      fullPath: '/Company-registration'
+      preLoaderRoute: typeof CompanyRegistrationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -724,6 +744,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CompanyRegistrationRoute: CompanyRegistrationRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   CadastroEmpresaRoute: CadastroEmpresaRoute,
   LoginRoute: LoginRoute,

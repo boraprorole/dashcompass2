@@ -234,7 +234,9 @@ function LandingPage() {
               {isEn ? "Login" : "Entrar"}
             </Link>
             <Button asChild className="rounded-full bg-primary text-black hover:bg-primary/90 px-6 font-bold h-10">
-              <Link to="/cadastro-empresa">{isEn ? "Start now" : "Começar agora"}</Link>
+              <Link to={isEn ? "/Company-registration" : "/cadastro-empresa"} search={{ lang: isEn ? 'en' : 'pt' }}>
+                {isEn ? "Start now" : "Começar agora"}
+              </Link>
             </Button>
           </div>
 
@@ -281,7 +283,9 @@ function LandingPage() {
               </div>
               <Link to="/login" className="text-white/70 py-2" onClick={() => setIsMenuOpen(false)}>{isEn ? "Login" : "Entrar"}</Link>
               <Button asChild className="w-full bg-primary text-black font-bold h-12" onClick={() => setIsMenuOpen(false)}>
-                <Link to="/login">{isEn ? "Create account" : "Criar conta"}</Link>
+                <Link to={isEn ? "/Company-registration" : "/cadastro-empresa"} search={{ lang: isEn ? 'en' : 'pt' }}>
+                  {isEn ? "Create account" : "Criar conta"}
+                </Link>
               </Button>
             </div>
           </motion.div>
@@ -323,7 +327,9 @@ function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <Button asChild size="lg" className="h-14 px-8 rounded-full bg-primary text-black font-bold text-lg hover:bg-primary/90 transition-all hover:scale-105">
-                <Link to="/cadastro-empresa">{isEn ? "Start now" : "Começar agora"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                <Link to={isEn ? "/Company-registration" : "/cadastro-empresa"} search={{ lang: isEn ? 'en' : 'pt' }}>
+                  {isEn ? "Start now" : "Começar agora"} <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
               </Button>
               <Button variant="ghost" size="lg" className="h-14 px-8 rounded-full text-white font-semibold hover:bg-white/5 border border-white/10">
                 {isEn ? "See demo" : "Ver demonstração"} <Play className="ml-2 h-4 w-4 fill-white" />
@@ -508,7 +514,7 @@ function LandingPage() {
                     : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
                 }`}
               >
-                <Link to="/cadastro-empresa">{plan.buttonText}</Link>
+                <Link to={isEn ? "/Company-registration" : "/cadastro-empresa"} search={{ lang: isEn ? 'en' : 'pt' }}>{plan.buttonText}</Link>
               </Button>
             </div>
           ))}
@@ -527,7 +533,7 @@ function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Button asChild size="lg" className="h-16 px-10 rounded-full bg-primary text-black font-bold text-xl hover:bg-primary/90 transition-all hover:scale-105">
-              <Link to="/cadastro-empresa">{isEn ? "Start now" : "Começar agora"}</Link>
+              <Link to={isEn ? "/Company-registration" : "/cadastro-empresa"} search={{ lang: isEn ? 'en' : 'pt' }}>{isEn ? "Start now" : "Começar agora"}</Link>
             </Button>
           </div>
         </div>
