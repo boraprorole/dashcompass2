@@ -102,10 +102,12 @@ function RegistrationPage() {
 
       // 2. Stripe Checkout Integration
       const checkout = await startCheckout({
-        email: parsed.data.email,
-        companyName: parsed.data.companyName,
-        planId: selectedPlan,
-        origin: window.location.origin,
+        data: {
+          email: parsed.data.email,
+          companyName: parsed.data.companyName,
+          planId: selectedPlan,
+          origin: window.location.origin,
+        }
       });
 
       if (checkout?.url) {
