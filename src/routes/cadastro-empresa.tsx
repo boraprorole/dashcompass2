@@ -65,6 +65,18 @@ function RegistrationPage() {
         return;
       }
 
+      if (step === "account") {
+        setStep("plan");
+        setLoading(false);
+        return;
+      }
+
+      if (!selectedPlan) {
+        toast.error("Selecione um plano para continuar.");
+        setLoading(false);
+        return;
+      }
+
       // 1. Sign Up User
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: parsed.data.email,
@@ -88,10 +100,21 @@ function RegistrationPage() {
         return;
       }
 
-      // 2. We'll handle agency/company creation after email confirmation or via a trigger.
-      // For now, inform the user to check their email.
-      toast.success("Conta criada! Verifique seu email para confirmar e concluir o cadastro da sua empresa.");
-      navigate({ to: "/login" });
+      // 2. Stripe Checkout Integration
+      const checkout = await startCheckout({
+        email: parsed.data.email,
+        companyName: parsed.data.companyName,
+        planId: selectedPlan,
+        origin: window.location.origin,
+      });
+
+      if (checkout?.url) {
+        toast.success("Redirecionando para o pagamento...");
+        window.location.href = checkout.url;
+      } else {
+        toast.success("Conta criada! Verifique seu email para confirmar.");
+        navigate({ to: "/login" });
+      }
       
     } catch (err: any) {
       toast.error(err?.message ?? "Erro inesperado.");
