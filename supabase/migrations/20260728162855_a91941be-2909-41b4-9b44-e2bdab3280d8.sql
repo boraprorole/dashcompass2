@@ -1,0 +1,1 @@
+UPDATE app_features SET label = 'Integração de pagamentos via Stripe' WHERE key = 'stripe';
