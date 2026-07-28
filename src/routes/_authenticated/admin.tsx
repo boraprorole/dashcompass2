@@ -1956,15 +1956,15 @@ function PricingTab() {
   const { data: pricing, isLoading } = useQuery({
     queryKey: ["pricing-settings"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("pricing_settings").select("*");
+      const { data, error } = await supabase.from("pricing_settings" as any).select("*");
       if (error) throw error;
-      return data;
+      return data as any[];
     },
   });
 
   const mutation = useMutation({
     mutationFn: async (values: any[]) => {
-      const { error } = await supabase.from("pricing_settings").upsert(values, { onConflict: "key" });
+      const { error } = await supabase.from("pricing_settings" as any).upsert(values, { onConflict: "key" });
       if (error) throw error;
     },
     onSuccess: () => {
@@ -2000,7 +2000,7 @@ function PricingTab() {
 
       <form onSubmit={handleSave} className="space-y-6 pt-4">
         <div className="grid gap-6">
-          {pricing?.map((plan) => (
+          {(pricing as any[])?.map((plan) => (
             <div key={plan.key} className="p-6 rounded-2xl bg-[#111] border border-border space-y-4">
               <h4 className="font-bold uppercase tracking-wider text-primary">{plan.key.replace('_', ' ')}</h4>
               <div className="grid grid-cols-2 gap-4">
