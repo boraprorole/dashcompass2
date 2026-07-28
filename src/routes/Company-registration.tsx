@@ -41,7 +41,7 @@ const registrationSchema = z.object({
 function RegistrationPage() {
   const navigate = useNavigate();
   const startCheckout = useServerFn(createCheckoutSession);
-  const search = useSearch({ from: "/cadastro-empresa" });
+  const search = useSearch({ from: "/Company-registration" });
   
   const [step, setStep] = useState<"account" | "plan">("account");
   const [loading, setLoading] = useState(false);
