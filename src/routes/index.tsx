@@ -323,7 +323,7 @@ function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <Button asChild size="lg" className="h-14 px-8 rounded-full bg-primary text-black font-bold text-lg hover:bg-primary/90 transition-all hover:scale-105">
-                <Link to="/login">{isEn ? "Start now" : "Começar agora"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                <Link to="/cadastro-empresa">{isEn ? "Start now" : "Começar agora"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
               <Button variant="ghost" size="lg" className="h-14 px-8 rounded-full text-white font-semibold hover:bg-white/5 border border-white/10">
                 {isEn ? "See demo" : "Ver demonstração"} <Play className="ml-2 h-4 w-4 fill-white" />
