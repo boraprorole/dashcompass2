@@ -32,6 +32,8 @@ const registrationSchema = z.object({
 
 function RegistrationPage() {
   const navigate = useNavigate();
+  const startCheckout = useServerFn(createCheckoutSession);
+  const [step, setStep] = useState<"account" | "plan">("account");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -39,6 +41,13 @@ function RegistrationPage() {
     displayName: "",
     companyName: "",
   });
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+
+  const plans = [
+    { id: "starter", name: "Starter", price: "R$ 99", features: ["1 Empresa", "5 Conexões", "Dashboards IA"] },
+    { id: "agency", name: "Agency", price: "R$ 159", features: ["10 Empresas", "100 Conexões", "White Label"] },
+    { id: "pro", name: "Agency Pro", price: "R$ 499", features: ["20 Empresas", "200 Conexões", "White Label Completo"] },
+  ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [e.target.id]: e.target.value }));
