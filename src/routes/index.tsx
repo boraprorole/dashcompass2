@@ -4,8 +4,9 @@ import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import bgVideoAsset from "@/assets/homepage-hero-video.mp4.asset.json";
-import { ArrowRight, Play, CheckCircle2, ChevronRight, Menu, X } from "lucide-react";
+import { ArrowRight, Play, CheckCircle2, ChevronRight, Menu, X, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>) => {
@@ -35,6 +36,23 @@ export const Route = createFileRoute("/")({
 });
 
 function LandingPage() {
+  const { data: pricingData, isLoading: isLoadingPricing } = useQuery({
+    queryKey: ["pricing-settings-public"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("pricing_settings" as any).select("*");
+      if (error) throw error;
+      return data as any[];
+    },
+    staleTime: 3600000,
+  });
+
+  const getPrice = (key: string, isEn: boolean) => {
+    if (isLoadingPricing || !pricingData) return null;
+    const plan = pricingData.find(p => p.key === key);
+    if (!plan) return null;
+    return isEn ? `$ ${plan.value_usd}` : `R$ ${plan.value_brl}`;
+  };
+
   const { lang } = Route.useSearch();
   const isEn = lang === "en";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -61,7 +79,7 @@ function LandingPage() {
   const plans = isEn ? [
     {
       name: "Starter",
-      price: "$29",
+      price: getPrice("starter", true) || "$29",
       description: "For professionals and small businesses.",
       features: [
         "Up to 1 company",
@@ -76,7 +94,7 @@ function LandingPage() {
     },
     {
       name: "Agency",
-      price: "$99",
+      price: getPrice("agency", true) || "$99",
       description: "For growing agencies.",
       features: [
         "Up to 10 companies",
@@ -92,7 +110,7 @@ function LandingPage() {
     },
     {
       name: "Agency Pro",
-      price: "$249",
+      price: getPrice("agency_pro", true) || "$249",
       description: "High capacity for teams.",
       features: [
         "Up to 20 companies",
@@ -124,7 +142,7 @@ function LandingPage() {
   ] : [
     {
       name: "Starter",
-      price: "R$ 99",
+      price: getPrice("starter", false) || "R$ 99",
       description: "Para profissionais e pequenas empresas.",
       features: [
         "Até 1 empresa",
@@ -139,7 +157,7 @@ function LandingPage() {
     },
     {
       name: "Agency",
-      price: "R$ 159",
+      price: getPrice("agency", false) || "R$ 159",
       description: "Para agências em crescimento.",
       features: [
         "Até 10 empresas",
@@ -155,7 +173,7 @@ function LandingPage() {
     },
     {
       name: "Agency Pro",
-      price: "R$ 499",
+      price: getPrice("agency_pro", false) || "R$ 499",
       description: "Alta capacidade para equipes.",
       features: [
         "Até 20 empresas",

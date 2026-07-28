@@ -84,7 +84,7 @@ import {
   ClipboardList,
   Palette,
   Settings,
-
+  CircleDollarSign,
 } from "lucide-react";
 
 import { toast } from "sonner";
@@ -160,6 +160,12 @@ function AdminPage() {
           )}
           
           {isAdminGlobal && (
+            <TabsTrigger value="pricing" className="gap-2">
+              <CircleDollarSign className="h-4 w-4" /> Valores
+            </TabsTrigger>
+          )}
+
+          {isAdminGlobal && (
             <TabsTrigger value="features" className="gap-2">
               <Settings className="h-4 w-4" /> Funções
             </TabsTrigger>
@@ -204,6 +210,9 @@ function AdminPage() {
         </TabsContent>
         <TabsContent value="features">
           <FeaturesTab />
+        </TabsContent>
+        <TabsContent value="pricing">
+          <PricingTab />
         </TabsContent>
 
 
@@ -1939,5 +1948,93 @@ function AgencySettingsTab({ type }: { type: "windsor" | "ai" | "news" }) {
     </div>
   );
 }
+
+function PricingTab() {
+  const qc = useQueryClient();
+  const [isSaving, setIsSaving] = useState(false);
+
+  const { data: pricing, isLoading } = useQuery({
+    queryKey: ["pricing-settings"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("pricing_settings" as any).select("*");
+      if (error) throw error;
+      return data as any[];
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (values: any[]) => {
+      const { error } = await supabase.from("pricing_settings" as any).upsert(values, { onConflict: "key" });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Valores atualizados com sucesso.");
+      qc.invalidateQueries({ queryKey: ["pricing-settings"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const updates = (pricing || []).map(p => ({
+      key: p.key,
+      value_brl: parseFloat(formData.get(`${p.key}_brl`) as string),
+      value_usd: parseFloat(formData.get(`${p.key}_usd`) as string),
+    }));
+    mutation.mutate(updates);
+  };
+
+  if (isLoading) return <div className="p-8 text-center"><Loader2 className="animate-spin inline mr-2" /> Carregando...</div>;
+
+  return (
+    <div className="glass-strong p-8 rounded-3xl space-y-6">
+      <div className="flex items-center gap-3 mb-2">
+        <CircleDollarSign className="h-5 w-5 text-primary" />
+        <h3 className="text-xl font-semibold">Configuração de Valores</h3>
+      </div>
+      
+      <p className="text-sm text-muted-foreground max-w-lg">
+        Configure os preços dos planos exibidos na Landing Page e no Checkout para BRL e USD.
+      </p>
+
+      <form onSubmit={handleSave} className="space-y-6 pt-4">
+        <div className="grid gap-6">
+          {(pricing as any[])?.map((plan) => (
+            <div key={plan.key} className="p-6 rounded-2xl bg-[#111] border border-border space-y-4">
+              <h4 className="font-bold uppercase tracking-wider text-primary">{plan.key.replace('_', ' ')}</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Valor BRL (R$)</Label>
+                  <Input 
+                    name={`${plan.key}_brl`}
+                    type="number" 
+                    step="0.01"
+                    defaultValue={plan.value_brl}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Valor USD ($)</Label>
+                  <Input 
+                    name={`${plan.key}_usd`}
+                    type="number" 
+                    step="0.01"
+                    defaultValue={plan.value_usd}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <Button type="submit" disabled={mutation.isPending}>
+          {mutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+          Salvar Valores
+        </Button>
+      </form>
+    </div>
+  );
+}
+
 
 
