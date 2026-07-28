@@ -269,18 +269,7 @@ function RegistrationPage() {
                     </div>
                   </div>
 
-                  {/* Tax ID Field */}
-                  <div className="space-y-2">
-                    <Label htmlFor="taxId" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">{t.labelTaxId}</Label>
-                    <Input
-                      id="taxId"
-                      value={formData.taxId}
-                      onChange={handleChange}
-                      placeholder={t.placeholderTaxId}
-                      required
-                      className="bg-white/5 border-white/10 text-white h-12 rounded-2xl focus:border-primary/50 transition-all"
-                    />
-                  </div>
+                  {/* Tax ID Field - Removido a pedido do usuário, mas mantido no schema como opcional para não quebrar o estado */}
 
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">{t.labelEmail}</Label>
