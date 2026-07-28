@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Loader2, ArrowRight, Building2, User } from "lucide-react";
+import { Loader2, ArrowRight, Building2, User, CheckCircle2 } from "lucide-react";
 import { Logo } from "@/components/Logo";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import bgVideoAsset from "@/assets/login-bg-final.mp4.asset.json";
+import { createCheckoutSession } from "@/lib/stripe.functions";
+import { useServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/cadastro-empresa")({
   head: () => ({
