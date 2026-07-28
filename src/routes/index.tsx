@@ -234,7 +234,7 @@ function LandingPage() {
               {isEn ? "Login" : "Entrar"}
             </Link>
             <Button asChild className="rounded-full bg-primary text-black hover:bg-primary/90 px-6 font-bold h-10">
-              <Link to="/login" search={{ mode: 'signup' }}>{isEn ? "Start now" : "Começar agora"}</Link>
+              <Link to="/cadastro-empresa">{isEn ? "Start now" : "Começar agora"}</Link>
             </Button>
           </div>
 
