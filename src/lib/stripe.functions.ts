@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({
@@ -9,6 +8,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     companyName: z.string(),
     origin: z.string(),
   }).parse(data))
+  .handler(async ({ data }) => {
     const { createStripeCheckoutSessionImpl } = await import("./stripe.server");
     return createStripeCheckoutSessionImpl(data);
   });
