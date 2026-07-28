@@ -508,7 +508,7 @@ function LandingPage() {
                     : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
                 }`}
               >
-                <Link to="/login">{plan.buttonText}</Link>
+                <Link to="/cadastro-empresa">{plan.buttonText}</Link>
               </Button>
             </div>
           ))}
