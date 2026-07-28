@@ -41,9 +41,20 @@ const registrationSchema = z.object({
 function RegistrationPage() {
   const navigate = useNavigate();
   const startCheckout = useServerFn(createCheckoutSession);
+  const search = useSearch({ from: "/cadastro-empresa" });
+  
   const [step, setStep] = useState<"account" | "plan">("account");
   const [loading, setLoading] = useState(false);
-  const search = useSearch({ from: "/cadastro-empresa" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    displayName: "",
+    companyName: "",
+    accountType: "business" as "personal" | "business" | "agency",
+    taxId: "",
+  });
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+
   const isPT = search.lang === "pt";
 
   const t = useMemo(() => ({
@@ -73,16 +84,6 @@ function RegistrationPage() {
     plansSubtitle: isPT ? "Selecione a melhor opção para sua operação." : "Select the best option for your operation.",
     perMonth: isPT ? "/mês" : "/mo",
   }), [isPT, formData.accountType]);
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    displayName: "",
-    companyName: "",
-    accountType: "business" as "personal" | "business" | "agency",
-    taxId: "",
-  });
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
   const plans = [
     { id: "starter", name: "Starter", price: isPT ? "R$ 99" : "$29", features: isPT ? ["1 Empresa", "5 Conexões", "Dashboards IA"] : ["1 Company", "5 Connections", "AI Dashboards"] },
@@ -117,12 +118,11 @@ function RegistrationPage() {
       }
 
       if (!selectedPlan) {
-        toast.error("Selecione um plano para continuar.");
+        toast.error(isPT ? "Selecione um plano para continuar." : "Select a plan to continue.");
         setLoading(false);
         return;
       }
 
-      // 1. Sign Up User
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: parsed.data.email,
         password: parsed.data.password,
@@ -140,12 +140,11 @@ function RegistrationPage() {
       }
 
       if (!authData.user) {
-        toast.error("Erro ao criar usuário.");
+        toast.error(isPT ? "Erro ao criar usuário." : "Error creating user.");
         setLoading(false);
         return;
       }
 
-      // 2. Stripe Checkout Integration
       const checkout = await startCheckout({
         data: {
           email: parsed.data.email,
@@ -156,15 +155,15 @@ function RegistrationPage() {
       });
 
       if (checkout?.url) {
-        toast.success("Redirecionando para o pagamento...");
+        toast.success(isPT ? "Redirecionando para o pagamento..." : "Redirecting to payment...");
         window.location.href = checkout.url;
       } else {
-        toast.success("Conta criada! Verifique seu email para confirmar.");
+        toast.success(isPT ? "Conta criada! Verifique seu email para confirmar." : "Account created! Check your email to confirm.");
         navigate({ to: "/login" });
       }
       
     } catch (err: any) {
-      toast.error(err?.message ?? "Erro inesperado.");
+      toast.error(err?.message ?? (isPT ? "Erro inesperado." : "Unexpected error."));
     } finally {
       setLoading(false);
     }
@@ -207,35 +206,62 @@ function RegistrationPage() {
                 className="space-y-6"
               >
                 <div className="text-center mb-10">
-                  <h1 className="text-3xl font-bold text-white mb-2">Crie sua conta</h1>
-                  <p className="text-white/40">Dados básicos para sua agência no DashCompass.</p>
+                  <h1 className="text-3xl font-bold text-white mb-2">{t.title}</h1>
+                  <p className="text-white/40">{t.subtitle}</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Account Type Selector */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">{t.labelAccountType}</Label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { id: 'personal', label: t.typePersonal, icon: User },
+                        { id: 'business', label: t.typeBusiness, icon: Building2 },
+                        { id: 'agency', label: t.typeAgency, icon: Briefcase },
+                      ].map((type) => (
+                        <button
+                          key={type.id}
+                          type="button"
+                          onClick={() => handleTypeChange(type.id as any)}
+                          className={cn(
+                            "flex flex-col items-center justify-center gap-2 p-3 rounded-xl border text-[10px] font-bold uppercase tracking-tight transition-all",
+                            formData.accountType === type.id 
+                              ? "bg-primary text-black border-primary shadow-[0_0_15px_rgba(61,252,3,0.3)]"
+                              : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"
+                          )}
+                        >
+                          <type.icon className="h-4 w-4" />
+                          {type.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="displayName" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">Seu Nome</Label>
+                      <Label htmlFor="displayName" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">{t.labelName}</Label>
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20" />
                         <Input
                           id="displayName"
                           value={formData.displayName}
                           onChange={handleChange}
-                          placeholder="Nome completo"
+                          placeholder={t.placeholderName}
                           required
                           className="bg-white/5 border-white/10 text-white pl-11 h-12 rounded-2xl focus:border-primary/50 transition-all"
                         />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="companyName" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">Nome da Empresa</Label>
+                      <Label htmlFor="companyName" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">{t.labelCompany}</Label>
                       <div className="relative">
                         <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20" />
                         <Input
                           id="companyName"
                           value={formData.companyName}
                           onChange={handleChange}
-                          placeholder="Nome da sua agência"
+                          placeholder={t.placeholderCompany}
                           required
                           className="bg-white/5 border-white/10 text-white pl-11 h-12 rounded-2xl focus:border-primary/50 transition-all"
                         />
@@ -243,38 +269,51 @@ function RegistrationPage() {
                     </div>
                   </div>
 
+                  {/* Tax ID Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">Email Profissional</Label>
+                    <Label htmlFor="taxId" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">{t.labelTaxId}</Label>
                     <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
+                      id="taxId"
+                      value={formData.taxId}
                       onChange={handleChange}
-                      placeholder="voce@empresa.com"
+                      placeholder={t.placeholderTaxId}
                       required
                       className="bg-white/5 border-white/10 text-white h-12 rounded-2xl focus:border-primary/50 transition-all"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">Senha</Label>
+                    <Label htmlFor="email" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">{t.labelEmail}</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder={t.placeholderEmail}
+                      required
+                      className="bg-white/5 border-white/10 text-white h-12 rounded-2xl focus:border-primary/50 transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-xs font-bold text-white/50 ml-1 uppercase tracking-widest">{t.labelPassword}</Label>
                     <Input
                       id="password"
                       type="password"
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="Mínimo 6 caracteres"
+                      placeholder={t.placeholderPassword}
                       required
                       className="bg-white/5 border-white/10 text-white h-12 rounded-2xl focus:border-primary/50 transition-all"
                     />
                   </div>
 
                   <Button 
-                    type="submit" 
+    type="submit" 
                     className="w-full h-14 bg-primary text-black hover:bg-primary/90 rounded-2xl font-bold text-lg transition-all active:scale-95"
                     disabled={loading}
                   >
-                    {loading ? <Loader2 className="animate-spin h-5 w-5" /> : <>Próximo Passo <ArrowRight className="ml-2 h-5 w-5" /></>}
+                    {loading ? <Loader2 className="animate-spin h-5 w-5" /> : <>{t.nextStep} <ArrowRight className="ml-2 h-5 w-5" /></>}
                   </Button>
                 </form>
               </motion.div>
@@ -287,8 +326,8 @@ function RegistrationPage() {
                 className="space-y-6"
               >
                 <div className="text-center mb-8">
-                  <h1 className="text-3xl font-bold text-white mb-2">Escolha seu plano</h1>
-                  <p className="text-white/40">Selecione a melhor opção para sua operação.</p>
+                  <h1 className="text-3xl font-bold text-white mb-2">{t.plansTitle}</h1>
+                  <p className="text-white/40">{t.plansSubtitle}</p>
                 </div>
 
                 <div className="space-y-4">
@@ -308,7 +347,7 @@ function RegistrationPage() {
                           "font-bold text-lg",
                           selectedPlan === plan.id ? "text-primary" : "text-white"
                         )}>{plan.name}</span>
-                        <span className="font-bold text-white">{plan.price}<span className="text-xs text-white/40 font-normal">/mês</span></span>
+                        <span className="font-bold text-white">{plan.price}<span className="text-xs text-white/40 font-normal">{t.perMonth}</span></span>
                       </div>
                       <div className="flex flex-wrap gap-x-4 gap-y-1">
                         {plan.features.map((f, i) => (
@@ -334,14 +373,14 @@ function RegistrationPage() {
                     onClick={() => setStep("account")}
                     className="flex-1 h-14 border border-white/10 text-white rounded-2xl hover:bg-white/5 font-bold"
                   >
-                    Voltar
+                    {t.back}
                   </Button>
                   <Button 
                     onClick={() => handleSubmit()}
                     className="flex-[2] h-14 bg-primary text-black hover:bg-primary/90 rounded-2xl font-bold text-lg transition-all active:scale-95"
                     disabled={loading || !selectedPlan}
                   >
-                    {loading ? <Loader2 className="animate-spin h-5 w-5" /> : <>Assinar Agora <ArrowRight className="ml-2 h-5 w-5" /></>}
+                    {loading ? <Loader2 className="animate-spin h-5 w-5" /> : <>{t.subscribe} <ArrowRight className="ml-2 h-5 w-5" /></>}
                   </Button>
                 </div>
               </motion.div>
@@ -350,9 +389,9 @@ function RegistrationPage() {
 
           <p className="mt-8 text-center text-sm text-white/30">
             {step === "account" ? (
-              <>Já tem uma conta? <Link to="/login" className="text-primary hover:underline">Fazer login</Link></>
+              <>{t.hasAccount} <Link to="/login" className="text-primary hover:underline">{t.login}</Link></>
             ) : (
-              <>Assinatura processada de forma segura via <strong>Stripe</strong></>
+              <>{t.secure} <strong>Stripe</strong></>
             )}
           </p>
         </div>
