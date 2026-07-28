@@ -43,22 +43,59 @@ function RegistrationPage() {
   const startCheckout = useServerFn(createCheckoutSession);
   const [step, setStep] = useState<"account" | "plan">("account");
   const [loading, setLoading] = useState(false);
+  const search = useSearch({ from: "/cadastro-empresa" });
+  const isPT = search.lang === "pt";
+
+  const t = useMemo(() => ({
+    title: isPT ? "Crie sua conta" : "Create your account",
+    subtitle: isPT ? "Dados básicos para sua agência no DashCompass." : "Basic data for your agency on DashCompass.",
+    labelName: isPT ? "Seu Nome" : "Your Name",
+    placeholderName: isPT ? "Nome completo" : "Full name",
+    labelCompany: isPT ? "Nome da Empresa" : "Company Name",
+    placeholderCompany: isPT ? "Nome da sua agência" : "Agency name",
+    labelEmail: isPT ? "Email Profissional" : "Professional Email",
+    placeholderEmail: isPT ? "voce@empresa.com" : "you@company.com",
+    labelPassword: isPT ? "Senha" : "Password",
+    placeholderPassword: isPT ? "Mínimo 6 caracteres" : "Min. 6 characters",
+    labelTaxId: isPT ? (formData.accountType === 'personal' ? 'CPF' : 'CNPJ') : 'Tax ID',
+    placeholderTaxId: isPT ? (formData.accountType === 'personal' ? '000.000.000-00' : '00.000.000/0000-00') : 'ID Number',
+    labelAccountType: isPT ? "Tipo de Conta" : "Account Type",
+    typePersonal: isPT ? "Pessoa Física" : "Personal",
+    typeBusiness: isPT ? "Empresa" : "Business",
+    typeAgency: isPT ? "Agência" : "Agency",
+    nextStep: isPT ? "Próximo Passo" : "Next Step",
+    back: isPT ? "Voltar" : "Back",
+    subscribe: isPT ? "Assinar Agora" : "Subscribe Now",
+    hasAccount: isPT ? "Já tem uma conta?" : "Already have an account?",
+    login: isPT ? "Fazer login" : "Login",
+    secure: isPT ? "Assinatura processada de forma segura via" : "Secure subscription processed via",
+    plansTitle: isPT ? "Escolha seu plano" : "Choose your plan",
+    plansSubtitle: isPT ? "Selecione a melhor opção para sua operação." : "Select the best option for your operation.",
+    perMonth: isPT ? "/mês" : "/mo",
+  }), [isPT, formData.accountType]);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     displayName: "",
     companyName: "",
+    accountType: "business" as "personal" | "business" | "agency",
+    taxId: "",
   });
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
   const plans = [
-    { id: "starter", name: "Starter", price: "R$ 99", features: ["1 Empresa", "5 Conexões", "Dashboards IA"] },
-    { id: "agency", name: "Agency", price: "R$ 159", features: ["10 Empresas", "100 Conexões", "White Label"] },
-    { id: "pro", name: "Agency Pro", price: "R$ 499", features: ["20 Empresas", "200 Conexões", "White Label Completo"] },
+    { id: "starter", name: "Starter", price: isPT ? "R$ 99" : "$29", features: isPT ? ["1 Empresa", "5 Conexões", "Dashboards IA"] : ["1 Company", "5 Connections", "AI Dashboards"] },
+    { id: "agency", name: "Agency", price: isPT ? "R$ 159" : "$99", features: isPT ? ["10 Empresas", "100 Conexões", "White Label"] : ["10 Companies", "100 Connections", "White Label"] },
+    { id: "pro", name: "Agency Pro", price: isPT ? "R$ 499" : "$249", features: isPT ? ["20 Empresas", "200 Conexões", "White Label Completo"] : ["20 Companies", "200 Connections", "Full White Label"] },
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [e.target.id]: e.target.value }));
+  };
+
+  const handleTypeChange = (type: "personal" | "business" | "agency") => {
+    setFormData(prev => ({ ...prev, accountType: type }));
   };
 
   const handleSubmit = async (e?: React.FormEvent) => {
