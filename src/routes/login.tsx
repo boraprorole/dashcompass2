@@ -218,7 +218,7 @@ function LoginPage() {
                 value="signup"
                 className="rounded-[10px] py-2.5 data-[state=active]:bg-primary data-[state=active]:text-black text-white/60"
               >
-                Cadastrar
+                <Link to="/cadastro-empresa">Cadastrar</Link>
               </TabsTrigger>
             </TabsList>
 
