@@ -527,7 +527,7 @@ function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Button asChild size="lg" className="h-16 px-10 rounded-full bg-primary text-black font-bold text-xl hover:bg-primary/90 transition-all hover:scale-105">
-              <Link to="/login">{isEn ? "Start now" : "Começar agora"}</Link>
+              <Link to="/cadastro-empresa">{isEn ? "Start now" : "Começar agora"}</Link>
             </Button>
           </div>
         </div>
