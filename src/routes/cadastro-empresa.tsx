@@ -35,7 +35,7 @@ const registrationSchema = z.object({
   displayName: z.string().trim().min(2, "Informe seu nome").max(80),
   companyName: z.string().trim().min(2, "Informe o nome da empresa").max(100),
   accountType: z.enum(["personal", "business", "agency"]),
-  taxId: z.string().trim().min(5, "Informe o documento").max(20),
+  taxId: z.string().trim().optional(),
 });
 
 function RegistrationPage() {
