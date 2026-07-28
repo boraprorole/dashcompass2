@@ -1947,6 +1947,8 @@ function AgencySettingsTab({ type }: { type: "windsor" | "ai" | "news" }) {
       </div>
     </div>
   );
+}
+
 function PricingTab() {
   const qc = useQueryClient();
   const [isSaving, setIsSaving] = useState(false);
