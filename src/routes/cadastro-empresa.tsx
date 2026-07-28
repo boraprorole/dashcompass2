@@ -15,6 +15,11 @@ import { useServerFn } from "@tanstack/react-start";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/cadastro-empresa")({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      lang: (search.lang as "pt" | "en") || "en",
+    };
+  },
   head: () => ({
     meta: [
       { title: "Cadastro — DashCompass" },
@@ -29,6 +34,8 @@ const registrationSchema = z.object({
   password: z.string().min(6, "Mínimo 6 caracteres").max(72),
   displayName: z.string().trim().min(2, "Informe seu nome").max(80),
   companyName: z.string().trim().min(2, "Informe o nome da empresa").max(100),
+  accountType: z.enum(["personal", "business", "agency"]),
+  taxId: z.string().trim().min(5, "Informe o documento").max(20),
 });
 
 function RegistrationPage() {
