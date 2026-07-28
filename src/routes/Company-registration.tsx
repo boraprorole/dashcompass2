@@ -127,6 +127,7 @@ function RegistrationPage() {
         email: parsed.data.email,
         password: parsed.data.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: { 
             display_name: parsed.data.displayName,
           },
@@ -145,6 +146,9 @@ function RegistrationPage() {
         return;
       }
 
+      // IMPORTANT: Redirect to checkout EVEN IF email is not verified yet.
+      // Supabase by default allows partial sessions or the user can verify later, 
+      // but the payment flow should be immediate to avoid losing conversion.
       const checkout = await startCheckout({
         data: {
           email: parsed.data.email,
@@ -155,10 +159,10 @@ function RegistrationPage() {
       });
 
       if (checkout?.url) {
-        toast.success(isPT ? "Redirecionando para o pagamento..." : "Redirecting to payment...");
+        toast.success(isPT ? "Account created! Redirecting to payment..." : "Account created! Redirecting to payment...");
         window.location.href = checkout.url;
       } else {
-        toast.success(isPT ? "Conta criada! Verifique seu email para confirmar." : "Account created! Check your email to confirm.");
+        toast.success(isPT ? "Account created! Check your email to confirm." : "Account created! Check your email to confirm.");
         navigate({ to: "/login" });
       }
       
