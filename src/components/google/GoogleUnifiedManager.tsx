@@ -78,19 +78,36 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
               conta/propriedade de cada serviço para vincular ao relatório.
             </p>
           </div>
-          <Button
-            size="sm"
-            onClick={() => connectMut.mutate()}
-            disabled={connectMut.isPending}
-            className="bg-primary hover:bg-primary/90"
-          >
-            {connectMut.isPending ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Plus className="mr-2 h-4 w-4" />
+          <div className="flex gap-2">
+            {isConnected && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (confirm("Deseja desconectar todas as contas do Google vinculadas a este relatório?")) {
+                    disconnectMut.mutate();
+                  }
+                }}
+                disabled={disconnectMut.isPending}
+                className="border-destructive/30 text-destructive hover:bg-destructive/10"
+              >
+                {disconnectMut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+              </Button>
             )}
-            {isConnected ? "Reconectar Google" : "Conectar Google"}
-          </Button>
+            <Button
+              size="sm"
+              onClick={() => connectMut.mutate()}
+              disabled={connectMut.isPending}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {connectMut.isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Plus className="mr-2 h-4 w-4" />
+              )}
+              {isConnected ? "Reconectar Google" : "Conectar Google"}
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
