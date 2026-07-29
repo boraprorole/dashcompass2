@@ -22,6 +22,7 @@ import { LinkedInConnectionsManager } from "@/components/linkedin/LinkedInConnec
 import { PipedriveConnectionsManager } from "@/components/pipedrive/PipedriveConnectionsManager";
 import { GoogleAdsCsvManager } from "@/components/googleads/GoogleAdsCsvManager";
 import { GoogleUnifiedManager } from "@/components/google/GoogleUnifiedManager";
+import { BingManager } from "@/components/bing/BingManager";
 import { TikTokManager } from "@/components/tiktok/TikTokManager";
 import { WindsorSettingsTab } from "@/components/windsor/WindsorSettingsTab";
 import { AdminAITab } from "@/components/ai/AdminAITab";
@@ -528,6 +529,16 @@ function ReportsTab() {
                       </summary>
                       <div className="mt-3">
                         <GoogleUnifiedManager reportId={r.id} />
+                      </div>
+                    </details>
+
+                    <details className="group mt-2">
+                      <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
+                        <Link2 className="mr-1 inline h-3 w-3" />
+                        Microsoft Ecosystem (Bing)
+                      </summary>
+                      <div className="mt-3">
+                        <BingManager reportId={r.id} />
                       </div>
                     </details>
 
@@ -1272,6 +1283,16 @@ function CompaniesTab() {
             </summary>
             <div className="mt-2">
               <GoogleUnifiedManager reportId={r.id} />
+            </div>
+          </details>
+
+          <details className="group mt-2">
+            <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
+              <Link2 className="mr-1 inline h-3 w-3" />
+              Microsoft Ecosystem (Bing)
+            </summary>
+            <div className="mt-2">
+              <BingManager reportId={r.id} />
             </div>
           </details>
 
