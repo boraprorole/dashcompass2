@@ -9,8 +9,9 @@ const tiktokCallbackSchema = z.object({
 
 export const Route = createFileRoute('/api/public/tiktok/oauth/callback')({
   validateSearch: (search) => tiktokCallbackSchema.parse(search),
-  loader: async ({ search }: { search: z.infer<typeof tiktokCallbackSchema> }) => {
-    const { code, state } = search;
+  loader: async (context) => {
+    const { code, state } = context.search;
+
 
 
     if (!code || !state) {
