@@ -308,7 +308,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
 
   const fetchTiktok = useServerFn(getReportTiktokMetrics);
   const tiktokQ = useQuery({
-    queryKey: ["report-tiktok-oauth", reportId, rangeKey],
+    queryKey: ["report-tiktok-oauth", reportId, rangeKey, sortBy],
     queryFn: () => fetchTiktok({ data: { reportId, ...rangeArgs, sortBy } }),
     retry: false,
     enabled: !customPending,
