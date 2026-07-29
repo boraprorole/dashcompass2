@@ -57,84 +57,86 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
   const gadsConn = conns?.gads[0];
 
   return (
-    <div className="space-y-4 rounded-xl border border-border/40 bg-background/40 p-4">
-      <div className="flex items-center justify-between gap-2">
-        <div className="space-y-1">
-          <h3 className="text-sm font-semibold">Google Ecosystem</h3>
-          <p className="text-[11px] text-muted-foreground">
-            Analytics, Search Console (AI Insights) e Google Ads em uma única conexão. Escolha a
-            conta/propriedade de cada serviço para vincular ao relatório.
-          </p>
+    <>
+      <div className="space-y-4 rounded-xl border border-border/40 bg-background/40 p-4">
+        <div className="flex items-center justify-between gap-2">
+          <div className="space-y-1">
+            <h3 className="text-sm font-semibold">Google Ecosystem</h3>
+            <p className="text-[11px] text-muted-foreground">
+              Analytics, Search Console (AI Insights) e Google Ads em uma única conexão. Escolha a
+              conta/propriedade de cada serviço para vincular ao relatório.
+            </p>
+          </div>
+          <Button
+            size="sm"
+            onClick={() => connectMut.mutate()}
+            disabled={connectMut.isPending}
+            className="bg-primary hover:bg-primary/90"
+          >
+            {connectMut.isPending ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Plus className="mr-2 h-4 w-4" />
+            )}
+            {isConnected ? "Reconectar Google" : "Conectar Google"}
+          </Button>
         </div>
-        <Button
-          size="sm"
-          onClick={() => connectMut.mutate()}
-          disabled={connectMut.isPending}
-          className="bg-primary hover:bg-primary/90"
-        >
-          {connectMut.isPending ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Plus className="mr-2 h-4 w-4" />
-          )}
-          {isConnected ? "Reconectar Google" : "Conectar Google"}
-        </Button>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <ServiceCard
-          icon={<LineChart className="h-4 w-4" />}
-          label="Google Analytics (GA4)"
-          email={gaConn?.google_email}
-          connected={!!gaConn}
-          selected={gaConn?.ga_property_id && gaConn.ga_property_id !== "PENDING" ? gaConn.ga_property_id : undefined}
-          picker={gaConn ? <GaPicker reportId={reportId} onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
-        />
-        <ServiceCard
-          icon={<Search className="h-4 w-4" />}
-          label="Search Console (AI Insights)"
-          email={gscConn?.google_email}
-          connected={!!gscConn}
-          selected={conns?.gsc.find(c => c.type === 'web')?.site_url ?? undefined}
-          picker={gscConn ? <GscPicker reportId={reportId} type="web" placeholder="Escolher site (Web)" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
-        />
-        <ServiceCard
-          icon={<Search className="h-4 w-4 text-[#ff0050]" />}
-          label="Search Console (TikTok)"
-          email={conns?.gsc.find(c => c.type === 'tiktok')?.google_email || gscConn?.google_email}
-          connected={!!gscConn}
-          selected={conns?.gsc.find(c => c.type === 'tiktok')?.site_url ?? undefined}
-          picker={gscConn ? <GscPicker reportId={reportId} type="tiktok" placeholder="Escolher perfil TikTok" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
-        />
-        <ServiceCard
-          icon={<Search className="h-4 w-4 text-[#E1306C]" />}
-          label="Search Console (Instagram)"
-          email={conns?.gsc.find(c => c.type === 'instagram')?.google_email || gscConn?.google_email}
-          connected={!!gscConn}
-          selected={conns?.gsc.find(c => c.type === 'instagram')?.site_url ?? undefined}
-          picker={gscConn ? <GscPicker reportId={reportId} type="instagram" placeholder="Escolher perfil Instagram" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
-        />
-        <ServiceCard
-          icon={<Presentation className="h-4 w-4" />}
-          label="Google Ads"
-          email={gadsConn?.google_email}
-          connected={!!gadsConn}
-          selected={gadsConn?.customer_id ?? undefined}
-          picker={gadsConn ? <GadsPicker reportId={reportId} onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
-        />
-      </div>
-      {isLoading && <p className="text-[10px] text-muted-foreground">Carregando conexões…</p>}
-    </div>
-    
-    <div className="mt-6">
-      <div className="flex items-center gap-2 mb-4 px-1">
-        <div className="rounded-lg bg-blue-500/10 p-1.5 text-blue-500">
-          <Globe className="h-4 w-4" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <ServiceCard
+            icon={<LineChart className="h-4 w-4" />}
+            label="Google Analytics (GA4)"
+            email={gaConn?.google_email}
+            connected={!!gaConn}
+            selected={gaConn?.ga_property_id && gaConn.ga_property_id !== "PENDING" ? gaConn.ga_property_id : undefined}
+            picker={gaConn ? <GaPicker reportId={reportId} onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
+          />
+          <ServiceCard
+            icon={<Search className="h-4 w-4" />}
+            label="Search Console (AI Insights)"
+            email={gscConn?.google_email}
+            connected={!!gscConn}
+            selected={conns?.gsc.find(c => c.type === 'web')?.site_url ?? undefined}
+            picker={gscConn ? <GscPicker reportId={reportId} type="web" placeholder="Escolher site (Web)" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
+          />
+          <ServiceCard
+            icon={<Search className="h-4 w-4 text-[#ff0050]" />}
+            label="Search Console (TikTok)"
+            email={conns?.gsc.find(c => c.type === 'tiktok')?.google_email || gscConn?.google_email}
+            connected={!!gscConn}
+            selected={conns?.gsc.find(c => c.type === 'tiktok')?.site_url ?? undefined}
+            picker={gscConn ? <GscPicker reportId={reportId} type="tiktok" placeholder="Escolher perfil TikTok" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
+          />
+          <ServiceCard
+            icon={<Search className="h-4 w-4 text-[#E1306C]" />}
+            label="Search Console (Instagram)"
+            email={conns?.gsc.find(c => c.type === 'instagram')?.google_email || gscConn?.google_email}
+            connected={!!gscConn}
+            selected={conns?.gsc.find(c => c.type === 'instagram')?.site_url ?? undefined}
+            picker={gscConn ? <GscPicker reportId={reportId} type="instagram" placeholder="Escolher perfil Instagram" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
+          />
+          <ServiceCard
+            icon={<Presentation className="h-4 w-4" />}
+            label="Google Ads"
+            email={gadsConn?.google_email}
+            connected={!!gadsConn}
+            selected={gadsConn?.customer_id ?? undefined}
+            picker={gadsConn ? <GadsPicker reportId={reportId} onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
+          />
         </div>
-        <h3 className="text-sm font-semibold">Microsoft Ecosystem</h3>
+        {isLoading && <p className="text-[10px] text-muted-foreground">Carregando conexões…</p>}
       </div>
-      <BingManager reportId={reportId} />
-    </div>
+      
+      <div className="mt-6">
+        <div className="flex items-center gap-2 mb-4 px-1">
+          <div className="rounded-lg bg-blue-500/10 p-1.5 text-blue-500">
+            <Globe className="h-4 w-4" />
+          </div>
+          <h3 className="text-sm font-semibold">Microsoft Ecosystem</h3>
+        </div>
+        <BingManager reportId={reportId} />
+      </div>
+    </>
   );
 }
 
