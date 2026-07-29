@@ -308,7 +308,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
 
   const fetchTiktok = useServerFn(getReportTiktokMetrics);
   const tiktokQ = useQuery({
-    queryKey: ["report-tiktok-oauth", reportId, rangeKey, sortBy],
+    queryKey: ["report-tiktok-oauth", reportId, rangeKey],
     queryFn: () => fetchTiktok({ data: { reportId, ...rangeArgs, sortBy } }),
     retry: false,
     enabled: !customPending,
@@ -784,6 +784,7 @@ function TopPostsSection({
 }) {
   const isTiktok = connector === "tiktok_oauth";
   const platformLabel = isTiktok ? "TikTok" : "Instagram";
+  const sortedPosts = [...posts].sort((a, b) => (b[sortBy] ?? 0) - (a[sortBy] ?? 0));
   
   return (
     <section className="space-y-4 rounded-2xl border border-border/40 bg-background/40 p-4 md:p-5">
@@ -810,22 +811,21 @@ function TopPostsSection({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="engagement">Engajamento</SelectItem>
-            <SelectItem value="views">Visualizações</SelectItem>
+            <SelectItem value="likes">Curtidas</SelectItem>
             {isTiktok ? (
-              <SelectItem value="reach">Visualizações (Vídeo)</SelectItem>
+              <SelectItem value="views">Visualizações</SelectItem>
             ) : (
-              <SelectItem value="reach">Alcance</SelectItem>
+              <>
+                <SelectItem value="reach">Alcance</SelectItem>
+                <SelectItem value="views">Visualizações</SelectItem>
+              </>
             )}
-            <SelectItem value="likes">Curtidas</SelectItem>
-            <SelectItem value="reach">Alcance</SelectItem>
-            <SelectItem value="likes">Curtidas</SelectItem>
-            <SelectItem value="views">Visualizações</SelectItem>
           </SelectContent>
         </Select>
       </header>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {posts.map((p, i) => (
+        {sortedPosts.map((p, i) => (
           <article
             key={p.media_id || i}
             className="group relative overflow-hidden rounded-2xl border border-border/40 bg-background/60 transition-shadow hover:shadow-lg"
