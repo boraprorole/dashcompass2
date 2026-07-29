@@ -66,9 +66,7 @@ export const disconnectGoogleUnified = createServerFn({ method: "POST" })
     await Promise.all([
       supabaseAdmin.from("ga_connections").delete().eq("report_id", data.reportId),
       supabaseAdmin.from("gsc_connections").delete().eq("report_id", data.reportId),
-      supabaseAdmin.from("google_ads_connections").delete().eq("report_id", data.reportId),
-      supabaseAdmin.from("ga_tokens").delete().match({ user_id: context.userId }) // Optional: keep tokens if used by other reports? 
-      // Usually better to just clear report associations.
+      supabaseAdmin.from("google_ads_connections").delete().eq("report_id", data.reportId)
     ]);
     
     return { success: true };

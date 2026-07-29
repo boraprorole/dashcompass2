@@ -53,6 +53,15 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const disconnectMut = useMutation({
+    mutationFn: () => disconnect({ data: { reportId } }),
+    onSuccess: () => {
+      toast.success("Conexões do Google removidas");
+      qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   const isConnected = conns && (conns.ga.length > 0 || conns.gsc.length > 0 || conns.gads.length > 0);
   const gaConn = conns?.ga[0];
   const gscConn = conns?.gsc[0];
