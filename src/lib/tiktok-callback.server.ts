@@ -1,4 +1,4 @@
-import { exchangeTiktokCode, saveTiktokConnection } from "./tiktok.server";
+import { exchangeTiktokCode, fetchTiktokUserInfo, saveTiktokConnection } from "./tiktok.server";
 
 function html(body: string, status = 200) {
   return new Response(
@@ -44,22 +44,23 @@ export async function handleTiktokOAuthCallback(request: Request) {
   try {
     const { reportId } = parseTiktokState(state);
     const tokens = await exchangeTiktokCode(code);
-    const advertiserId = tokens.advertiser_ids?.[0];
+    const user = await fetchTiktokUserInfo(tokens.access_token!).catch(() => ({} as { open_id?: string; display_name?: string }));
 
     await saveTiktokConnection({
       reportId,
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token,
-      advertiserId,
+      accessToken: tokens.access_token!,
+      refreshToken: tokens.refresh_token!,
+      openId: tokens.open_id || user.open_id,
+      displayName: user.display_name,
     });
 
     return html(
-      `<h1>TikTok Conectado</h1><p>Sua conta TikTok Ads foi vinculada com sucesso ao relatório.</p><a href="/admin?reportId=${reportId}">Voltar ao admin</a>`,
+      `<h1>TikTok Conectado</h1><p>Conta TikTok (${user.display_name ?? "orgânica"}) vinculada com sucesso ao relatório.</p><a href="/admin?reportId=${reportId}">Voltar ao admin</a>`,
     );
   } catch (e) {
     console.error("TikTok OAuth Error:", e);
     return html(
-      `<h1>Erro ao conectar TikTok</h1><p>${(e as Error).message}</p><p>App ID: 7666141116089223184<br>Redirect URL: https://dashcompass.com/auth/tiktok/callback</p><a href="/admin">Voltar</a>`,
+      `<h1>Erro ao conectar TikTok</h1><p>${(e as Error).message}</p><p>Redirect URL: https://dashcompass.com/auth/tiktok/callback</p><a href="/admin">Voltar</a>`,
       500,
     );
   }
