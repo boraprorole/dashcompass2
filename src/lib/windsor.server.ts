@@ -313,7 +313,7 @@ export function computeDerived(connector: string, m: Record<string, number | nul
     const shareRate = safeDiv(m.shares, m.reach);
     if (shareRate != null) d.share_rate = shareRate * 100;
   }
-  if (connector === "facebook_ads" || connector === "tiktok" || connector === "linkedin") {
+  if (connector === "facebook_ads" || connector === "tiktok" || connector === "linkedin" || connector === "tiktok_organic") {
     const spend = m.spend ?? m.cost ?? null;
     d.cpa_calc = safeDiv(spend, m.conversions);
     d.roas_calc = safeDiv(m.conversion_value ?? null, spend);
