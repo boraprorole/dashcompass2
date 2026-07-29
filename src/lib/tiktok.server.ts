@@ -452,7 +452,7 @@ export async function fetchTiktokMetricGroups(reportId: string, range: TiktokRan
   let videos: TiktokVideo[] = [];
   let apiError: string | undefined = accessToken ? undefined : "A conexão TikTok não possui token ativo. Reconecte o TikTok neste relatório.";
 
-  const loadData = async (token: string) => {
+  const loadData = async (token: string): Promise<{ user: TiktokUserInfo; videos: TiktokVideo[]; error?: unknown }> => {
     const [userResult, videoResult] = await Promise.allSettled([
       fetchTiktokUserInfo(token).catch(async (userError: unknown) => {
         if (!isMissingScopeError(userError)) throw userError;
@@ -465,8 +465,7 @@ export async function fetchTiktokMetricGroups(reportId: string, range: TiktokRan
     const loadedVideos = videoResult.status === "fulfilled" ? videoResult.value : [];
     const firstError = userResult.status === "rejected" ? userResult.reason : videoResult.status === "rejected" ? videoResult.reason : null;
 
-    if (firstError) throw firstError;
-    return { user: loadedUser, videos: loadedVideos };
+    return { user: loadedUser, videos: loadedVideos, error: firstError ?? undefined };
   };
 
   if (accessToken) {
@@ -474,6 +473,7 @@ export async function fetchTiktokMetricGroups(reportId: string, range: TiktokRan
       const loaded = await loadData(accessToken);
       user = loaded.user;
       videos = loaded.videos;
+      if (loaded.error) throw loaded.error;
     } catch (loadError) {
       if (refreshToken && isRefreshableAuthError(loadError) && !isMissingScopeError(loadError)) {
         const refreshed = await refreshTiktokToken(refreshToken);
@@ -490,6 +490,7 @@ export async function fetchTiktokMetricGroups(reportId: string, range: TiktokRan
         const loaded = await loadData(accessToken);
         user = loaded.user;
         videos = loaded.videos;
+        if (loaded.error) throw loaded.error;
       } else {
         apiError = isMissingScopeError(loadError)
           ? "A conta TikTok conectada não concedeu acesso às métricas. Reconecte o TikTok para autorizar os escopos user.info.stats e video.list."
