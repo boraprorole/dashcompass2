@@ -598,7 +598,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
             {group.connector === "instagram" && topPostsQ.data && (() => {
               const filtered = topPostsQ.data.filter((p) => String(p.account_id) === String(group.account_id));
               return filtered.length > 0 ? (
-                <TopPostsSection posts={filtered} sortBy={sortBy} onSortChange={setSortBy} />
+                <TopPostsSection posts={filtered} sortBy={sortBy} onSortChange={setSortBy} connector="instagram" />
               ) : null;
             })()}
             {group.connector === "tiktok_oauth" && (group as any).top_posts && (() => {
@@ -618,7 +618,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
                 views: v.views,
                 engagement: v.engagement,
               }));
-              return <TopPostsSection posts={posts} sortBy="engagement" onSortChange={() => {}} />;
+              return <TopPostsSection posts={posts} sortBy={sortBy} onSortChange={setSortBy} connector="tiktok_oauth" />;
             })()}
             {group.connector === "instagram" && audienceQ.data && (() => {
               const filtered = audienceQ.data.filter((a) => String(a.account_id) === String(group.account_id));
@@ -760,6 +760,7 @@ function TopPostsSection({
   posts,
   sortBy,
   onSortChange,
+  connector = "instagram",
 }: {
   posts: Array<{
     media_id: string;
@@ -779,7 +780,11 @@ function TopPostsSection({
   }>;
   sortBy: "engagement" | "reach" | "likes" | "views";
   onSortChange: (v: "engagement" | "reach" | "likes" | "views") => void;
+  connector?: string;
 }) {
+  const isTiktok = connector === "tiktok_oauth";
+  const platformLabel = isTiktok ? "TikTok" : "Instagram";
+  
   return (
     <section className="space-y-4 rounded-2xl border border-border/40 bg-background/40 p-4 md:p-5">
       <header className="flex flex-wrap items-center justify-between gap-2">
@@ -789,7 +794,14 @@ function TopPostsSection({
           </div>
           <div>
             <h3 className="text-sm font-semibold leading-tight">Publicações com melhor desempenho</h3>
-            <p className="text-[11px] text-muted-foreground">Instagram · ranqueado por {sortBy === "engagement" ? "engajamento" : sortBy === "reach" ? "alcance" : sortBy === "likes" ? "curtidas" : "visualizações"}</p>
+            <p className="text-[11px] text-muted-foreground">
+              {platformLabel} · ranqueado por {
+                sortBy === "engagement" ? "engajamento" : 
+                sortBy === "reach" ? (isTiktok ? "visualizações" : "alcance") : 
+                sortBy === "likes" ? "curtidas" : 
+                "visualizações"
+              }
+            </p>
           </div>
         </div>
         <Select value={sortBy} onValueChange={(v) => onSortChange(v as typeof sortBy)}>
@@ -798,6 +810,13 @@ function TopPostsSection({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="engagement">Engajamento</SelectItem>
+            <SelectItem value="views">Visualizações</SelectItem>
+            {isTiktok ? (
+              <SelectItem value="reach">Visualizações (Vídeo)</SelectItem>
+            ) : (
+              <SelectItem value="reach">Alcance</SelectItem>
+            )}
+            <SelectItem value="likes">Curtidas</SelectItem>
             <SelectItem value="reach">Alcance</SelectItem>
             <SelectItem value="likes">Curtidas</SelectItem>
             <SelectItem value="views">Visualizações</SelectItem>
