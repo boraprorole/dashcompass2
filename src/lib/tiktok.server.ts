@@ -20,6 +20,18 @@ export type TiktokMetricGroup = {
   derivedPrevious: Record<string, number | null>;
   insights: Array<{ level: "success" | "warning" | "danger" | "info"; title: string; detail: string; metric?: string }>;
   daily: Array<{ date: string } & Record<string, number | string | null>>;
+  top_posts?: Array<{
+    id: string;
+    media_url?: string;
+    permalink: string;
+    caption?: string;
+    timestamp: string;
+    like_count: number;
+    comments_count: number;
+    views?: number;
+    shares?: number;
+    engagement?: number;
+  }>;
   error?: string;
 };
 
@@ -517,6 +529,22 @@ export async function fetchTiktokMetricGroups(reportId: string, range: TiktokRan
   const derived = buildTiktokDerived(metrics);
   const derivedPrevious = buildTiktokDerived(previous);
 
+  const topPosts = currentVideos
+    .map((v) => ({
+      id: v.id ?? "unknown",
+      media_url: undefined, 
+      permalink: `https://www.tiktok.com/@${user.display_name}/video/${v.id}`,
+      caption: v.title || v.video_description,
+      timestamp: v.create_time ? new Date(v.create_time * 1000).toISOString() : new Date().toISOString(),
+      like_count: v.like_count ?? 0,
+      comments_count: v.comment_count ?? 0,
+      views: v.view_count ?? 0,
+      shares: v.share_count ?? 0,
+      engagement: (v.like_count ?? 0) + (v.comment_count ?? 0) + (v.share_count ?? 0),
+    }))
+    .sort((a, b) => b.engagement - a.engagement)
+    .slice(0, 10);
+
   return [
     {
       connector: "tiktok_oauth",
@@ -528,6 +556,7 @@ export async function fetchTiktokMetricGroups(reportId: string, range: TiktokRan
       derivedPrevious,
       insights: buildTiktokInsights(derived),
       daily: buildDailyRowsFromVideos(videos, bounds),
+      top_posts: topPosts,
       error: apiError,
     },
   ];
