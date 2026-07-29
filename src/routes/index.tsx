@@ -215,7 +215,7 @@ function LandingPage() {
         }`}
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
-          <Link to="/">
+          <Link to="/" search={{ lang: isEn ? 'en' : 'pt' }}>
             <Logo iconClassName="h-8 w-8" textClassName="text-xl" />
           </Link>
 

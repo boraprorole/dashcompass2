@@ -195,7 +195,7 @@ function RegistrationPage() {
       >
         <div className="bg-black/40 border border-white/10 p-8 md:p-10 rounded-[32px] backdrop-blur-xl">
           <div className="flex justify-center mb-8">
-            <Link to="/">
+            <Link to="/" search={{ lang: 'en' }}>
               <Logo iconClassName="h-8 w-8" textClassName="text-2xl" />
             </Link>
           </div>

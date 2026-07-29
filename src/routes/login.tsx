@@ -218,7 +218,7 @@ function LoginPage() {
                 value="signup"
                 className="rounded-[10px] py-2.5 data-[state=active]:bg-primary data-[state=active]:text-black text-white/60"
               >
-                <Link to="/cadastro-empresa">Cadastrar</Link>
+                <Link to="/cadastro-empresa" search={{ lang: 'pt' }}>Cadastrar</Link>
               </TabsTrigger>
             </TabsList>
 

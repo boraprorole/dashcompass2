@@ -2,7 +2,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const AUTH_URL = "https://business-api.tiktok.com/portal/auth";
 const TOKEN_URL = "https://business-api.tiktok.com/open_api/v1.3/oauth2/access_token/";
-const TIKTOK_REDIRECT_URI = "https://www.dashcompass.com/api/public/tiktok/oauth/callback";
+const TIKTOK_REDIRECT_URI = "https://dashcompass.com/auth/tiktok/callback";
 
 export async function buildTiktokAuthUrl(opts: { reportId: string; userId: string }) {
   const appId = process.env.TIKTOK_APP_ID;
