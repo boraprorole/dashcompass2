@@ -21,6 +21,8 @@ export const getReportTiktokMetrics = createServerFn({ method: "POST" })
         datePreset: z.string().max(32).optional(),
         dateFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
         dateTo: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+        sortBy: z.enum(["engagement", "reach", "likes", "views"]).optional(),
+
       })
       .parse(input),
   )
@@ -31,5 +33,7 @@ export const getReportTiktokMetrics = createServerFn({ method: "POST" })
       datePreset: data.datePreset,
       dateFrom: data.dateFrom,
       dateTo: data.dateTo,
+      sortBy: data.sortBy,
+
     });
   });
