@@ -143,7 +143,7 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
 
   const { data: conn } = await supabaseAdmin
     .from("google_ads_connections")
-    .select("id, refresh_token, customer_id")
+    .select("id, refresh_token, customer_id, google_email")
     .eq("report_id", reportId)
     .maybeSingle();
   
