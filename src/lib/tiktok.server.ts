@@ -62,7 +62,7 @@ export async function exchangeTiktokCode(code: string) {
   return data;
 }
 
-export async function fetchTiktokUserInfo(accessToken: string) {
+export async function fetchTiktokUserInfo(accessToken: string): Promise<{ open_id?: string; display_name?: string }> {
   const res = await fetch(`${USER_INFO_URL}?fields=open_id,display_name`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
