@@ -110,11 +110,20 @@ export function BingManager({ reportId }: { reportId: string }) {
           </p>
         </div>
 
-        <div className="flex items-start gap-2 rounded-lg bg-yellow-500/10 p-3 text-xs text-yellow-500">
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-          <p>
-            Nota: A integração total via OAuth2 Microsoft está sendo configurada. Por enquanto,
-            use a API Key ou informe a URL para monitoramento.
+        <div className="flex flex-col gap-3 rounded-lg bg-blue-500/10 p-4 text-xs text-blue-400 border border-blue-500/20">
+          <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-blue-500">
+            <AlertCircle className="h-4 w-4" />
+            Passo a Passo para Conexão
+          </div>
+          <ol className="list-decimal list-inside space-y-2 ml-1">
+            <li>Acesse o <a href="https://www.bing.com/webmasters/" target="_blank" rel="noopener" className="underline hover:text-blue-300">Bing Webmaster Tools</a>.</li>
+            <li>No canto superior direito, clique na <b>engrenagem (Configurações)</b>.</li>
+            <li>Vá em <b>Acesso à API</b> e selecione <b>Chave de API (API Key)</b>.</li>
+            <li>Gere e copie sua chave de API.</li>
+            <li>Insira a <b>URL exata</b> do site (conforme cadastrada no Bing) e a <b>API Key</b> acima.</li>
+          </ol>
+          <p className="mt-1 text-[10px] opacity-70 italic">
+            Nota: A conexão direta via OAuth (Login Microsoft) está em homologação. Utilize a API Key para ativação imediata.
           </p>
         </div>
 
