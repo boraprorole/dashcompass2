@@ -39,7 +39,8 @@ export function TikTokManager({ reportId }: { reportId: string }) {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Music2 className="h-4 w-4 text-primary" />
-            <h3 className="text-sm font-semibold">TikTok Ads</h3>
+            <h3 className="text-sm font-semibold">TikTok</h3>
+
           </div>
           <p className="text-[11px] text-muted-foreground">
             Integração com TikTok Ads para relatórios de performance de vídeo e conversões. (Ads App ID: 7666141116089223184 | Redirect URL: https://dashcompass.com/auth/tiktok/callback)
