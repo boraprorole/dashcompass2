@@ -506,6 +506,7 @@ export async function saveOauthConnection(opts: {
     .from("ga_connections")
     .select("id")
     .eq("report_id", opts.reportId)
+    .eq("ga_property_id", "PENDING")
     .order("updated_at", { ascending: false })
     .limit(1);
 
@@ -520,31 +521,33 @@ export async function saveOauthConnection(opts: {
       .eq("id", existing[0].id);
     if (error) throw new Error(error.message);
   } else {
-    // We must try to reuse any existing 'PENDING' connection if it exists for this report,
-    // or insert a new one if it doesn't.
-    // However, ga_connections has UNIQUE (report_id, ga_property_id).
-    // If there's an existing row with ga_property_id='PENDING' and report_id=X,
-    // the UPDATE above would have caught it if it was the most recent.
-    const { error } = await supabaseAdmin.from("ga_connections").insert({
-      report_id: opts.reportId,
-      refresh_token: opts.refreshToken,
-      google_email: opts.googleEmail,
-      ga_property_id: "PENDING",
-      label: "PENDING",
-      updated_at: new Date().toISOString(),
-    });
-    // If insert fails due to unique constraint, we just try to update that specific one
-    if (error && error.code === "23505") {
-      await supabaseAdmin
-        .from("ga_connections")
-        .update({
-          refresh_token: opts.refreshToken,
-          google_email: opts.googleEmail,
-          updated_at: new Date().toISOString(),
-        })
-        .match({ report_id: opts.reportId, ga_property_id: "PENDING" });
-    } else if (error) {
-      throw new Error(error.message);
+    // Check if there is ANY connection to update refresh token on all matching ones
+    const { error: updateAllError } = await supabaseAdmin
+      .from("ga_connections")
+      .update({
+        refresh_token: opts.refreshToken,
+        google_email: opts.googleEmail,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("report_id", opts.reportId);
+      
+    // If none were updated, we need to create a PENDING one
+    const { data: anyExisting } = await supabaseAdmin
+      .from("ga_connections")
+      .select("id")
+      .eq("report_id", opts.reportId)
+      .limit(1);
+
+    if (!anyExisting || anyExisting.length === 0) {
+      const { error } = await supabaseAdmin.from("ga_connections").insert({
+        report_id: opts.reportId,
+        refresh_token: opts.refreshToken,
+        google_email: opts.googleEmail,
+        ga_property_id: "PENDING",
+        label: "PENDING",
+        updated_at: new Date().toISOString(),
+      });
+      if (error && error.code !== "23505") throw new Error(error.message);
     }
   }
 }
