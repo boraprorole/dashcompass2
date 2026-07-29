@@ -43,7 +43,7 @@ export function TikTokManager({ reportId }: { reportId: string }) {
 
           </div>
           <p className="text-[11px] text-muted-foreground">
-            Integração com TikTok Ads para relatórios de performance de vídeo e conversões. (Ads App ID: 7666141116089223184 | Redirect URL: https://dashcompass.com/auth/tiktok/callback)
+            Integração com TikTok Orgânico para relatórios de performance de vídeo e conversões.
           </p>
         </div>
         <Button
