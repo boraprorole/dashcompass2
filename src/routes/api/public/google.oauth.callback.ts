@@ -28,10 +28,42 @@ export const Route = createFileRoute("/api/public/google/oauth/callback")({
         if (error) return html(`<h1>Autorização negada</h1><p>${error}</p><a href="/admin">Voltar</a>`, 400);
         if (!code || !state) return html(`<h1>Parâmetros ausentes</h1><a href="/admin">Voltar</a>`, 400);
         try {
-          // Re-using GA verifyState since logic is identical for now
-          const parsed = (await verifyState(state)) as { reportId?: string; userId?: string };
-          if (!parsed.reportId || !parsed.userId) throw new Error("state incompleto");
+          // Detect provider from state
+          let provider = "google";
+          let parsed: { reportId?: string; userId?: string } = {};
+
+          try {
+            // Try parsing as Bing state (Simple B64) or Google state (HMAC signed)
+            if (state.includes(".")) {
+              parsed = (await verifyState(state)) as { reportId?: string; userId?: string };
+            } else {
+              const decoded = JSON.parse(atob(state));
+              parsed = decoded;
+              provider = decoded.provider || "google";
+            }
+          } catch (e) {
+            console.error("State parse error:", e);
+          }
+
+          if (!parsed.reportId || !parsed.userId) throw new Error("state incompleto ou inválido");
           
+          if (provider === "bing") {
+            const { exchangeBingCode, saveBingConnection } = await import("@/lib/bing_auth.server");
+            const tokens = await exchangeBingCode(code);
+            
+            // For Bing, we might need a default site URL or fetch it later. 
+            // For now, we save what we have.
+            await saveBingConnection({
+              reportId: parsed.reportId,
+              refreshToken: tokens.refresh_token,
+              siteUrl: "https://bing-connected.waiting-selection.com"
+            });
+
+            return html(
+              `<h1>Bing Conectado</h1><p>Sua conta Microsoft foi vinculada com sucesso.</p><a href="/admin">Voltar ao admin</a>`,
+            );
+          }
+
           const tokens = await exchangeCode(code, url.origin, getGoogleRedirectUri());
           if (!tokens.refresh_token) {
             return html(
@@ -42,7 +74,6 @@ export const Route = createFileRoute("/api/public/google/oauth/callback")({
           
           const email = await fetchGoogleEmail(tokens.access_token);
           
-          // Save to all 3 tables (GA4, GSC, GAds) to fulfill the unified request
           await Promise.all([
             saveOauthConnection({
               userId: parsed.userId,
