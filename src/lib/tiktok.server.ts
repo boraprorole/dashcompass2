@@ -450,7 +450,7 @@ export async function fetchTiktokMetricGroups(reportId: string, range: TiktokRan
   let refreshToken = conn.refresh_token;
   let user: TiktokUserInfo = {};
   let videos: TiktokVideo[] = [];
-  let apiError: string | undefined;
+  let apiError: string | undefined = accessToken ? undefined : "A conexão TikTok não possui token ativo. Reconecte o TikTok neste relatório.";
 
   const loadData = async (token: string) => {
     const [userResult, videoResult] = await Promise.allSettled([
@@ -469,30 +469,32 @@ export async function fetchTiktokMetricGroups(reportId: string, range: TiktokRan
     return { user: loadedUser, videos: loadedVideos };
   };
 
-  try {
-    const loaded = await loadData(accessToken);
-    user = loaded.user;
-    videos = loaded.videos;
-  } catch (loadError) {
-    if (refreshToken && isRefreshableAuthError(loadError) && !isMissingScopeError(loadError)) {
-      const refreshed = await refreshTiktokToken(refreshToken);
-      accessToken = refreshed.access_token;
-      refreshToken = refreshed.refresh_token;
-      await saveTiktokConnection({
-        reportId,
-        accessToken,
-        refreshToken,
-        openId: refreshed.open_id ?? conn.tiktok_advertiser_id ?? undefined,
-        displayName: conn.tiktok_email ?? undefined,
-      });
-
+  if (accessToken) {
+    try {
       const loaded = await loadData(accessToken);
       user = loaded.user;
       videos = loaded.videos;
-    } else {
-      apiError = isMissingScopeError(loadError)
-        ? "A conta TikTok conectada não concedeu acesso às métricas. Reconecte o TikTok para autorizar os escopos user.info.stats e video.list."
-        : `Erro ao carregar dados reais do TikTok: ${(loadError as Error).message}`;
+    } catch (loadError) {
+      if (refreshToken && isRefreshableAuthError(loadError) && !isMissingScopeError(loadError)) {
+        const refreshed = await refreshTiktokToken(refreshToken);
+        accessToken = refreshed.access_token;
+        refreshToken = refreshed.refresh_token;
+        await saveTiktokConnection({
+          reportId,
+          accessToken,
+          refreshToken,
+          openId: refreshed.open_id ?? conn.tiktok_advertiser_id ?? undefined,
+          displayName: conn.tiktok_email ?? undefined,
+        });
+
+        const loaded = await loadData(accessToken);
+        user = loaded.user;
+        videos = loaded.videos;
+      } else {
+        apiError = isMissingScopeError(loadError)
+          ? "A conta TikTok conectada não concedeu acesso às métricas. Reconecte o TikTok para autorizar os escopos user.info.stats e video.list."
+          : `Erro ao carregar dados reais do TikTok: ${(loadError as Error).message}`;
+      }
     }
   }
 
