@@ -40,7 +40,7 @@ export function BingPanel({
 
   if (error || !data?.connected) {
     return (
-      <Card className="glass flex flex-col items-center justify-center p-12 text-center">
+      <Card className="glass-strong border-none rounded-3xl flex flex-col items-center justify-center p-12 text-center">
         <AlertCircle className="mb-4 h-12 w-12 text-muted-foreground/50" />
         <h3 className="text-lg font-semibold text-foreground">Bing não conectado</h3>
         <p className="max-w-xs text-sm text-muted-foreground">
@@ -83,7 +83,7 @@ export function BingPanel({
         <KpiCard label="Posição média" value={avgPos.toFixed(1)} icon={<TrendingUp className="h-4 w-4" />} color="orange" />
       </div>
 
-      <Card className="glass p-6">
+      <Card className="glass-strong border-none rounded-3xl p-6">
         <h3 className="mb-6 text-sm font-semibold">Desempenho ao longo do tempo</h3>
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -121,7 +121,7 @@ export function BingPanel({
       </Card>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-1">
-        <Card className="glass overflow-hidden">
+        <Card className="glass-strong border-none rounded-3xl overflow-hidden">
           <div className="border-b border-white/5 bg-white/5 px-6 py-4">
             <h3 className="text-sm font-semibold text-foreground">Top Palavras-chave</h3>
           </div>
@@ -163,7 +163,7 @@ function KpiCard({ label, value, icon, color }: { label: string; value: string; 
     orange: "text-orange-500 bg-orange-500/10",
   };
   return (
-    <Card className="glass flex items-center gap-4 p-4">
+    <Card className="glass-strong border-none rounded-2xl flex items-center gap-4 p-4">
       <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${colors[color]}`}>
         {icon}
       </div>
