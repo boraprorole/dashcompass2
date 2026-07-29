@@ -165,7 +165,7 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
 
   console.log(`[Ads] Fetching accessible customers for account...`);
   const listRes = await fetch(
-    "https://googleads.googleapis.com/v16/customers:listAccessibleCustomers",
+    "https://googleads.googleapis.com/v17/customers:listAccessibleCustomers",
     { headers },
   );
   
@@ -176,7 +176,7 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
     // If 404, it might be that the developer token is not approved for this API version or environment
     if (listRes.status === 404) {
       console.warn(`[Ads] 404 on listAccessibleCustomers. This usually means the Developer Token is invalid or for a different environment (e.g. Test vs Production).`);
-      throw new Error(`Ads list: 404. O Google Ads API retornou 404. Isso geralmente indica que o Developer Token não é válido para a versão v16 ou a conta Google não tem acesso ao Google Ads.`);
+      throw new Error(`Ads list: 404. O Google Ads API retornou 404. Isso geralmente indica que o Developer Token não é válido para a versão v17 ou a conta Google não tem acesso ao Google Ads.`);
     }
     
     throw new Error(`Ads list: ${listRes.status}. Verifique se o Developer Token está correto.`);
@@ -190,7 +190,7 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
     ids.map(async (id) => {
       try {
         const r = await fetch(
-          `https://googleads.googleapis.com/v16/customers/${id}/googleAds:search`,
+          `https://googleads.googleapis.com/v17/customers/${id}/googleAds:search`,
           {
             method: "POST",
             headers,
