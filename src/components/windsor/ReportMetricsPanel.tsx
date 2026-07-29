@@ -444,7 +444,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
   });
   const hasGadsCsv = (gadsCsvQ.data ?? []).length > 0;
 
-  if (q.isLoading) {
+  if (q.isLoading || tiktokQ.isLoading) {
     return (
       <div className="glass-strong flex items-center justify-center rounded-3xl p-6 text-sm text-muted-foreground">
         <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Carregando métricas...
