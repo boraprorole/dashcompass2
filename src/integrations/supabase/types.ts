@@ -1068,6 +1068,50 @@ export type Database = {
           },
         ]
       }
+      tiktok_connections: {
+        Row: {
+          access_token: string | null
+          created_at: string
+          id: string
+          label: string | null
+          refresh_token: string | null
+          report_id: string
+          tiktok_advertiser_id: string | null
+          tiktok_email: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string
+          id?: string
+          label?: string | null
+          refresh_token?: string | null
+          report_id: string
+          tiktok_advertiser_id?: string | null
+          tiktok_email?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string
+          id?: string
+          label?: string | null
+          refresh_token?: string | null
+          report_id?: string
+          tiktok_advertiser_id?: string | null
+          tiktok_email?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tiktok_connections_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: true
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           agency_id: string | null
