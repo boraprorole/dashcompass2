@@ -41,6 +41,7 @@ export const GA_SCOPES = [
   "email",
   "https://www.googleapis.com/auth/analytics.readonly",
   "https://www.googleapis.com/auth/adwords",
+  "https://www.googleapis.com/auth/webmasters.readonly",
 ].join(" ");
 
 const GA_OAUTH_ORIGIN = "https://www.dashcompass.com";
