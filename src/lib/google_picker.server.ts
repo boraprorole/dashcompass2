@@ -55,7 +55,7 @@ export async function listGscSitesForReport(userId: string, reportId: string) {
   await assertAdminGa(userId);
   const { data: conns } = await supabaseAdmin
     .from("gsc_connections")
-    .select("id, refresh_token, site_url, type")
+    .select("id, refresh_token, site_url, type, google_email")
     .eq("report_id", reportId)
     .order("updated_at", { ascending: false });
 
