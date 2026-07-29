@@ -706,7 +706,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
         };
 
 
-        if (items.length <= 1) return items.map((it) => <div key={it.key}>{renderItem(it)}</div>);
+        if (items.length <= 1 && items[0]?.kind !== "tiktok") return items.map((it) => <div key={it.key}>{renderItem(it)}</div>);
 
         return (
           <Tabs defaultValue={items[0].key} className="space-y-4">
