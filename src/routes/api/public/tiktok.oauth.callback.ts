@@ -1,9 +1,16 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { exchangeTiktokCode, saveTiktokConnection } from '@/lib/tiktok.server';
+import { z } from 'zod';
+
+const tiktokCallbackSchema = z.object({
+  code: z.string().optional(),
+  state: z.string().optional(),
+});
 
 export const Route = createFileRoute('/api/public/tiktok/oauth/callback')({
+  validateSearch: (search) => tiktokCallbackSchema.parse(search),
   loader: async ({ search }) => {
-    const { code, state } = search as { code?: string; state?: string };
+    const { code, state } = search;
 
     if (!code || !state) {
       console.error('TikTok OAuth Error: Missing code or state');
@@ -26,13 +33,15 @@ export const Route = createFileRoute('/api/public/tiktok/oauth/callback')({
         advertiserId
       });
 
-      return redirect({
+      throw redirect({
         to: '/admin',
         search: { reportId }
       });
     } catch (error) {
+      if (error instanceof Error && error.name === 'Redirect') throw error;
       console.error('TikTok OAuth Error:', error);
       throw redirect({ to: '/admin' });
     }
   },
 });
+
