@@ -43,6 +43,7 @@ export const SUPPORTED_CONNECTORS = [
   { id: "adwords", label: "Google Ads" },
   { id: "ga4", label: "Google Analytics 4" },
   { id: "tiktok", label: "TikTok Ads" },
+  { id: "tiktok_organic", label: "TikTok" },
   { id: "linkedin", label: "LinkedIn Ads" },
   { id: "searchconsole", label: "Google Search Console" },
 ] as const;
@@ -601,7 +602,7 @@ export async function getReportMetricsImpl(
   range: WindsorRange = { datePreset: "last_30d" },
 ): Promise<WindsorMetricGroup[]> {
   await assertReportAccess(callerId, reportId);
-  return withCache(`metrics-v15:${reportId}:${rangeKey(range)}`, reportId, async () => {
+  return withCache(`metrics-v16:${reportId}:${rangeKey(range)}`, reportId, async () => {
 
   const { data: conns, error } = await supabaseAdmin
     .from("windsor_connections")
