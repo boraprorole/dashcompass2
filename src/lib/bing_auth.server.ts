@@ -1,8 +1,8 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { signState } from "@/lib/ga.server";
 
-const BING_AUTH_URL = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
-const BING_TOKEN_URL = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
+const BING_AUTH_URL = "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize";
+const BING_TOKEN_URL = "https://login.microsoftonline.com/organizations/oauth2/v2.0/token";
 const BING_SCOPES = [
   "offline_access",
   "https://www.bing.com/webmasters.readonly"
