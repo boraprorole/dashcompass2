@@ -602,7 +602,7 @@ export async function getReportMetricsImpl(
   range: WindsorRange = { datePreset: "last_30d" },
 ): Promise<WindsorMetricGroup[]> {
   await assertReportAccess(callerId, reportId);
-  return withCache(`metrics-v15:${reportId}:${rangeKey(range)}`, reportId, async () => {
+  return withCache(`metrics-v16:${reportId}:${rangeKey(range)}`, reportId, async () => {
 
   const { data: conns, error } = await supabaseAdmin
     .from("windsor_connections")
