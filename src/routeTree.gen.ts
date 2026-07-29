@@ -39,6 +39,7 @@ import { Route as ApiAiChatRouteImport } from './routes/api/ai.chat'
 import { Route as AuthenticatedReportsReportIdRouteImport } from './routes/_authenticated/reports.$reportId'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as ApiPublicTiktokOauthCallbackRouteImport } from './routes/api/public/tiktok.oauth.callback'
 import { Route as ApiPublicRdstationOauthCallbackRouteImport } from './routes/api/public/rdstation.oauth.callback'
 import { Route as ApiPublicPipedriveOauthCallbackRouteImport } from './routes/api/public/pipedrive.oauth.callback'
 import { Route as ApiPublicMetaOauthCallbackRouteImport } from './routes/api/public/meta.oauth.callback'
@@ -201,6 +202,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicTiktokOauthCallbackRoute =
+  ApiPublicTiktokOauthCallbackRouteImport.update({
+    id: '/api/public/tiktok/oauth/callback',
+    path: '/api/public/tiktok/oauth/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicRdstationOauthCallbackRoute =
   ApiPublicRdstationOauthCallbackRouteImport.update({
     id: '/api/public/rdstation/oauth/callback',
@@ -274,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/api/public/meta/oauth/callback': typeof ApiPublicMetaOauthCallbackRoute
   '/api/public/pipedrive/oauth/callback': typeof ApiPublicPipedriveOauthCallbackRoute
   '/api/public/rdstation/oauth/callback': typeof ApiPublicRdstationOauthCallbackRoute
+  '/api/public/tiktok/oauth/callback': typeof ApiPublicTiktokOauthCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -311,6 +319,7 @@ export interface FileRoutesByTo {
   '/api/public/meta/oauth/callback': typeof ApiPublicMetaOauthCallbackRoute
   '/api/public/pipedrive/oauth/callback': typeof ApiPublicPipedriveOauthCallbackRoute
   '/api/public/rdstation/oauth/callback': typeof ApiPublicRdstationOauthCallbackRoute
+  '/api/public/tiktok/oauth/callback': typeof ApiPublicTiktokOauthCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -350,6 +359,7 @@ export interface FileRoutesById {
   '/api/public/meta/oauth/callback': typeof ApiPublicMetaOauthCallbackRoute
   '/api/public/pipedrive/oauth/callback': typeof ApiPublicPipedriveOauthCallbackRoute
   '/api/public/rdstation/oauth/callback': typeof ApiPublicRdstationOauthCallbackRoute
+  '/api/public/tiktok/oauth/callback': typeof ApiPublicTiktokOauthCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -389,6 +399,7 @@ export interface FileRouteTypes {
     | '/api/public/meta/oauth/callback'
     | '/api/public/pipedrive/oauth/callback'
     | '/api/public/rdstation/oauth/callback'
+    | '/api/public/tiktok/oauth/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -426,6 +437,7 @@ export interface FileRouteTypes {
     | '/api/public/meta/oauth/callback'
     | '/api/public/pipedrive/oauth/callback'
     | '/api/public/rdstation/oauth/callback'
+    | '/api/public/tiktok/oauth/callback'
   id:
     | '__root__'
     | '/'
@@ -464,6 +476,7 @@ export interface FileRouteTypes {
     | '/api/public/meta/oauth/callback'
     | '/api/public/pipedrive/oauth/callback'
     | '/api/public/rdstation/oauth/callback'
+    | '/api/public/tiktok/oauth/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -492,6 +505,7 @@ export interface RootRouteChildren {
   ApiPublicMetaOauthCallbackRoute: typeof ApiPublicMetaOauthCallbackRoute
   ApiPublicPipedriveOauthCallbackRoute: typeof ApiPublicPipedriveOauthCallbackRoute
   ApiPublicRdstationOauthCallbackRoute: typeof ApiPublicRdstationOauthCallbackRoute
+  ApiPublicTiktokOauthCallbackRoute: typeof ApiPublicTiktokOauthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -706,6 +720,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/tiktok/oauth/callback': {
+      id: '/api/public/tiktok/oauth/callback'
+      path: '/api/public/tiktok/oauth/callback'
+      fullPath: '/api/public/tiktok/oauth/callback'
+      preLoaderRoute: typeof ApiPublicTiktokOauthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/rdstation/oauth/callback': {
       id: '/api/public/rdstation/oauth/callback'
       path: '/api/public/rdstation/oauth/callback'
@@ -811,6 +832,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicMetaOauthCallbackRoute: ApiPublicMetaOauthCallbackRoute,
   ApiPublicPipedriveOauthCallbackRoute: ApiPublicPipedriveOauthCallbackRoute,
   ApiPublicRdstationOauthCallbackRoute: ApiPublicRdstationOauthCallbackRoute,
+  ApiPublicTiktokOauthCallbackRoute: ApiPublicTiktokOauthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

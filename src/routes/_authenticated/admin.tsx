@@ -22,13 +22,15 @@ import { LinkedInConnectionsManager } from "@/components/linkedin/LinkedInConnec
 import { PipedriveConnectionsManager } from "@/components/pipedrive/PipedriveConnectionsManager";
 import { GoogleAdsCsvManager } from "@/components/googleads/GoogleAdsCsvManager";
 import { GoogleUnifiedManager } from "@/components/google/GoogleUnifiedManager";
+import { TikTokManager } from "@/components/tiktok/TikTokManager";
 import { WindsorSettingsTab } from "@/components/windsor/WindsorSettingsTab";
 import { AdminAITab } from "@/components/ai/AdminAITab";
 import { AdminDemandasTab } from "@/components/demandas/AdminDemandasTab";
 import { AdminRDStationTab } from "@/components/rdstation/AdminRDStationTab";
 import { AdminMcpTab } from "@/components/mcp/AdminMcpTab";
 import { NewsSettingsTab } from "@/components/news/NewsSettingsTab";
-import { Sparkles, Radio, Newspaper } from "lucide-react";
+import { Sparkles, Radio, Newspaper, Music2 } from "lucide-react";
+
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -552,12 +554,13 @@ function ReportsTab() {
                     <details className="group mt-2">
                       <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
                         <Link2 className="mr-1 inline h-3 w-3" />
-                        Pipedrive CRM (OAuth)
+                        TikTok Ads (OAuth)
                       </summary>
                       <div className="mt-3">
-                        <PipedriveConnectionsManager reportId={r.id} />
+                        <TikTokManager reportId={r.id} />
                       </div>
                     </details>
+
 
                     <details className="group mt-2">
                       <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
