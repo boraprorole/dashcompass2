@@ -109,7 +109,7 @@ export async function fetchTiktokMetricGroups(reportId: string, range: any): Pro
   return [{
     connector: "tiktok_organic",
     account_id: conn.tiktok_advertiser_id || "tiktok_account",
-    account_name: conn.tiktok_email || "TikTok Orgânico",
+    account_name: conn.tiktok_email || "TikTok",
     metrics: {
       follows: 0,
       video_views: 0,

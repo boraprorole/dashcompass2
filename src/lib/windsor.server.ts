@@ -342,6 +342,10 @@ export function computeDerived(connector: string, m: Record<string, number | nul
     const revenuePerUser = safeDiv(m.totalRevenue, m.activeUsers ?? m.users);
     if (revenuePerUser != null) d.revenue_per_user = revenuePerUser;
   }
+  if (connector === "tiktok_organic") {
+    const engRate = safeDiv((m.likes || 0) + (m.comments || 0) + (m.shares || 0), m.video_views);
+    if (engRate != null) d.engagement_rate = engRate * 100;
+  }
   return d;
 }
 
