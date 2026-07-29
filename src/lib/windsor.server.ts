@@ -602,7 +602,7 @@ export async function getReportMetricsImpl(
   range: WindsorRange = { datePreset: "last_30d" },
 ): Promise<WindsorMetricGroup[]> {
   await assertReportAccess(callerId, reportId);
-  return withCache(`metrics-v16:${reportId}:${rangeKey(range)}`, reportId, async () => {
+  return withCache(`metrics-v17:${reportId}:${rangeKey(range)}`, reportId, async () => {
 
   const { data: conns, error } = await supabaseAdmin
     .from("windsor_connections")
@@ -729,15 +729,6 @@ export async function getReportMetricsImpl(
     results.push(...graphGroups);
   } catch {
     // silencioso: mantém apenas Windsor caso a integração Meta falhe
-  }
-
-  // Novo: Buscar métricas do TikTok Orgânico caso exista conexão
-  try {
-    const { fetchTiktokMetricGroups } = await import("./tiktok.server");
-    const tiktokGroups = await fetchTiktokMetricGroups(reportId, range);
-    results.push(...tiktokGroups);
-  } catch (err) {
-    console.error("Erro ao buscar TikTok Orgânico:", err);
   }
 
   return results;
