@@ -43,6 +43,7 @@ export const SUPPORTED_CONNECTORS = [
   { id: "adwords", label: "Google Ads" },
   { id: "ga4", label: "Google Analytics 4" },
   { id: "tiktok", label: "TikTok Ads" },
+  { id: "tiktok_organic", label: "TikTok" },
   { id: "linkedin", label: "LinkedIn Ads" },
   { id: "searchconsole", label: "Google Search Console" },
 ] as const;
