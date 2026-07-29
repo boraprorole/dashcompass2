@@ -633,13 +633,6 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
         const renderGoogle = () => (
           <div className="space-y-5">
             {hasGa && gaQ.data && <Ga4Section data={gaQ.data} />}
-            {gadsUnifiedConn && (
-              <GoogleAdsPanel 
-                reportId={reportId} 
-                dateFrom={rangeArgs.dateFrom} 
-                dateTo={rangeArgs.dateTo} 
-              />
-            )}
             {gscUnifiedConn && (
               <div className="space-y-6">
                 <Tabs defaultValue="web" className="w-full">
@@ -688,11 +681,24 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
           </div>
         );
 
+        const renderGoogleAds = () => (
+          <div className="space-y-5">
+            {gadsUnifiedConn && (
+              <GoogleAdsPanel 
+                reportId={reportId} 
+                dateFrom={rangeArgs.dateFrom} 
+                dateTo={rangeArgs.dateTo} 
+              />
+            )}
+          </div>
+        );
+
         type TabItem =
           | { kind: "windsor"; key: string; label: string; group: typeof data[number] }
           | { kind: "tiktok"; key: string; label: string; group: typeof tiktokGroups[number] }
           | { kind: "rd"; key: string; label: string }
           | { kind: "google"; key: string; label: string }
+          | { kind: "google-ads"; key: string; label: string }
           | { kind: "crm"; key: string; label: string }
           | { kind: "gads-csv"; key: string; label: string }
           | { kind: "meta-csv-unorte"; key: string; label: string }
@@ -700,7 +706,8 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
           | { kind: "crm-csv-unorte"; key: string; label: string }
           | { kind: "analise-geral-unorte"; key: string; label: string };
 
-        const hasGoogleTab = hasGa || !!scGroup || !!emvQ.data || !!gscUnifiedConn || !!gadsUnifiedConn;
+        const hasGoogleTab = hasGa || !!scGroup || !!emvQ.data || !!gscUnifiedConn;
+        const hasGoogleAdsTab = !!gadsUnifiedConn;
 
         const items: TabItem[] = [
           ...(reportId === "1231f578-3057-4167-a705-5c45b526bf53"
@@ -719,7 +726,10 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
             group: g,
           })),
           ...(hasGoogleTab
-            ? [{ kind: "google" as const, key: "google-suite", label: "Google Ecosystem (GA4, GSC, Ads)" }]
+            ? [{ kind: "google" as const, key: "google-suite", label: "Analytics & Search Console" }]
+            : []),
+          ...(hasGoogleAdsTab
+            ? [{ kind: "google-ads" as const, key: "google-ads-native", label: "Google Ads" }]
             : []),
           ...((gadsCsvQ.data ?? []).length > 0
             ? [{ kind: "gads-csv" as const, key: "gads-csv", label: "Google Ads (CSV)" }]
@@ -749,6 +759,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
           if (it.kind === "windsor") return renderGroup(it.group);
           if (it.kind === "tiktok") return renderGroup(it.group);
           if (it.kind === "google") return renderGoogle();
+          if (it.kind === "google-ads") return renderGoogleAds();
           if (it.kind === "crm") return <PipedriveCrmPanel reportId={reportId} />;
           if (it.kind === "gads-csv") return <GoogleAdsCsvPanel reportId={reportId} />;
           if (it.kind === "meta-csv-unorte") return <UnorteMetaCsvPanel />;
