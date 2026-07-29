@@ -47,7 +47,7 @@ export function BingManager({ reportId }: { reportId: string }) {
 
   if (status?.connected) {
     return (
-      <Card className="glass p-6">
+      <Card className="glass-strong border-none rounded-2xl p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10 text-blue-500">
@@ -71,7 +71,7 @@ export function BingManager({ reportId }: { reportId: string }) {
   }
 
   return (
-    <Card className="glass p-6">
+    <Card className="glass-strong border-none rounded-2xl p-6">
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Globe className="h-6 w-6" />
@@ -92,7 +92,7 @@ export function BingManager({ reportId }: { reportId: string }) {
             placeholder="https://suaurl.com"
             value={siteUrl}
             onChange={(e) => setSiteUrl(e.target.value)}
-            className="bg-background/50"
+            className="bg-background/20 border-border/30"
           />
         </div>
         <div className="space-y-2">
@@ -103,7 +103,7 @@ export function BingManager({ reportId }: { reportId: string }) {
             placeholder="Sua API Key do Bing"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            className="bg-background/50"
+            className="bg-background/20 border-border/30"
           />
           <p className="text-[10px] text-muted-foreground">
             Você pode obter sua API Key nas configurações do Bing Webmaster Tools.
