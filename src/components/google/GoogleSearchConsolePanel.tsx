@@ -31,7 +31,7 @@ export function GoogleSearchConsolePanel({ reportId, type = 'web', dateFrom, dat
         <KpiCard label="Posição Média" value={data.position} sub="Posição no ranking" icon={<LayoutPanelTop className="h-4 w-4" />} isDecimal />
       </div>
 
-      <Card className="glass-strong border-none rounded-3xl overflow-hidden">
+      <Card className="glass-strong border-none rounded-3xl overflow-hidden mt-6">
         <CardHeader className="border-b border-border/10">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
