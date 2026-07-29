@@ -4,11 +4,11 @@ import { getGscMetrics } from "@/lib/gsc.functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Search, MousePointer2, Eye, LayoutPanelTop, BarChart3 } from "lucide-react";
 
-export function GoogleSearchConsolePanel({ reportId, dateFrom, dateTo }: { reportId: string; dateFrom?: string; dateTo?: string }) {
+export function GoogleSearchConsolePanel({ reportId, type = 'web', dateFrom, dateTo }: { reportId: string; type?: string; dateFrom?: string; dateTo?: string }) {
   const fetchGsc = useServerFn(getGscMetrics);
   const { data, isLoading } = useQuery({
-    queryKey: ["gsc-metrics", reportId, dateFrom, dateTo],
-    queryFn: () => fetchGsc({ data: { reportId, dateFrom, dateTo } }),
+    queryKey: ["gsc-metrics", reportId, type, dateFrom, dateTo],
+    queryFn: () => fetchGsc({ data: { reportId, type, dateFrom, dateTo } }),
   });
 
   if (isLoading) {
