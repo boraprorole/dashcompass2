@@ -10,3 +10,26 @@ export const startTiktokOAuth = createServerFn({ method: "POST" })
     const url = await buildTiktokAuthUrl({ reportId: data.reportId, userId: context.userId });
     return { url };
   });
+
+export const getReportTiktokMetrics = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z
+      .object({
+        reportId: z.string().uuid(),
+        datePreset: z.string().max(32).optional(),
+        dateFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+        dateTo: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+      })
+      .parse(input),
+  )
+  .handler(async ({ context, data }) => {
+    const { assertReportAccess } = await import("./windsor.server");
+    const { fetchTiktokMetricGroups } = await import("./tiktok.server");
+    await assertReportAccess(context.userId, data.reportId);
+    return fetchTiktokMetricGroups(data.reportId, {
+      datePreset: data.datePreset,
+      dateFrom: data.dateFrom,
+      dateTo: data.dateTo,
+    });
+  });
