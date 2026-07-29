@@ -143,12 +143,13 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
 
   const { data: conn } = await supabaseAdmin
     .from("google_ads_connections")
-    .select("id, refresh_token, customer_id")
+    .select("id, refresh_token, customer_id, google_email")
     .eq("report_id", reportId)
     .maybeSingle();
   
   if (!conn) return { current: null, customers: [] as Array<{ customerId: string; descriptiveName: string }> };
   
+  console.log(`[Ads] Fetching accounts for ${conn.google_email} (Report: ${reportId})`);
   const { access_token } = await refreshAccessToken(conn.refresh_token);
 
   const headers: Record<string, string> = {
@@ -156,8 +157,13 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
     "developer-token": developerToken,
     "content-type": "application/json",
   };
-  if (loginCustomerId) headers["login-customer-id"] = loginCustomerId.replace(/-/g, "");
+  if (loginCustomerId) {
+    const cleanLoginId = loginCustomerId.replace(/-/g, "");
+    headers["login-customer-id"] = cleanLoginId;
+    console.log(`[Ads] Using login-customer-id: ${cleanLoginId}`);
+  }
 
+  console.log(`[Ads] Fetching accessible customers for account...`);
   const listRes = await fetch(
     "https://googleads.googleapis.com/v16/customers:listAccessibleCustomers",
     { headers },
@@ -165,8 +171,14 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
   
   if (!listRes.ok) {
     const errorText = await listRes.text();
-    console.error("Ads list error:", listRes.status, errorText);
-    throw new Error(`Ads list: ${listRes.status}. Verifique se o Developer Token e o Login Customer ID estão corretos.`);
+    console.error(`[Ads] listAccessibleCustomers error (${listRes.status}):`, errorText);
+    
+    // If 404, it might be that the developer token is not approved for this API version or environment
+    if (listRes.status === 404) {
+      throw new Error(`Ads list: 404. O Google Ads API retornou 404. Isso geralmente indica que o Developer Token não é válido para a versão v16 ou a URL está incorreta.`);
+    }
+    
+    throw new Error(`Ads list: ${listRes.status}. Verifique se o Developer Token está correto.`);
   }
 
   const listJson = (await listRes.json()) as { resourceNames?: string[] };
