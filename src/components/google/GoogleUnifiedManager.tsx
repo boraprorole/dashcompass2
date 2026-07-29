@@ -255,8 +255,8 @@ function GscPicker({ reportId, type = 'web', placeholder, onSaved }: { reportId:
   
   const filteredSites = (data?.sites ?? []).filter(s => {
     const url = s.siteUrl.toLowerCase();
-    if (type === 'tiktok') return url.includes('tiktok.com');
-    if (type === 'instagram') return url.includes('instagram.com') || url.includes('threads.net');
+    if (type === 'tiktok') return url.includes('tiktok.com') || url.includes('sc-creator-profile:tiktok.com');
+    if (type === 'instagram') return url.includes('instagram.com') || url.includes('threads.net') || url.includes('sc-creator-profile:instagram.com');
     // For web, we show everything that is NOT clearly TikTok or Instagram to keep it clean, 
     // or just show everything if the user prefers. Let's show everything for web as fallback.
     return true; 
