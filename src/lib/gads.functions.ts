@@ -56,7 +56,7 @@ export const getGadsMetrics = createServerFn({ method: "POST" })
       `;
 
       const res = await fetch(
-        `https://googleads.googleapis.com/v17/customers/${customerId}/googleAds:search`,
+        `https://googleads.googleapis.com/v18/customers/${customerId}/googleAds:search`,
         {
           method: "POST",
           headers,
