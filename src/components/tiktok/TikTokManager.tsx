@@ -42,7 +42,7 @@ export function TikTokManager({ reportId }: { reportId: string }) {
             <h3 className="text-sm font-semibold">TikTok Ads</h3>
           </div>
           <p className="text-[11px] text-muted-foreground">
-            Integração com TikTok Ads para relatórios de performance de vídeo e conversões.
+            Integração com TikTok Ads para relatórios de performance de vídeo e conversões. (TIKTOK_APP_ID é a mesma coisa que Client key?)
           </p>
         </div>
         <Button
