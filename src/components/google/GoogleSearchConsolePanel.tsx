@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getGscMetrics } from "@/lib/gsc.functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, MousePointer2, Eye, LayoutPanelTop, BarChart3 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, Search, MousePointer2, Eye, LayoutPanelTop, BarChart3, Sparkles } from "lucide-react";
 
 export function GoogleSearchConsolePanel({ reportId, type = 'web', dateFrom, dateTo }: { reportId: string; type?: string; dateFrom?: string; dateTo?: string }) {
   const fetchGsc = useServerFn(getGscMetrics);
