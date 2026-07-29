@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { connectBing, getBingMetrics, getBingConnectUrl } from "@/lib/bing.functions";
+import { connectBing, getBingMetrics, getBingConnectUrl, disconnectBing } from "@/lib/bing.functions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, ExternalLink, ShieldCheck, AlertCircle, Globe } from "lucide-react";
+import { Loader2, ExternalLink, ShieldCheck, AlertCircle, Globe, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export function BingManager({ reportId }: { reportId: string }) {
@@ -14,6 +14,7 @@ export function BingManager({ reportId }: { reportId: string }) {
   const [apiKey, setApiKey] = useState("");
   const queryClient = useQueryClient();
   const connect = useServerFn(connectBing);
+  const disconnect = useServerFn(disconnectBing);
   const getConnectUrl = useServerFn(getBingConnectUrl);
   const fetchMetrics = useServerFn(getBingMetrics);
 
@@ -35,6 +36,18 @@ export function BingManager({ reportId }: { reportId: string }) {
       queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] });
     } catch (error) {
       toast.error("Erro ao conectar Bing Webmaster Tools");
+    }
+  };
+  
+  const handleDisconnect = async () => {
+    if (!confirm("Tem certeza que deseja desconectar o Bing Webmaster Tools?")) return;
+    
+    try {
+      await disconnect({ data: { reportId } });
+      toast.success("Bing Webmaster Tools desconectado com sucesso");
+      queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] });
+    } catch (error) {
+      toast.error("Erro ao desconectar Bing Webmaster Tools");
     }
   };
 
@@ -59,13 +72,23 @@ export function BingManager({ reportId }: { reportId: string }) {
               <p className="text-sm text-muted-foreground">{status.siteUrl}</p>
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => window.open(`https://www.bing.com/webmasters?siteUrl=${status.siteUrl}`, "_blank")}
-          >
-            <ExternalLink className="mr-2 h-4 w-4" /> Ver no Bing
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open(`https://www.bing.com/webmasters?siteUrl=${status.siteUrl}`, "_blank")}
+            >
+              <ExternalLink className="mr-2 h-4 w-4" /> Ver no Bing
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={handleDisconnect}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </Card>
     );

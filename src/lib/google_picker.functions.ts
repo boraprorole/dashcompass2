@@ -55,3 +55,19 @@ export const chooseGoogleAdsCustomer = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) =>
     setGoogleAdsCustomer(context.userId, data.reportId, data.customerId),
   );
+
+export const disconnectGoogleUnified = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => z.object({ reportId: z.string().uuid() }).parse(input))
+  .handler(async ({ context, data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    
+    // Delete from all Google-related tables for this report
+    await Promise.all([
+      supabaseAdmin.from("ga_connections").delete().eq("report_id", data.reportId),
+      supabaseAdmin.from("gsc_connections").delete().eq("report_id", data.reportId),
+      supabaseAdmin.from("google_ads_connections").delete().eq("report_id", data.reportId)
+    ]);
+    
+    return { success: true };
+  });

@@ -9,6 +9,7 @@ import {
   chooseGscSite,
   listGoogleAdsCustomers,
   chooseGoogleAdsCustomer,
+  disconnectGoogleUnified,
 } from "@/lib/google_picker.functions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,12 +20,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, LineChart, Search, Presentation, Globe } from "lucide-react";
+import { Loader2, Plus, LineChart, Search, Presentation, Globe, Trash2 } from "lucide-react";
 import { BingManager } from "@/components/bing/BingManager";
 import { supabase } from "@/integrations/supabase/client";
 
 export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
   const startOAuth = useServerFn(startGoogleUnifiedOAuth);
+  const disconnect = useServerFn(disconnectGoogleUnified);
   const qc = useQueryClient();
 
   const { data: conns, isLoading } = useQuery({
@@ -51,6 +53,15 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const disconnectMut = useMutation({
+    mutationFn: () => disconnect({ data: { reportId } }),
+    onSuccess: () => {
+      toast.success("Conexões do Google removidas");
+      qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   const isConnected = conns && (conns.ga.length > 0 || conns.gsc.length > 0 || conns.gads.length > 0);
   const gaConn = conns?.ga[0];
   const gscConn = conns?.gsc[0];
@@ -67,19 +78,36 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
               conta/propriedade de cada serviço para vincular ao relatório.
             </p>
           </div>
-          <Button
-            size="sm"
-            onClick={() => connectMut.mutate()}
-            disabled={connectMut.isPending}
-            className="bg-primary hover:bg-primary/90"
-          >
-            {connectMut.isPending ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Plus className="mr-2 h-4 w-4" />
+          <div className="flex gap-2">
+            {isConnected && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (confirm("Deseja desconectar todas as contas do Google vinculadas a este relatório?")) {
+                    disconnectMut.mutate();
+                  }
+                }}
+                disabled={disconnectMut.isPending}
+                className="border-destructive/30 text-destructive hover:bg-destructive/10"
+              >
+                {disconnectMut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+              </Button>
             )}
-            {isConnected ? "Reconectar Google" : "Conectar Google"}
-          </Button>
+            <Button
+              size="sm"
+              onClick={() => connectMut.mutate()}
+              disabled={connectMut.isPending}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {connectMut.isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Plus className="mr-2 h-4 w-4" />
+              )}
+              {isConnected ? "Reconectar Google" : "Conectar Google"}
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

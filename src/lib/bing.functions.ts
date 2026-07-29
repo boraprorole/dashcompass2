@@ -41,6 +41,22 @@ export const connectBing = createServerFn({ method: "POST" })
     return { success: true };
   });
 
+export const disconnectBing = createServerFn({ method: "POST" })
+  .inputValidator((data) => z.object({ reportId: z.string() }).parse(data))
+  .handler(async ({ data }) => {
+    const { error } = await supabaseAdmin
+      .from("bing_connections")
+      .delete()
+      .eq("report_id", data.reportId);
+
+    if (error) {
+      console.error("Error disconnecting Bing:", error);
+      throw new Error("Failed to disconnect Bing Webmaster Tools");
+    }
+
+    return { success: true };
+  });
+
 export const getBingMetrics = createServerFn({ method: "GET" })
   .inputValidator((data) =>
     z.object({
