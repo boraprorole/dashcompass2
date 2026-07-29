@@ -601,6 +601,25 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
                 <TopPostsSection posts={filtered} sortBy={sortBy} onSortChange={setSortBy} />
               ) : null;
             })()}
+            {group.connector === "tiktok_oauth" && (group as any).top_posts && (() => {
+              const posts = (group as any).top_posts.map((v: any) => ({
+                media_id: v.id,
+                account_name: group.account_name,
+                media_type: "VIDEO",
+                caption: v.caption,
+                permalink: v.permalink,
+                thumbnail: v.media_url,
+                timestamp: v.timestamp,
+                likes: v.like_count,
+                comments: v.comments_count,
+                shares: v.shares,
+                saved: 0,
+                reach: v.views,
+                views: v.views,
+                engagement: v.engagement,
+              }));
+              return <TopPostsSection posts={posts} sortBy="engagement" onSortChange={() => {}} />;
+            })()}
             {group.connector === "instagram" && audienceQ.data && (() => {
               const filtered = audienceQ.data.filter((a) => String(a.account_id) === String(group.account_id));
               return filtered.length > 0 ? <AudienceSection audiences={filtered} /> : null;
