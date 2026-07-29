@@ -31,7 +31,7 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
     queryFn: async () => {
       const [ga, gsc, gads] = await Promise.all([
         supabase.from("ga_connections").select("id, google_email, ga_property_id, updated_at").eq("report_id", reportId).order("updated_at", { ascending: false }),
-        supabase.from("gsc_connections").select("id, google_email, site_url, updated_at").eq("report_id", reportId).order("updated_at", { ascending: false }),
+        supabase.from("gsc_connections").select("id, google_email, site_url, type, updated_at").eq("report_id", reportId).order("updated_at", { ascending: false }),
         supabase.from("google_ads_connections").select("id, google_email, customer_id, updated_at").eq("report_id", reportId).order("updated_at", { ascending: false }),
       ]);
       return {
@@ -91,11 +91,27 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
         />
         <ServiceCard
           icon={<Search className="h-4 w-4" />}
-          label="Search Console"
+          label="Search Console (Web)"
           email={gscConn?.google_email}
           connected={!!gscConn}
-          selected={gscConn?.site_url ?? undefined}
-          picker={gscConn ? <GscPicker reportId={reportId} onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
+          selected={conns?.gsc.find(c => c.type === 'web')?.site_url ?? undefined}
+          picker={gscConn ? <GscPicker reportId={reportId} type="web" placeholder="Escolher site (Web)" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
+        />
+        <ServiceCard
+          icon={<Search className="h-4 w-4 text-[#ff0050]" />}
+          label="Search Console (TikTok)"
+          email={conns?.gsc.find(c => c.type === 'tiktok')?.google_email || gscConn?.google_email}
+          connected={!!gscConn}
+          selected={conns?.gsc.find(c => c.type === 'tiktok')?.site_url ?? undefined}
+          picker={gscConn ? <GscPicker reportId={reportId} type="tiktok" placeholder="Escolher perfil TikTok" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
+        />
+        <ServiceCard
+          icon={<Search className="h-4 w-4 text-[#E1306C]" />}
+          label="Search Console (Instagram)"
+          email={conns?.gsc.find(c => c.type === 'instagram')?.google_email || gscConn?.google_email}
+          connected={!!gscConn}
+          selected={conns?.gsc.find(c => c.type === 'instagram')?.site_url ?? undefined}
+          picker={gscConn ? <GscPicker reportId={reportId} type="instagram" placeholder="Escolher perfil Instagram" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
         />
         <ServiceCard
           icon={<Presentation className="h-4 w-4" />}
@@ -204,18 +220,18 @@ function GaPicker({ reportId, onSaved }: { reportId: string; onSaved: () => void
   );
 }
 
-function GscPicker({ reportId, onSaved }: { reportId: string; onSaved: () => void }) {
+function GscPicker({ reportId, type = 'web', placeholder, onSaved }: { reportId: string; type?: string; placeholder: string; onSaved: () => void }) {
   const list = useServerFn(listGscSites);
   const choose = useServerFn(chooseGscSite);
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["gsc-sites", reportId],
+    queryKey: ["gsc-sites", reportId, type],
     queryFn: () => list({ data: { reportId } }),
     staleTime: 0,
   });
   const mut = useMutation({
-    mutationFn: (siteUrl: string) => choose({ data: { reportId, siteUrl } }),
+    mutationFn: (siteUrl: string) => choose({ data: { reportId, siteUrl, type } }),
     onSuccess: () => {
-      toast.success("Site do Search Console vinculado");
+      toast.success(`Search Console (${type}) vinculado`);
       onSaved();
     },
     onError: (e: Error) => toast.error(e.message),
@@ -234,9 +250,12 @@ function GscPicker({ reportId, onSaved }: { reportId: string; onSaved: () => voi
       </Button>
     </div>
   );
+  
+  const current = (data as any)?.connections?.find((c: any) => c.type === type)?.site_url || (type === 'web' ? data?.current : undefined);
+  
   return (
-    <Select value={data?.current ?? undefined} onValueChange={(v) => mut.mutate(v)} disabled={mut.isPending}>
-      <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Escolher site do GSC" /></SelectTrigger>
+    <Select value={current} onValueChange={(v) => mut.mutate(v)} disabled={mut.isPending}>
+      <SelectTrigger className="h-8 text-xs"><SelectValue placeholder={placeholder} /></SelectTrigger>
       <SelectContent>
         {(data?.sites ?? []).map((s) => (
           <SelectItem key={s.siteUrl} value={s.siteUrl} className="text-xs">
