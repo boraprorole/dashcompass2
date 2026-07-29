@@ -534,6 +534,16 @@ function ReportsTab() {
                     <details className="group mt-2">
                       <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
                         <Link2 className="mr-1 inline h-3 w-3" />
+                        Microsoft Ecosystem (Bing)
+                      </summary>
+                      <div className="mt-3">
+                        <BingManager reportId={r.id} />
+                      </div>
+                    </details>
+
+                    <details className="group mt-2">
+                      <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
+                        <Link2 className="mr-1 inline h-3 w-3" />
                         RD Station Marketing (OAuth)
                       </summary>
                       <div className="mt-3">
@@ -1272,6 +1282,16 @@ function CompaniesTab() {
             </summary>
             <div className="mt-2">
               <GoogleUnifiedManager reportId={r.id} />
+            </div>
+          </details>
+
+          <details className="group mt-2">
+            <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
+              <Link2 className="mr-1 inline h-3 w-3" />
+              Microsoft Ecosystem (Bing)
+            </summary>
+            <div className="mt-2">
+              <BingManager reportId={r.id} />
             </div>
           </details>
 
