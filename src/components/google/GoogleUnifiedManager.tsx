@@ -9,6 +9,7 @@ import {
   chooseGscSite,
   listGoogleAdsCustomers,
   chooseGoogleAdsCustomer,
+  disconnectGoogleUnified,
 } from "@/lib/google_picker.functions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,12 +20,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, LineChart, Search, Presentation, Globe } from "lucide-react";
+import { Loader2, Plus, LineChart, Search, Presentation, Globe, Trash2 } from "lucide-react";
 import { BingManager } from "@/components/bing/BingManager";
 import { supabase } from "@/integrations/supabase/client";
 
 export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
   const startOAuth = useServerFn(startGoogleUnifiedOAuth);
+  const disconnect = useServerFn(disconnectGoogleUnified);
   const qc = useQueryClient();
 
   const { data: conns, isLoading } = useQuery({
