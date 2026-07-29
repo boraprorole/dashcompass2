@@ -626,6 +626,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
 
         type TabItem =
           | { kind: "windsor"; key: string; label: string; group: typeof data[number] }
+          | { kind: "tiktok"; key: string; label: string; group: typeof tiktokGroups[number] }
           | { kind: "rd"; key: string; label: string }
           | { kind: "google"; key: string; label: string }
           | { kind: "crm"; key: string; label: string }
@@ -648,7 +649,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
             group: g,
           })),
           ...tiktokGroups.map<TabItem>((g) => ({
-            kind: "windsor",
+            kind: "tiktok",
             key: `tiktok-oauth-${g.account_id}`,
             label: `${connectorLabel(g.connector)}${g.account_name ? ` · ${g.account_name}` : ""}`,
             group: g,
@@ -682,6 +683,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
 
         const renderItem = (it: TabItem) => {
           if (it.kind === "windsor") return renderGroup(it.group);
+          if (it.kind === "tiktok") return renderGroup(it.group);
           if (it.kind === "google") return renderGoogle();
           if (it.kind === "crm") return <PipedriveCrmPanel reportId={reportId} />;
           if (it.kind === "gads-csv") return <GoogleAdsCsvPanel reportId={reportId} />;
