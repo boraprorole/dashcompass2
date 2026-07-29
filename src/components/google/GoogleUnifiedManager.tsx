@@ -261,16 +261,17 @@ function GscPicker({ reportId, type = 'web', placeholder, onSaved }: { reportId:
     // or just show everything if the user prefers. Let's show everything for web as fallback.
     return true; 
   });
+  return (
     <Select value={current} onValueChange={(v) => mut.mutate(v)} disabled={mut.isPending}>
       <SelectTrigger className="h-8 text-xs"><SelectValue placeholder={placeholder} /></SelectTrigger>
       <SelectContent>
-        {(data?.sites ?? []).map((s) => (
+        {filteredSites.map((s) => (
           <SelectItem key={s.siteUrl} value={s.siteUrl} className="text-xs">
             {s.siteUrl}
           </SelectItem>
         ))}
-        {(data?.sites?.length ?? 0) === 0 && (
-          <div className="p-2 text-[10px] text-muted-foreground">Nenhum site encontrado.</div>
+        {filteredSites.length === 0 && (
+          <div className="p-2 text-[10px] text-muted-foreground">Nenhum site encontrado para {type}.</div>
         )}
       </SelectContent>
     </Select>
