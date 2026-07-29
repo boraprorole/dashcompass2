@@ -8,6 +8,7 @@ export const getGscMetrics = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ 
     reportId: z.string().uuid(),
+    type: z.string().optional(),
     dateFrom: z.string().optional(),
     dateTo: z.string().optional()
   }).parse(input))
@@ -16,6 +17,7 @@ export const getGscMetrics = createServerFn({ method: "POST" })
       .from("gsc_connections")
       .select("refresh_token, site_url")
       .eq("report_id", data.reportId)
+      .eq("type", data.type || 'web')
       .maybeSingle();
 
     if (!conn || !conn.site_url) {

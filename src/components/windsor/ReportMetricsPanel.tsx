@@ -641,11 +641,40 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
               />
             )}
             {gscUnifiedConn && (
-              <GoogleSearchConsolePanel 
-                reportId={reportId} 
-                dateFrom={rangeArgs.dateFrom} 
-                dateTo={rangeArgs.dateTo} 
-              />
+              <div className="space-y-6">
+                <Tabs defaultValue="web" className="w-full">
+                  <TabsList className="bg-white/5 border border-white/10 rounded-full h-10 p-1 mb-6">
+                    <TabsTrigger value="web" className="rounded-full px-6 data-[state=active]:bg-primary data-[state=active]:text-black text-xs font-bold">Search Console Web</TabsTrigger>
+                    <TabsTrigger value="tiktok" className="rounded-full px-6 data-[state=active]:bg-[#ff0050] data-[state=active]:text-white text-xs font-bold">Search Console TikTok</TabsTrigger>
+                    <TabsTrigger value="instagram" className="rounded-full px-6 data-[state=active]:bg-[#E1306C] data-[state=active]:text-white text-xs font-bold">Search Console Instagram</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="web">
+                    <GoogleSearchConsolePanel 
+                      reportId={reportId} 
+                      type="web"
+                      dateFrom={rangeArgs.dateFrom} 
+                      dateTo={rangeArgs.dateTo} 
+                    />
+                  </TabsContent>
+                  <TabsContent value="tiktok">
+                    <GoogleSearchConsolePanel 
+                      reportId={reportId} 
+                      type="tiktok"
+                      dateFrom={rangeArgs.dateFrom} 
+                      dateTo={rangeArgs.dateTo} 
+                    />
+                  </TabsContent>
+                  <TabsContent value="instagram">
+                    <GoogleSearchConsolePanel 
+                      reportId={reportId} 
+                      type="instagram"
+                      dateFrom={rangeArgs.dateFrom} 
+                      dateTo={rangeArgs.dateTo} 
+                    />
+                  </TabsContent>
+                </Tabs>
+              </div>
             )}
             {scGroup && renderGroup(scGroup)}
             {scGroup && searchConsoleQ.data && searchConsoleQ.data.length > 0 && (

@@ -32,9 +32,13 @@ export const listGscSites = createServerFn({ method: "POST" })
 export const chooseGscSite = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) =>
-    z.object({ reportId: z.string().uuid(), siteUrl: z.string().min(1) }).parse(input),
+    z.object({ 
+      reportId: z.string().uuid(), 
+      siteUrl: z.string().min(1),
+      type: z.string().optional()
+    }).parse(input),
   )
-  .handler(async ({ context, data }) => setGscSite(context.userId, data.reportId, data.siteUrl));
+  .handler(async ({ context, data }) => setGscSite(context.userId, data.reportId, data.siteUrl, data.type));
 
 export const listGoogleAdsCustomers = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

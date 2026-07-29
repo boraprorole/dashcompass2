@@ -533,7 +533,7 @@ export type Database = {
           {
             foreignKeyName: "google_ads_connections_report_id_fkey"
             columns: ["report_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "reports"
             referencedColumns: ["id"]
           },
@@ -591,34 +591,40 @@ export type Database = {
           created_at: string | null
           google_email: string | null
           id: string
+          label: string | null
           refresh_token: string
           report_id: string
           site_url: string | null
+          type: string | null
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
           google_email?: string | null
           id?: string
+          label?: string | null
           refresh_token: string
           report_id: string
           site_url?: string | null
+          type?: string | null
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
           google_email?: string | null
           id?: string
+          label?: string | null
           refresh_token?: string
           report_id?: string
           site_url?: string | null
+          type?: string | null
           updated_at?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "gsc_connections_report_id_fkey"
             columns: ["report_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "reports"
             referencedColumns: ["id"]
           },
