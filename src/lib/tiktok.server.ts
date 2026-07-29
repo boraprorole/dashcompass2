@@ -90,3 +90,35 @@ export async function saveTiktokConnection(opts: {
   );
   if (error) throw error;
 }
+
+export async function fetchTiktokMetricGroups(reportId: string, range: any): Promise<any[]> {
+  const { data: conn } = await supabaseAdmin
+    .from("tiktok_connections")
+    .select("*")
+    .eq("report_id", reportId)
+    .maybeSingle();
+
+  if (!conn) return [];
+
+  // Como o Login Kit v2 orgânico é limitado para métricas históricas agregadas via API pública 
+  // sem aprovações de escopos avançados, retornamos um grupo com os dados básicos 
+  // da conta para garantir que a aba apareça. No futuro, isto pode ser expandido 
+  // consumindo endpoints de Video/Post metrics se os escopos forem aprovados.
+  return [{
+    connector: "tiktok_organic",
+    account_id: conn.tiktok_advertiser_id || "tiktok_account",
+    account_name: conn.tiktok_email || "TikTok Orgânico",
+    metrics: {
+      follows: 0,
+      video_views: 0,
+      likes: 0,
+      comments: 0,
+      shares: 0
+    },
+    previous: {},
+    derived: {},
+    derivedPrevious: {},
+    insights: [],
+    daily: []
+  }];
+}
