@@ -133,7 +133,7 @@ export function BingManager({ reportId }: { reportId: string }) {
           </div>
           <div className="mt-3 pt-3 border-t border-blue-500/10 space-y-3">
             <p className="text-[10px] text-blue-300 font-medium">
-              Já possui o <b>Client ID</b> e <b>Client Secret</b> configurados no Google Cloud Console / Microsoft Azure?
+              Client ID e Client Secret são globais e devem ser configurados no backend pelo administrador.
             </p>
             <Button 
               type="button" 
