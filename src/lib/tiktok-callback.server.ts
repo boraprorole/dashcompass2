@@ -17,14 +17,19 @@ type TiktokOAuthState = {
   userId?: string;
 };
 
-function parseTiktokState(state: string): TiktokOAuthState {
+type ValidTiktokOAuthState = {
+  reportId: string;
+  userId?: string;
+};
+
+function parseTiktokState(state: string): ValidTiktokOAuthState {
   const parsed = JSON.parse(atob(state)) as TiktokOAuthState;
 
   if (!parsed.reportId) {
     throw new Error("state sem reportId");
   }
 
-  return parsed;
+  return { reportId: parsed.reportId, userId: parsed.userId };
 }
 
 export async function handleTiktokOAuthCallback(request: Request) {
