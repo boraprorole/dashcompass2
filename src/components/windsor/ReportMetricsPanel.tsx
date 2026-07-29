@@ -808,7 +808,7 @@ function TopPostsSection({
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((p, i) => (
           <article
-            key={p.media_id}
+            key={p.media_id || i}
             className="group relative overflow-hidden rounded-2xl border border-border/40 bg-background/60 transition-shadow hover:shadow-lg"
           >
             <div className="relative aspect-square w-full overflow-hidden bg-muted">
