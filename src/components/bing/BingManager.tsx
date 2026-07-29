@@ -122,6 +122,15 @@ export function BingManager({ reportId }: { reportId: string }) {
             <li>Gere e copie sua chave de API.</li>
             <li>Insira a <b>URL exata</b> do site (conforme cadastrada no Bing) e a <b>API Key</b> acima.</li>
           </ol>
+          <div className="mt-2 pt-2 border-t border-blue-500/10">
+            <p className="font-bold text-blue-500 mb-1">Microsoft OAuth Redirect URI:</p>
+            <code className="bg-black/30 px-2 py-1 rounded block break-all text-[9px] select-all">
+              {window.location.origin}/api/public/google.oauth.callback
+            </code>
+            <p className="mt-1 text-[8px] opacity-60">
+              * Nota: A integração utiliza o mesmo endpoint unificado para Microsoft e Google.
+            </p>
+          </div>
           <p className="mt-1 text-[10px] opacity-70 italic">
             Nota: A conexão direta via OAuth (Login Microsoft) está em homologação. Utilize a API Key para ativação imediata.
           </p>
