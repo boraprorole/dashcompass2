@@ -41,7 +41,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, Bookmark, Eye, Heart, Instagram, MessageCircle, Share2, ExternalLink, Sparkles } from "lucide-react";
+import { CalendarIcon, Bookmark, Eye, Heart, Instagram, MessageCircle, Share2, ExternalLink, Sparkles, Video } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowDownRight,
@@ -843,7 +843,7 @@ function TopPostsSection({
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-                  <Instagram className="h-8 w-8" />
+                  {isTiktok ? <Video className="h-8 w-8" /> : <Instagram className="h-8 w-8" />}
                 </div>
               )}
               <div className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-bold text-white">
@@ -874,7 +874,7 @@ function TopPostsSection({
                   rel="noreferrer"
                   className="inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline"
                 >
-                  Ver no Instagram <ExternalLink className="h-3 w-3" />
+                  {isTiktok ? "Ver no TikTok" : "Ver no Instagram"} <ExternalLink className="h-3 w-3" />
                 </a>
               )}
             </div>
