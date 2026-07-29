@@ -44,12 +44,12 @@ export async function handleTiktokOAuthCallback(request: Request) {
   try {
     const { reportId } = parseTiktokState(state);
     const tokens = await exchangeTiktokCode(code);
-    const user = await fetchTiktokUserInfo(tokens.access_token!).catch(() => ({} as { open_id?: string; display_name?: string }));
+    const user = await fetchTiktokUserInfo(tokens.access_token).catch(() => ({} as { open_id?: string; display_name?: string }));
 
     await saveTiktokConnection({
       reportId,
-      accessToken: tokens.access_token!,
-      refreshToken: tokens.refresh_token!,
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token,
       openId: tokens.open_id || user.open_id,
       displayName: user.display_name,
     });
