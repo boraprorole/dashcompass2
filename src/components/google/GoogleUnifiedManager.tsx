@@ -251,9 +251,16 @@ function GscPicker({ reportId, type = 'web', placeholder, onSaved }: { reportId:
     </div>
   );
   
-  const current = (data as any)?.connections?.find((c: any) => c.type === type)?.site_url || (type === 'web' ? data?.current : undefined);
+  const current = (data as any)?.connections?.find((c: any) => c.type === type)?.site_url;
   
-  return (
+  const filteredSites = (data?.sites ?? []).filter(s => {
+    const url = s.siteUrl.toLowerCase();
+    if (type === 'tiktok') return url.includes('tiktok.com');
+    if (type === 'instagram') return url.includes('instagram.com') || url.includes('threads.net');
+    // For web, we show everything that is NOT clearly TikTok or Instagram to keep it clean, 
+    // or just show everything if the user prefers. Let's show everything for web as fallback.
+    return true; 
+  });
     <Select value={current} onValueChange={(v) => mut.mutate(v)} disabled={mut.isPending}>
       <SelectTrigger className="h-8 text-xs"><SelectValue placeholder={placeholder} /></SelectTrigger>
       <SelectContent>
