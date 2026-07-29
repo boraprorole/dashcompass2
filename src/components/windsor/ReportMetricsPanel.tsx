@@ -87,6 +87,11 @@ const METRIC_LABELS: Record<string, string> = {
   shares: "Compartilhamentos",
   replies: "Respostas",
   video_views: "Views de vídeo",
+  videos: "Vídeos no período",
+  video_count: "Vídeos publicados",
+  follower_count: "Seguidores",
+  following_count: "Seguindo",
+  likes_count: "Curtidas totais",
   reel_plays: "Plays de Reels",
   // Facebook
   page_fans: "Fãs da página",
@@ -176,7 +181,7 @@ const PRIMARY_FIELDS: Record<string, string[]> = {
   google_ads: ["cost", "impressions", "clicks", "ctr", "average_cpc", "conversions", "conversion_value", "cost_per_conversion"],
   ga4: ["users", "sessions", "screenPageViews", "engagementRate", "conversions", "totalRevenue"],
   tiktok: ["spend", "reach", "impressions", "clicks", "video_views", "ctr", "cpm", "follows"],
-  tiktok_oauth: ["follows", "video_views", "likes", "comments", "shares", "profile_views"],
+  tiktok_oauth: ["follower_count", "video_views", "likes", "comments", "shares", "videos"],
   linkedin: ["cost", "impressions", "clicks", "ctr", "reactions", "shares", "follows", "video_views"],
 };
 
