@@ -784,6 +784,7 @@ function TopPostsSection({
 }) {
   const isTiktok = connector === "tiktok_oauth";
   const platformLabel = isTiktok ? "TikTok" : "Instagram";
+  const sortedPosts = [...posts].sort((a, b) => (b[sortBy] ?? 0) - (a[sortBy] ?? 0));
   
   return (
     <section className="space-y-4 rounded-2xl border border-border/40 bg-background/40 p-4 md:p-5">
