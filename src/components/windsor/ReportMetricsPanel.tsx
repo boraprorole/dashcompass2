@@ -18,6 +18,7 @@ import {
 import { getGaMetrics } from "@/lib/ga.functions";
 import { getReportEmv } from "@/lib/emv.functions";
 import { getRDStationMetrics } from "@/lib/rdstation.functions";
+import { getReportTiktokMetrics } from "@/lib/tiktok.functions";
 import { hasPipedriveConnection } from "@/lib/pipedrive.functions";
 import { PipedriveCrmPanel } from "@/components/pipedrive/PipedriveCrmPanel";
 import { GoogleAdsCsvPanel } from "@/components/googleads/GoogleAdsCsvPanel";
@@ -175,7 +176,7 @@ const PRIMARY_FIELDS: Record<string, string[]> = {
   google_ads: ["cost", "impressions", "clicks", "ctr", "average_cpc", "conversions", "conversion_value", "cost_per_conversion"],
   ga4: ["users", "sessions", "screenPageViews", "engagementRate", "conversions", "totalRevenue"],
   tiktok: ["spend", "reach", "impressions", "clicks", "video_views", "ctr", "cpm", "follows"],
-  tiktok_organic: ["follows", "video_views", "likes", "comments", "shares", "profile_views"],
+  tiktok_oauth: ["follows", "video_views", "likes", "comments", "shares", "profile_views"],
   linkedin: ["cost", "impressions", "clicks", "ctr", "reactions", "shares", "follows", "video_views"],
 };
 
@@ -184,7 +185,7 @@ const DERIVED_FIELDS: Record<string, string[]> = {
   facebook_ads: ["leads_calc", "roas_calc", "cpa_calc", "cost_per_engaged", "video_retention"],
   adwords: ["roas_calc", "cpa_calc"],
   tiktok: ["cpa_calc", "video_retention"],
-  tiktok_organic: ["engagement_rate"],
+  tiktok_oauth: ["engagement_rate"],
   linkedin: ["cpa_calc"],
   ga4: ["conversion_rate", "pages_per_session", "revenue_per_user"],
 };
@@ -296,6 +297,14 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
   const q = useQuery({
     queryKey: ["report-metrics", reportId, rangeKey],
     queryFn: () => fetchMetrics({ data: { reportId, ...rangeArgs } }),
+    retry: false,
+    enabled: !customPending,
+  });
+
+  const fetchTiktok = useServerFn(getReportTiktokMetrics);
+  const tiktokQ = useQuery({
+    queryKey: ["report-tiktok-oauth", reportId, rangeKey],
+    queryFn: () => fetchTiktok({ data: { reportId, ...rangeArgs } }),
     retry: false,
     enabled: !customPending,
   });
@@ -433,7 +442,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
   });
   const hasGadsCsv = (gadsCsvQ.data ?? []).length > 0;
 
-  if (q.isLoading) {
+  if (q.isLoading || tiktokQ.isLoading) {
     return (
       <div className="glass-strong flex items-center justify-center rounded-3xl p-6 text-sm text-muted-foreground">
         <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Carregando métricas...
@@ -442,13 +451,14 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
   }
 
   const hasWindsor = !!q.data && q.data.length > 0;
+  const hasTiktok = !!tiktokQ.data && tiktokQ.data.length > 0;
   const isUnorteMetaCsv = reportId === "1231f578-3057-4167-a705-5c45b526bf53";
-  if (!customPending && !hasWindsor && !hasGa && !hasRd && !hasPipedrive && !hasGadsCsv && !isUnorteMetaCsv) return null;
+  if (!customPending && !hasWindsor && !hasTiktok && !hasGa && !hasRd && !hasPipedrive && !hasGadsCsv && !isUnorteMetaCsv) return null;
 
 
 
   const connectorLabel = (id: string) =>
-    supportedConnectors.find((c) => c.id === id)?.label ?? id;
+    id === "tiktok_oauth" ? "TikTok" : supportedConnectors.find((c) => c.id === id)?.label ?? id;
 
   const rangeLabel = (() => {
     if (datePreset !== "custom") return "Selecionar período";
@@ -547,12 +557,26 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
 
 
 
-      {(hasWindsor || hasRd || hasGa || hasPipedrive) && (() => {
+      {(hasWindsor || hasTiktok || hasRd || hasGa || hasPipedrive || hasGadsCsv || isUnorteMetaCsv) && (() => {
         const data = q.data ?? [];
         const scGroup = data.find((g) => g.connector === "searchconsole");
-        const nonGoogleWindsor = data.filter((g) => g.connector !== "searchconsole");
+        const standaloneWindsorGroups = data.filter((g) => g.connector !== "searchconsole");
+        const tiktokGroups = tiktokQ.data ?? [];
 
-        const renderGroup = (group: typeof data[number]) => (
+        type DashboardGroup = {
+          connector: string;
+          account_id: string;
+          account_name: string | null;
+          metrics: Record<string, number | null>;
+          previous: Record<string, number | null>;
+          derived?: Record<string, number | null>;
+          derivedPrevious?: Record<string, number | null>;
+          insights?: Array<{ level: "success" | "warning" | "danger" | "info"; title: string; detail: string; metric?: string }>;
+          daily: Array<Record<string, number | string | null>>;
+          error?: string;
+        };
+
+        const renderGroup = (group: DashboardGroup) => (
           <div key={`${group.connector}-${group.account_id}`} className="space-y-5">
             <ConnectorDashboard
               connector={group.connector}
@@ -613,6 +637,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
 
         type TabItem =
           | { kind: "windsor"; key: string; label: string; group: typeof data[number] }
+          | { kind: "tiktok"; key: string; label: string; group: typeof tiktokGroups[number] }
           | { kind: "rd"; key: string; label: string }
           | { kind: "google"; key: string; label: string }
           | { kind: "crm"; key: string; label: string }
@@ -628,9 +653,15 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
           ...(reportId === "1231f578-3057-4167-a705-5c45b526bf53"
             ? [{ kind: "analise-geral-unorte" as const, key: "analise-geral-unorte", label: "Análise Geral" }]
             : []),
-          ...nonGoogleWindsor.map<TabItem>((g) => ({
+          ...standaloneWindsorGroups.map<TabItem>((g) => ({
             kind: "windsor",
             key: `${g.connector}-${g.account_id}`,
+            label: `${connectorLabel(g.connector)}${g.account_name ? ` · ${g.account_name}` : ""}`,
+            group: g,
+          })),
+          ...tiktokGroups.map<TabItem>((g) => ({
+            kind: "tiktok",
+            key: `tiktok-oauth-${g.account_id}`,
             label: `${connectorLabel(g.connector)}${g.account_name ? ` · ${g.account_name}` : ""}`,
             group: g,
           })),
@@ -663,6 +694,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
 
         const renderItem = (it: TabItem) => {
           if (it.kind === "windsor") return renderGroup(it.group);
+          if (it.kind === "tiktok") return renderGroup(it.group);
           if (it.kind === "google") return renderGoogle();
           if (it.kind === "crm") return <PipedriveCrmPanel reportId={reportId} />;
           if (it.kind === "gads-csv") return <GoogleAdsCsvPanel reportId={reportId} />;
@@ -674,7 +706,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
         };
 
 
-        if (items.length <= 1) return items.map((it) => <div key={it.key}>{renderItem(it)}</div>);
+        if (items.length <= 1 && items[0]?.kind !== "tiktok") return items.map((it) => <div key={it.key}>{renderItem(it)}</div>);
 
         return (
           <Tabs defaultValue={items[0].key} className="space-y-4">

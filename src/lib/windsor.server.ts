@@ -43,7 +43,6 @@ export const SUPPORTED_CONNECTORS = [
   { id: "adwords", label: "Google Ads" },
   { id: "ga4", label: "Google Analytics 4" },
   { id: "tiktok", label: "TikTok Ads" },
-  { id: "tiktok_organic", label: "TikTok" },
   { id: "linkedin", label: "LinkedIn Ads" },
   { id: "searchconsole", label: "Google Search Console" },
 ] as const;
@@ -314,7 +313,7 @@ export function computeDerived(connector: string, m: Record<string, number | nul
     const shareRate = safeDiv(m.shares, m.reach);
     if (shareRate != null) d.share_rate = shareRate * 100;
   }
-  if (connector === "facebook_ads" || connector === "tiktok" || connector === "linkedin" || connector === "tiktok_organic") {
+  if (connector === "facebook_ads" || connector === "tiktok" || connector === "linkedin") {
     const spend = m.spend ?? m.cost ?? null;
     d.cpa_calc = safeDiv(spend, m.conversions);
     d.roas_calc = safeDiv(m.conversion_value ?? null, spend);
@@ -342,10 +341,6 @@ export function computeDerived(connector: string, m: Record<string, number | nul
     if (convRate != null) d.conversion_rate = convRate * 100;
     const revenuePerUser = safeDiv(m.totalRevenue, m.activeUsers ?? m.users);
     if (revenuePerUser != null) d.revenue_per_user = revenuePerUser;
-  }
-  if (connector === "tiktok_organic") {
-    const engRate = safeDiv((m.likes || 0) + (m.comments || 0) + (m.shares || 0), m.video_views);
-    if (engRate != null) d.engagement_rate = engRate * 100;
   }
   return d;
 }
@@ -602,7 +597,7 @@ export async function getReportMetricsImpl(
   range: WindsorRange = { datePreset: "last_30d" },
 ): Promise<WindsorMetricGroup[]> {
   await assertReportAccess(callerId, reportId);
-  return withCache(`metrics-v16:${reportId}:${rangeKey(range)}`, reportId, async () => {
+  return withCache(`metrics-v17:${reportId}:${rangeKey(range)}`, reportId, async () => {
 
   const { data: conns, error } = await supabaseAdmin
     .from("windsor_connections")
@@ -729,15 +724,6 @@ export async function getReportMetricsImpl(
     results.push(...graphGroups);
   } catch {
     // silencioso: mantém apenas Windsor caso a integração Meta falhe
-  }
-
-  // Novo: Buscar métricas do TikTok Orgânico caso exista conexão
-  try {
-    const { fetchTiktokMetricGroups } = await import("./tiktok.server");
-    const tiktokGroups = await fetchTiktokMetricGroups(reportId, range);
-    results.push(...tiktokGroups);
-  } catch (err) {
-    console.error("Erro ao buscar TikTok Orgânico:", err);
   }
 
   return results;
