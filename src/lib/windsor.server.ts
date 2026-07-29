@@ -313,7 +313,7 @@ export function computeDerived(connector: string, m: Record<string, number | nul
     const shareRate = safeDiv(m.shares, m.reach);
     if (shareRate != null) d.share_rate = shareRate * 100;
   }
-  if (connector === "facebook_ads" || connector === "tiktok" || connector === "linkedin") {
+  if (connector === "facebook_ads" || connector === "tiktok" || connector === "linkedin" || connector === "tiktok_organic") {
     const spend = m.spend ?? m.cost ?? null;
     d.cpa_calc = safeDiv(spend, m.conversions);
     d.roas_calc = safeDiv(m.conversion_value ?? null, spend);
@@ -341,6 +341,10 @@ export function computeDerived(connector: string, m: Record<string, number | nul
     if (convRate != null) d.conversion_rate = convRate * 100;
     const revenuePerUser = safeDiv(m.totalRevenue, m.activeUsers ?? m.users);
     if (revenuePerUser != null) d.revenue_per_user = revenuePerUser;
+  }
+  if (connector === "tiktok_organic") {
+    const engRate = safeDiv((m.likes || 0) + (m.comments || 0) + (m.shares || 0), m.video_views);
+    if (engRate != null) d.engagement_rate = engRate * 100;
   }
   return d;
 }
