@@ -29,6 +29,7 @@ import { UnorteAnaliseGeralPanel } from "@/components/analysis/UnorteAnaliseGera
 import { GoogleAdsPanel } from "@/components/google/GoogleAdsPanel";
 import { GoogleSearchConsolePanel } from "@/components/google/GoogleSearchConsolePanel";
 import { listGoogleAdsDatasets } from "@/lib/googleads-csv.functions";
+import { BingPanel } from "@/components/bing/BingPanel";
 import {
   Select,
   SelectContent,
@@ -447,6 +448,15 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
   });
   const hasGadsCsv = (gadsCsvQ.data ?? []).length > 0;
 
+  const { data: bingConn } = useQuery({
+    queryKey: ["bing-conn-status", reportId],
+    queryFn: async () => {
+      const { data } = await supabase.from("bing_connections" as any).select("id").eq("report_id", reportId).maybeSingle();
+      return data;
+    }
+  });
+  const hasBing = !!bingConn;
+
   if (q.isLoading || tiktokQ.isLoading) {
     return (
       <div className="glass-strong flex items-center justify-center rounded-3xl p-6 text-sm text-muted-foreground">
@@ -458,7 +468,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
   const hasWindsor = !!q.data && q.data.length > 0;
   const hasTiktok = !!tiktokQ.data && tiktokQ.data.length > 0;
   const isUnorteMetaCsv = reportId === "1231f578-3057-4167-a705-5c45b526bf53";
-  if (!customPending && !hasWindsor && !hasTiktok && !hasGa && !hasRd && !hasPipedrive && !hasGadsCsv && !isUnorteMetaCsv) return null;
+  if (!customPending && !hasWindsor && !hasTiktok && !hasGa && !hasRd && !hasPipedrive && !hasGadsCsv && !isUnorteMetaCsv && !hasBing) return null;
 
 
 
@@ -699,6 +709,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
           | { kind: "rd"; key: string; label: string }
           | { kind: "google"; key: string; label: string }
           | { kind: "google-ads"; key: string; label: string }
+          | { kind: "bing"; key: string; label: string }
           | { kind: "crm"; key: string; label: string }
           | { kind: "gads-csv"; key: string; label: string }
           | { kind: "meta-csv-unorte"; key: string; label: string }
@@ -731,6 +742,9 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
           ...(hasGoogleAdsTab
             ? [{ kind: "google-ads" as const, key: "google-ads-native", label: "Google Ads" }]
             : []),
+          ...(hasBing
+            ? [{ kind: "bing" as const, key: "bing-webmaster", label: "Bing" }]
+            : []),
           ...((gadsCsvQ.data ?? []).length > 0
             ? [{ kind: "gads-csv" as const, key: "gads-csv", label: "Google Ads (Relatório)" }]
             : []),
@@ -760,6 +774,7 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
           if (it.kind === "tiktok") return renderGroup(it.group);
           if (it.kind === "google") return renderGoogle();
           if (it.kind === "google-ads") return renderGoogleAds();
+          if (it.kind === "bing") return <BingPanel reportId={reportId} dateFrom={rangeArgs.dateFrom} dateTo={rangeArgs.dateTo} />;
           if (it.kind === "crm") return <PipedriveCrmPanel reportId={reportId} />;
           if (it.kind === "gads-csv") return <GoogleAdsCsvPanel reportId={reportId} />;
           if (it.kind === "meta-csv-unorte") return <UnorteMetaCsvPanel />;
