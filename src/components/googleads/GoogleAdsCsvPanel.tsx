@@ -100,7 +100,7 @@ export function GoogleAdsCsvPanel({ reportId }: { reportId: string }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
-        <Badge className="bg-primary/10 text-primary hover:bg-primary/15">Google Ads · CSV</Badge>
+        <Badge className="bg-primary/10 text-primary hover:bg-primary/15">Google Ads · Relatório</Badge>
         <Select value={active ?? undefined} onValueChange={(v) => setSelected(v)}>
           <SelectTrigger className="h-8 w-[280px] text-xs">
             <SelectValue placeholder="Selecione o período" />
