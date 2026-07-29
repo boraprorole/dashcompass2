@@ -102,7 +102,7 @@ export function UnorteGoogleAdsCsvPanel() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
-        <Badge className="bg-primary/10 text-primary hover:bg-primary/15">Google Ads · CSV</Badge>
+        <Badge className="bg-primary/10 text-primary hover:bg-primary/15">Google Ads · Relatório</Badge>
         <Select value={periodId} onValueChange={setPeriodId}>
           <SelectTrigger className="h-8 w-[240px] text-xs">
             <SelectValue />

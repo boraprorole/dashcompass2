@@ -732,13 +732,13 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
             ? [{ kind: "google-ads" as const, key: "google-ads-native", label: "Google Ads" }]
             : []),
           ...((gadsCsvQ.data ?? []).length > 0
-            ? [{ kind: "gads-csv" as const, key: "gads-csv", label: "Google Ads (CSV)" }]
+            ? [{ kind: "gads-csv" as const, key: "gads-csv", label: "Google Ads (Relatório)" }]
             : []),
           ...(reportId === "1231f578-3057-4167-a705-5c45b526bf53"
             ? [{ kind: "meta-csv-unorte" as const, key: "meta-csv-unorte", label: "Meta Ads (CSV)" }]
             : []),
           ...(reportId === "1231f578-3057-4167-a705-5c45b526bf53"
-            ? [{ kind: "gads-csv-unorte" as const, key: "gads-csv-unorte", label: "Google Ads (CSV)" }]
+            ? [{ kind: "gads-csv-unorte" as const, key: "gads-csv-unorte", label: "Google Ads (Relatório)" }]
             : []),
           ...(reportId === "1231f578-3057-4167-a705-5c45b526bf53"
             ? [{ kind: "crm-csv-unorte" as const, key: "crm-csv-unorte", label: "CRM (CSV)" }]
