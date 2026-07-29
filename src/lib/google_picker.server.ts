@@ -53,28 +53,73 @@ export async function setGa4Property(userId: string, reportId: string, propertyI
 
 export async function listGscSitesForReport(userId: string, reportId: string) {
   await assertAdminGa(userId);
-  const { data: conn } = await supabaseAdmin
+  const { data: conns } = await supabaseAdmin
     .from("gsc_connections")
-    .select("id, refresh_token, site_url")
+    .select("id, refresh_token, site_url, type")
     .eq("report_id", reportId)
-    .maybeSingle();
-  if (!conn) return { current: null, sites: [] as Array<{ siteUrl: string; permissionLevel: string }> };
-  const { access_token } = await refreshAccessToken(conn.refresh_token);
+    .order("updated_at", { ascending: false });
+
+  if (!conns || conns.length === 0) return { current: null, sites: [] as Array<{ siteUrl: string; permissionLevel: string }>, connections: [] };
+
+  // For the unified picker UI, we'll fetch sites using the most recent connection's token
+  // but the UI might need to handle multiple types. 
+  // For now, we fetch the available sites for the account.
+  const { access_token } = await refreshAccessToken(conns[0].refresh_token);
   const res = await fetch("https://www.googleapis.com/webmasters/v3/sites", {
     headers: { authorization: `Bearer ${access_token}` },
   });
   if (!res.ok) throw new Error(`GSC sites: ${res.status} ${await res.text()}`);
   const j = (await res.json()) as { siteEntry?: Array<{ siteUrl: string; permissionLevel: string }> };
-  return { current: conn.site_url, sites: j.siteEntry ?? [] };
+  
+  return { 
+    current: conns[0].site_url, 
+    sites: j.siteEntry ?? [],
+    connections: conns.map(c => ({ id: c.id, site_url: c.site_url, type: c.type }))
+  };
 }
 
-export async function setGscSite(userId: string, reportId: string, siteUrl: string) {
+export async function setGscSite(userId: string, reportId: string, siteUrl: string, type: string = 'web') {
   await assertAdminGa(userId);
-  const { error } = await supabaseAdmin
+  
+  // Try to find an existing connection of this type
+  const { data: existing } = await supabaseAdmin
     .from("gsc_connections")
-    .update({ site_url: siteUrl, updated_at: new Date().toISOString() })
-    .eq("report_id", reportId);
-  if (error) throw new Error(error.message);
+    .select("id")
+    .eq("report_id", reportId)
+    .eq("type", type)
+    .maybeSingle();
+
+  if (existing) {
+    const { error } = await supabaseAdmin
+      .from("gsc_connections")
+      .update({ site_url: siteUrl, updated_at: new Date().toISOString() })
+      .eq("id", existing.id);
+    if (error) throw new Error(error.message);
+  } else {
+    // If no connection of this type exists, we can't set the site unless we have a token.
+    // Usually, the unified OAuth flow creates the initial rows.
+    // If we're changing a site for a new type, we might need to find any valid refresh token for this report
+    const { data: anyConn } = await supabaseAdmin
+      .from("gsc_connections")
+      .select("refresh_token, google_email")
+      .eq("report_id", reportId)
+      .limit(1)
+      .maybeSingle();
+
+    if (anyConn) {
+      const { error } = await supabaseAdmin
+        .from("gsc_connections")
+        .insert({
+          report_id: reportId,
+          site_url: siteUrl,
+          type,
+          refresh_token: anyConn.refresh_token,
+          google_email: anyConn.google_email,
+          updated_at: new Date().toISOString()
+        });
+      if (error) throw new Error(error.message);
+    }
+  }
   return { ok: true };
 }
 
