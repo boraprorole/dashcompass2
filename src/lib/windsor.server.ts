@@ -726,6 +726,15 @@ export async function getReportMetricsImpl(
     // silencioso: mantém apenas Windsor caso a integração Meta falhe
   }
 
+  // Novo: Buscar métricas do TikTok Orgânico caso exista conexão
+  try {
+    const { fetchTiktokMetricGroups } = await import("./tiktok.server");
+    const tiktokGroups = await fetchTiktokMetricGroups(reportId, range);
+    results.push(...tiktokGroups);
+  } catch (err) {
+    console.error("Erro ao buscar TikTok Orgânico:", err);
+  }
+
   return results;
   });
 }

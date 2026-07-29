@@ -632,6 +632,12 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
             label: `${connectorLabel(g.connector)}${g.account_name ? ` · ${g.account_name}` : ""}`,
             group: g,
           })),
+          ...data.filter(g => g.connector === "tiktok_organic").map<TabItem>((g) => ({
+            kind: "windsor",
+            key: `tiktok-organic-${g.account_id}`,
+            label: `TikTok Orgânico${g.account_name ? ` · ${g.account_name}` : ""}`,
+            group: g,
+          })),
           ...(hasGoogleTab
             ? [{ kind: "google" as const, key: "google-suite", label: "Google Ecosystem (GA4, GSC, Ads)" }]
             : []),
