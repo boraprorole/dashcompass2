@@ -8,7 +8,7 @@ const VIDEO_LIST_URL = "https://open.tiktokapis.com/v2/video/list/";
 const TIKTOK_REDIRECT_URI = "https://dashcompass.com/auth/tiktok/callback";
 const SCOPES = "user.info.basic,user.info.stats,video.list";
 
-export type TiktokRange = { datePreset?: string; dateFrom?: string; dateTo?: string };
+export type TiktokRange = { datePreset?: string; dateFrom?: string; dateTo?: string; sortBy?: "engagement" | "reach" | "likes" | "views" };
 
 export type TiktokMetricGroup = {
   connector: "tiktok_oauth";
@@ -542,7 +542,11 @@ export async function fetchTiktokMetricGroups(reportId: string, range: TiktokRan
       shares: v.share_count ?? 0,
       engagement: (v.like_count ?? 0) + (v.comment_count ?? 0) + (v.share_count ?? 0),
     }))
-    .sort((a, b) => b.engagement - a.engagement)
+    .sort((a, b) => {
+      if (range.sortBy === "likes") return b.like_count - a.like_count;
+      if (range.sortBy === "views" || range.sortBy === "reach") return b.views - a.views;
+      return b.engagement - a.engagement;
+    })
     .slice(0, 10);
 
   return [
