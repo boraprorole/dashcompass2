@@ -15,7 +15,7 @@ export const GOOGLE_SCOPES = [
 const ORIGIN = "https://www.dashcompass.com";
 
 export function getGoogleRedirectUri() {
-  return `${ORIGIN}/api/public/google/oauth/callback`;
+  return `${ORIGIN}/api/public/google.oauth.callback`;
 }
 
 // Re-using common logic or duplicating for simplicity in this turn

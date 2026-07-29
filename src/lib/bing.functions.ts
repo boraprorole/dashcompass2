@@ -1,16 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { getBingAuthUrl } from "./bing_auth.server";
 
 export const getBingConnectUrl = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({ reportId: z.string() }).parse(data))
   .handler(async ({ data, context }) => {
-    // In a real app, context might provide userId. For now we fetch it or require it.
-    const { data: userData } = await supabaseAdmin.auth.getUser();
-    if (!userData.user) throw new Error("Não autenticado");
-    
-    return await getBingAuthUrl(data.reportId, userData.user.id);
+    return await getBingAuthUrl(data.reportId, context.userId);
   });
 
 export const connectBing = createServerFn({ method: "POST" })
@@ -21,9 +18,11 @@ export const connectBing = createServerFn({ method: "POST" })
       apiKey: z.string().optional(),
     }).parse(data)
   )
+  .middleware([requireSupabaseAuth])
   .handler(async ({ data }) => {
     const { reportId, siteUrl, apiKey } = data;
 
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
       .from("bing_connections")
       .upsert({
@@ -43,7 +42,9 @@ export const connectBing = createServerFn({ method: "POST" })
 
 export const disconnectBing = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({ reportId: z.string() }).parse(data))
+  .middleware([requireSupabaseAuth])
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
       .from("bing_connections")
       .delete()
@@ -65,9 +66,11 @@ export const getBingMetrics = createServerFn({ method: "GET" })
       dateTo: z.string().optional(),
     }).parse(data)
   )
+  .middleware([requireSupabaseAuth])
   .handler(async ({ data }) => {
     const { reportId } = data;
 
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: connection, error } = await supabaseAdmin
       .from("bing_connections")
       .select("*")
