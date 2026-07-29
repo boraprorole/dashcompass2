@@ -7,7 +7,7 @@ const BING_SCOPES = [
   "https://www.bing.com/webmasters.readonly"
 ].join(" ");
 
-const REDIRECT_URI = "https://www.dashcompass.com/api/public/google.oauth.callback";
+const REDIRECT_URI = "https://www.dashcompass.com/api/public/google/oauth/callback";
 
 export async function getBingAuthUrl(reportId: string, userId: string) {
   const clientId = process.env.MICROSOFT_CLIENT_ID;
