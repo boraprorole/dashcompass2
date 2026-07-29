@@ -554,7 +554,7 @@ function ReportsTab() {
                     <details className="group mt-2">
                       <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
                         <Link2 className="mr-1 inline h-3 w-3" />
-                        TikTok Ads (OAuth)
+                        TikTok (OAuth)
                       </summary>
                       <div className="mt-3">
                         <TikTokManager reportId={r.id} />
