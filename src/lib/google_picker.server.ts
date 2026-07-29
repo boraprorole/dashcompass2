@@ -190,7 +190,7 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
     ids.map(async (id) => {
       try {
         const r = await fetch(
-          `https://googleads.googleapis.com/v16/customers/${id}/googleAds:search`,
+          `https://googleads.googleapis.com/v17/customers/${id}/googleAds:search`,
           {
             method: "POST",
             headers,
