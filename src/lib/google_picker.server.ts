@@ -165,7 +165,7 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
 
   console.log(`[Ads] Fetching accessible customers for account...`);
   const listRes = await fetch(
-    "https://googleads.googleapis.com/v16/customers:listAccessibleCustomers",
+    "https://googleads.googleapis.com/v17/customers:listAccessibleCustomers",
     { headers },
   );
   
