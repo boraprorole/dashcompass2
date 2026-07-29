@@ -3,8 +3,7 @@ import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 // Bing Webmaster Tools API uses Microsoft OAuth
-// This is a placeholder for the actual implementation which would require
-// Microsoft OAuth credentials to be set up.
+// The following placeholder logic will be replaced with actual Microsoft OAuth implementation.
 
 export const connectBing = createServerFn({ method: "POST" })
   .inputValidator((data) =>
