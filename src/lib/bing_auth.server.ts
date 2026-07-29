@@ -1,0 +1,78 @@
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+
+const BING_AUTH_URL = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
+const BING_TOKEN_URL = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
+const BING_SCOPES = [
+  "offline_access",
+  "https://www.bing.com/webmasters.readonly"
+].join(" ");
+
+const REDIRECT_URI = "https://www.dashcompass.com/api/public/google.oauth.callback";
+
+export async function getBingAuthUrl(reportId: string, userId: string) {
+  const clientId = process.env.MICROSOFT_CLIENT_ID;
+  if (!clientId) throw new Error("MICROSOFT_CLIENT_ID não configurado");
+
+  // Re-using signState from ga.server or implementing similar logic
+  // For simplicity, let's assume we use a similar state structure
+  const state = btoa(JSON.stringify({ reportId, userId, provider: 'bing', ts: Date.now() }));
+
+  const params = new URLSearchParams({
+    client_id: clientId,
+    response_type: "code",
+    redirect_uri: REDIRECT_URI,
+    response_mode: "query",
+    scope: BING_SCOPES,
+    state: state,
+    prompt: "consent"
+  });
+
+  return `${BING_AUTH_URL}?${params.toString()}`;
+}
+
+export async function exchangeBingCode(code: string) {
+  const clientId = process.env.MICROSOFT_CLIENT_ID;
+  const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
+  if (!clientId || !clientSecret) throw new Error("Microsoft OAuth não configurado");
+
+  const res = await fetch(BING_TOKEN_URL, {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: clientId,
+      scope: BING_SCOPES,
+      code,
+      redirect_uri: REDIRECT_URI,
+      grant_type: "authorization_code",
+      client_secret: clientSecret,
+    }),
+  });
+
+  if (!res.ok) throw new Error(`Bing token exchange: ${res.status} ${await res.text()}`);
+  return (await res.json()) as {
+    access_token: string;
+    refresh_token: string;
+    expires_in: number;
+  };
+}
+
+export async function saveBingConnection({ 
+  reportId, 
+  refreshToken, 
+  siteUrl 
+}: { 
+  reportId: string; 
+  refreshToken: string; 
+  siteUrl: string;
+}) {
+  const { error } = await supabaseAdmin
+    .from("bing_connections")
+    .upsert({
+      report_id: reportId,
+      refresh_token: refreshToken,
+      site_url: siteUrl,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'report_id' });
+
+  if (error) throw error;
+}

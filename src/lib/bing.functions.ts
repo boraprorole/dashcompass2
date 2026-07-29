@@ -1,9 +1,17 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { getBingAuthUrl } from "./bing_auth.server";
 
-// Bing Webmaster Tools API uses Microsoft OAuth
-// The following placeholder logic will be replaced with actual Microsoft OAuth implementation.
+export const getBingConnectUrl = createServerFn({ method: "GET" })
+  .inputValidator((data) => z.object({ reportId: z.string() }).parse(data))
+  .handler(async ({ data, context }) => {
+    // In a real app, context might provide userId. For now we fetch it or require it.
+    const { data: userData } = await supabaseAdmin.auth.getUser();
+    if (!userData.user) throw new Error("Não autenticado");
+    
+    return await getBingAuthUrl(data.reportId, userData.user.id);
+  });
 
 export const connectBing = createServerFn({ method: "POST" })
   .inputValidator((data) =>
@@ -16,9 +24,6 @@ export const connectBing = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { reportId, siteUrl, apiKey } = data;
 
-    // In a real implementation, we would exchange an OAuth code for tokens
-    // For now, we'll store the site URL and an optional API key if provided
-    
     const { error } = await supabaseAdmin
       .from("bing_connections")
       .upsert({

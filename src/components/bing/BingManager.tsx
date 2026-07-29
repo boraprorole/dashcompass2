@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { connectBing, getBingMetrics } from "@/lib/bing.functions";
+import { connectBing, getBingMetrics, getBingConnectUrl } from "@/lib/bing.functions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ export function BingManager({ reportId }: { reportId: string }) {
   const [apiKey, setApiKey] = useState("");
   const queryClient = useQueryClient();
   const connect = useServerFn(connectBing);
+  const getConnectUrl = useServerFn(getBingConnectUrl);
   const fetchMetrics = useServerFn(getBingMetrics);
 
   const { data: status, isLoading } = useQuery({
@@ -139,7 +140,14 @@ export function BingManager({ reportId }: { reportId: string }) {
               type="button" 
               variant="outline" 
               className="w-full border-blue-500/30 bg-blue-500/5 hover:bg-blue-500/20 text-blue-400 text-xs h-8"
-              onClick={() => window.open('https://www.dashcompass.com/api/public/google.oauth.callback', '_blank')}
+              onClick={async () => {
+                try {
+                  const url = await getConnectUrl({ data: { reportId } });
+                  window.location.href = url;
+                } catch (e) {
+                  toast.error("Erro ao gerar URL de autenticação");
+                }
+              }}
             >
               Conectar via OAuth (Advanced)
             </Button>
