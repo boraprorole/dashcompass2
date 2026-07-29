@@ -565,7 +565,20 @@ export function ReportMetricsPanel({ reportId }: { reportId: string }) {
         const standaloneWindsorGroups = data.filter((g) => g.connector !== "searchconsole");
         const tiktokGroups = tiktokQ.data ?? [];
 
-        const renderGroup = (group: typeof data[number]) => (
+        type DashboardGroup = {
+          connector: string;
+          account_id: string;
+          account_name: string | null;
+          metrics: Record<string, number | null>;
+          previous: Record<string, number | null>;
+          derived?: Record<string, number | null>;
+          derivedPrevious?: Record<string, number | null>;
+          insights?: Array<{ level: "success" | "warning" | "danger" | "info"; title: string; detail: string; metric?: string }>;
+          daily: Array<Record<string, number | string | null>>;
+          error?: string;
+        };
+
+        const renderGroup = (group: DashboardGroup) => (
           <div key={`${group.connector}-${group.account_id}`} className="space-y-5">
             <ConnectorDashboard
               connector={group.connector}
