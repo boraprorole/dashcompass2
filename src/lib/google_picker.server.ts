@@ -157,7 +157,11 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
     "developer-token": developerToken,
     "content-type": "application/json",
   };
-  if (loginCustomerId) headers["login-customer-id"] = loginCustomerId.replace(/-/g, "");
+  if (loginCustomerId) {
+    const cleanLoginId = loginCustomerId.replace(/-/g, "");
+    headers["login-customer-id"] = cleanLoginId;
+    console.log(`[Ads] Using login-customer-id: ${cleanLoginId}`);
+  }
 
   const listRes = await fetch(
     "https://googleads.googleapis.com/v16/customers:listAccessibleCustomers",
