@@ -490,7 +490,11 @@ export async function fetchTiktokMetricGroups(reportId: string, range: TiktokRan
         const loaded = await loadData(accessToken);
         user = loaded.user;
         videos = loaded.videos;
-        if (loaded.error) throw loaded.error;
+        if (loaded.error) {
+          apiError = isMissingScopeError(loaded.error)
+            ? "A conta TikTok conectada não concedeu acesso às métricas. Reconecte o TikTok para autorizar os escopos user.info.stats e video.list."
+            : `Erro ao carregar dados reais do TikTok: ${(loaded.error as Error).message}`;
+        }
       } else {
         apiError = isMissingScopeError(loadError)
           ? "A conta TikTok conectada não concedeu acesso às métricas. Reconecte o TikTok para autorizar os escopos user.info.stats e video.list."
