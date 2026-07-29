@@ -22,6 +22,7 @@ import { LinkedInConnectionsManager } from "@/components/linkedin/LinkedInConnec
 import { PipedriveConnectionsManager } from "@/components/pipedrive/PipedriveConnectionsManager";
 import { GoogleAdsCsvManager } from "@/components/googleads/GoogleAdsCsvManager";
 import { GoogleUnifiedManager } from "@/components/google/GoogleUnifiedManager";
+import { BingManager } from "@/components/bing/BingManager";
 import { TikTokManager } from "@/components/tiktok/TikTokManager";
 import { WindsorSettingsTab } from "@/components/windsor/WindsorSettingsTab";
 import { AdminAITab } from "@/components/ai/AdminAITab";
