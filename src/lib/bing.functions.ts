@@ -57,7 +57,7 @@ export const disconnectBing = createServerFn({ method: "POST" })
     return { success: true };
   });
 
-
+export const getBingMetrics = createServerFn({ method: "GET" })
   .inputValidator((data) =>
     z.object({
       reportId: z.string(),
