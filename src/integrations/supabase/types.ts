@@ -214,6 +214,44 @@ export type Database = {
         }
         Relationships: []
       }
+      bing_connections: {
+        Row: {
+          api_key: string | null
+          created_at: string
+          id: string
+          refresh_token: string | null
+          report_id: string
+          site_url: string
+          updated_at: string
+        }
+        Insert: {
+          api_key?: string | null
+          created_at?: string
+          id?: string
+          refresh_token?: string | null
+          report_id: string
+          site_url: string
+          updated_at?: string
+        }
+        Update: {
+          api_key?: string | null
+          created_at?: string
+          id?: string
+          refresh_token?: string | null
+          report_id?: string
+          site_url?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bing_connections_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: true
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_users: {
         Row: {
           client_id: string
