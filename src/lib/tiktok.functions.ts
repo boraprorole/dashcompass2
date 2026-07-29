@@ -6,7 +6,8 @@ export const startTiktokOAuth = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ reportId: z.string().uuid() }).parse(input))
   .handler(async ({ context, data }) => {
-    const { buildTiktokAuthUrl } = await import("./tiktok.server");
+    const { assertTiktokReportAccess, buildTiktokAuthUrl } = await import("./tiktok.server");
+    await assertTiktokReportAccess(context.userId, data.reportId);
     const url = await buildTiktokAuthUrl({ reportId: data.reportId, userId: context.userId });
     return { url };
   });
