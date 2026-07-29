@@ -44,7 +44,7 @@ export async function handleTiktokOAuthCallback(request: Request) {
   try {
     const { reportId } = parseTiktokState(state);
     const tokens = await exchangeTiktokCode(code);
-    const user = await fetchTiktokUserInfo(tokens.access_token!).catch(() => ({}));
+    const user = await fetchTiktokUserInfo(tokens.access_token!).catch(() => ({} as { open_id?: string; display_name?: string }));
 
     await saveTiktokConnection({
       reportId,
