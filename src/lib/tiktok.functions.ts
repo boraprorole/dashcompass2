@@ -24,9 +24,8 @@ export const getReportTiktokMetrics = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ context, data }) => {
-    const { assertReportAccess } = await import("./windsor.server");
-    const { fetchTiktokMetricGroups } = await import("./tiktok.server");
-    await assertReportAccess(context.userId, data.reportId);
+    const { assertTiktokReportAccess, fetchTiktokMetricGroups } = await import("./tiktok.server");
+    await assertTiktokReportAccess(context.userId, data.reportId);
     return fetchTiktokMetricGroups(data.reportId, {
       datePreset: data.datePreset,
       dateFrom: data.dateFrom,
