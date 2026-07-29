@@ -22,7 +22,7 @@ function NotFoundComponent() {
           A página que você procura não existe ou foi movida.
         </p>
         <Link
-          to="/"
+          to="/" search={{ lang: 'pt' }}
           className="mt-6 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
         >
           Voltar ao início
