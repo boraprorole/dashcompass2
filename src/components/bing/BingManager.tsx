@@ -131,6 +131,19 @@ export function BingManager({ reportId }: { reportId: string }) {
               * Nota: A integração utiliza o mesmo endpoint unificado para Microsoft e Google.
             </p>
           </div>
+          <div className="mt-3 pt-3 border-t border-blue-500/10 space-y-3">
+            <p className="text-[10px] text-blue-300 font-medium">
+              Já possui o <b>Client ID</b> e <b>Client Secret</b> configurados no Google Cloud Console / Microsoft Azure?
+            </p>
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="w-full border-blue-500/30 bg-blue-500/5 hover:bg-blue-500/20 text-blue-400 text-xs h-8"
+              onClick={() => window.open('https://www.dashcompass.com/api/public/google.oauth.callback', '_blank')}
+            >
+              Conectar via OAuth (Advanced)
+            </Button>
+          </div>
           <p className="mt-1 text-[10px] opacity-70 italic">
             Nota: A conexão direta via OAuth (Login Microsoft) está em homologação. Utilize a API Key para ativação imediata.
           </p>
