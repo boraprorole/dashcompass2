@@ -810,16 +810,15 @@ function TopPostsSection({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="engagement">Engajamento</SelectItem>
-            <SelectItem value="views">Visualizações</SelectItem>
+            <SelectItem value="likes">Curtidas</SelectItem>
             {isTiktok ? (
-              <SelectItem value="reach">Visualizações (Vídeo)</SelectItem>
+              <SelectItem value="views">Visualizações</SelectItem>
             ) : (
-              <SelectItem value="reach">Alcance</SelectItem>
+              <>
+                <SelectItem value="reach">Alcance</SelectItem>
+                <SelectItem value="views">Visualizações</SelectItem>
+              </>
             )}
-            <SelectItem value="likes">Curtidas</SelectItem>
-            <SelectItem value="reach">Alcance</SelectItem>
-            <SelectItem value="likes">Curtidas</SelectItem>
-            <SelectItem value="views">Visualizações</SelectItem>
           </SelectContent>
         </Select>
       </header>
