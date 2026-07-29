@@ -22,6 +22,40 @@ export type TiktokMetricGroup = {
   error?: string;
 };
 
+export async function assertTiktokReportAccess(callerId: string, reportId: string) {
+  const { data: adminRoles, error: adminError } = await supabaseAdmin
+    .from("user_roles")
+    .select("role, agency_id")
+    .eq("user_id", callerId)
+    .in("role", ["admin", "admin_global", "admin_agencia"]);
+
+  if (adminError) throw new Error(adminError.message);
+
+  const isGlobalAdmin = (adminRoles ?? []).some((role) => role.role === "admin" || role.role === "admin_global");
+  if (isGlobalAdmin) return;
+
+  const { data: report, error: reportError } = await supabaseAdmin
+    .from("reports")
+    .select("company_id, agency_id")
+    .eq("id", reportId)
+    .maybeSingle();
+
+  if (reportError) throw new Error(reportError.message);
+  if (!report) throw new Error("Report not found");
+
+  const agencyIds = new Set((adminRoles ?? []).map((role) => role.agency_id).filter(Boolean));
+  if (report.agency_id && agencyIds.has(report.agency_id)) return;
+
+  const { data: profile, error: profileError } = await supabaseAdmin
+    .from("profiles")
+    .select("company_id")
+    .eq("id", callerId)
+    .maybeSingle();
+
+  if (profileError) throw new Error(profileError.message);
+  if (!profile || profile.company_id !== report.company_id) throw new Error("Forbidden");
+}
+
 type TiktokConfig = { clientKey: string; clientSecret: string };
 
 function getTiktokConfig(): TiktokConfig {
