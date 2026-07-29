@@ -176,7 +176,6 @@ const PRIMARY_FIELDS: Record<string, string[]> = {
   google_ads: ["cost", "impressions", "clicks", "ctr", "average_cpc", "conversions", "conversion_value", "cost_per_conversion"],
   ga4: ["users", "sessions", "screenPageViews", "engagementRate", "conversions", "totalRevenue"],
   tiktok: ["spend", "reach", "impressions", "clicks", "video_views", "ctr", "cpm", "follows"],
-  tiktok_organic: ["follows", "video_views", "likes", "comments", "shares", "profile_views"],
   tiktok_oauth: ["follows", "video_views", "likes", "comments", "shares", "profile_views"],
   linkedin: ["cost", "impressions", "clicks", "ctr", "reactions", "shares", "follows", "video_views"],
 };
@@ -186,7 +185,6 @@ const DERIVED_FIELDS: Record<string, string[]> = {
   facebook_ads: ["leads_calc", "roas_calc", "cpa_calc", "cost_per_engaged", "video_retention"],
   adwords: ["roas_calc", "cpa_calc"],
   tiktok: ["cpa_calc", "video_retention"],
-  tiktok_organic: ["engagement_rate"],
   tiktok_oauth: ["engagement_rate"],
   linkedin: ["cpa_calc"],
   ga4: ["conversion_rate", "pages_per_session", "revenue_per_user"],
