@@ -9,8 +9,9 @@ const tiktokCallbackSchema = z.object({
 
 export const Route = createFileRoute('/api/public/tiktok/oauth/callback')({
   validateSearch: (search) => tiktokCallbackSchema.parse(search),
-  loader: async ({ search }) => {
+  loader: async ({ search }: { search: z.infer<typeof tiktokCallbackSchema> }) => {
     const { code, state } = search;
+
 
     if (!code || !state) {
       console.error('TikTok OAuth Error: Missing code or state');
