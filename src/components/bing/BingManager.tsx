@@ -114,7 +114,7 @@ export function BingManager({ reportId }: { reportId: string }) {
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <p>
             Nota: A integração total via OAuth2 Microsoft está sendo configurada. Por enquanto,
-            use a API Key ou apenas informe a URL para monitoramento manual.
+            use a API Key ou informe a URL para monitoramento.
           </p>
         </div>
 
