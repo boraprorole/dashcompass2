@@ -65,10 +65,15 @@ export async function listGscSitesForReport(userId: string, reportId: string) {
   // but the UI might need to handle multiple types. 
   // For now, we fetch the available sites for the account.
   const { access_token } = await refreshAccessToken(conns[0].refresh_token);
+  console.log(`[GSC] Fetching sites using token for ${conns[0].google_email}`);
   const res = await fetch("https://www.googleapis.com/webmasters/v3/sites", {
     headers: { authorization: `Bearer ${access_token}` },
   });
-  if (!res.ok) throw new Error(`GSC sites: ${res.status} ${await res.text()}`);
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error(`[GSC] Error fetching sites: ${res.status} ${errorText}`);
+    throw new Error(`GSC sites: ${res.status} ${errorText}`);
+  }
   const j = (await res.json()) as { siteEntry?: Array<{ siteUrl: string; permissionLevel: string }> };
   
   return { 
