@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { signState } from "@/lib/ga.server";
 
 const BING_AUTH_URL = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
 const BING_TOKEN_URL = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
@@ -13,9 +14,7 @@ export async function getBingAuthUrl(reportId: string, userId: string) {
   const clientId = process.env.MICROSOFT_CLIENT_ID;
   if (!clientId) throw new Error("MICROSOFT_CLIENT_ID não configurado");
 
-  // Re-using signState from ga.server or implementing similar logic
-  // For simplicity, let's assume we use a similar state structure
-  const state = btoa(JSON.stringify({ reportId, userId, provider: 'bing', ts: Date.now() }));
+  const state = await signState({ reportId, userId, provider: 'bing' });
 
   const params = new URLSearchParams({
     client_id: clientId,
