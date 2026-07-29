@@ -76,8 +76,11 @@ export async function listGscSitesForReport(userId: string, reportId: string) {
   }
   const j = (await res.json()) as { siteEntry?: Array<{ siteUrl: string; permissionLevel: string }> };
   
+  // The API returns all sites, including sc-domain: and prefix URLs (http/https).
+  // TikTok/Instagram properties in GSC are usually registered as "sc-domain:tiktok.com/@user" or just the profile URL.
+  // We return all sites so the user can pick the correct one for each type.
   return { 
-    current: conns[0].site_url, 
+    current: conns.find(c => c.type === 'web')?.site_url || conns[0].site_url, 
     sites: j.siteEntry ?? [],
     connections: conns.map(c => ({ id: c.id, site_url: c.site_url, type: c.type }))
   };
