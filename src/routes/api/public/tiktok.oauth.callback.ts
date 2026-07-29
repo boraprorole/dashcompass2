@@ -47,7 +47,7 @@ export const Route = createFileRoute('/api/public/tiktok/oauth/callback')({
         } catch (e) {
           console.error('TikTok OAuth Error:', e);
           return html(
-            `<h1>Erro ao conectar</h1><p>${(e as Error).message}</p><a href="/admin">Voltar</a>`,
+            `<h1>Tiktok deu Error</h1><p>There seems to be an issue getting user information associated with your account or the authorization application. Please contact our support for further assistance.</p><a href="/admin">Voltar</a>`,
             500,
           );
         }
