@@ -118,12 +118,6 @@ export function BingManager({ reportId }: { reportId: string }) {
           Acesse os dados do Bing Webmaster Tools de forma segura utilizando sua conta Microsoft.
         </p>
         
-        <div className="mt-2 pt-2 border-t border-blue-500/10">
-          <p className="font-bold text-blue-500 mb-1">Microsoft OAuth Redirect URI:</p>
-          <code className="bg-black/30 px-2 py-1 rounded block break-all text-[9px] select-all">
-            {window.location.origin}/api/public/google.oauth.callback
-          </code>
-        </div>
 
         <div className="mt-2 pt-2 border-t border-blue-500/10 space-y-3">
           <Button 
