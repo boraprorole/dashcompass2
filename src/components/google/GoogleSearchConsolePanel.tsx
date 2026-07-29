@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getGscMetrics } from "@/lib/gsc.functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, MousePointer2, Eye, LayoutPanelTop, BarChart3 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, Search, MousePointer2, Eye, LayoutPanelTop, BarChart3, Sparkles } from "lucide-react";
 
 export function GoogleSearchConsolePanel({ reportId, type = 'web', dateFrom, dateTo }: { reportId: string; type?: string; dateFrom?: string; dateTo?: string }) {
   const fetchGsc = useServerFn(getGscMetrics);
@@ -32,9 +33,14 @@ export function GoogleSearchConsolePanel({ reportId, type = 'web', dateFrom, dat
 
       <Card className="glass-strong border-none rounded-3xl overflow-hidden">
         <CardHeader className="border-b border-border/10">
-          <CardTitle className="text-sm font-semibold flex items-center gap-2">
-            <Search className="h-4 w-4 text-primary" /> Termos de Pesquisa Principais
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <Search className="h-4 w-4 text-primary" /> Termos de Pesquisa Principais
+            </CardTitle>
+            <Badge variant="outline" className="text-[10px] bg-primary/5 text-primary border-primary/20">
+              <Sparkles className="h-3 w-3 mr-1" /> AI Insights Ativo
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">

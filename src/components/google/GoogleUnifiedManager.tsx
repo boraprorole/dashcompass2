@@ -61,7 +61,7 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
         <div className="space-y-1">
           <h3 className="text-sm font-semibold">Google Ecosystem</h3>
           <p className="text-[11px] text-muted-foreground">
-            GA4, Search Console e Google Ads em uma única conexão. Após conectar, escolha a
+            Analytics, Search Console (AI Insights) e Google Ads em uma única conexão. Escolha a
             conta/propriedade de cada serviço para vincular ao relatório.
           </p>
         </div>
@@ -83,7 +83,7 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <ServiceCard
           icon={<LineChart className="h-4 w-4" />}
-          label="GA4"
+          label="Google Analytics (GA4)"
           email={gaConn?.google_email}
           connected={!!gaConn}
           selected={gaConn?.ga_property_id && gaConn.ga_property_id !== "PENDING" ? gaConn.ga_property_id : undefined}
@@ -91,7 +91,7 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
         />
         <ServiceCard
           icon={<Search className="h-4 w-4" />}
-          label="Search Console (Web)"
+          label="Search Console (AI Insights)"
           email={gscConn?.google_email}
           connected={!!gscConn}
           selected={conns?.gsc.find(c => c.type === 'web')?.site_url ?? undefined}
