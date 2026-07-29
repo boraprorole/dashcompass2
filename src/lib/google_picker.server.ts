@@ -149,6 +149,7 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
   
   if (!conn) return { current: null, customers: [] as Array<{ customerId: string; descriptiveName: string }> };
   
+  console.log(`[Ads] Fetching accounts for ${conn.google_email} (Report: ${reportId})`);
   const { access_token } = await refreshAccessToken(conn.refresh_token);
 
   const headers: Record<string, string> = {
@@ -165,8 +166,8 @@ export async function listGoogleAdsCustomersForReport(userId: string, reportId: 
   
   if (!listRes.ok) {
     const errorText = await listRes.text();
-    console.error("Ads list error:", listRes.status, errorText);
-    throw new Error(`Ads list: ${listRes.status}. Verifique se o Developer Token e o Login Customer ID estão corretos.`);
+    console.error(`[Ads] listAccessibleCustomers error (${listRes.status}):`, errorText);
+    throw new Error(`Ads list: ${listRes.status}. Verifique se o Developer Token está correto.`);
   }
 
   const listJson = (await listRes.json()) as { resourceNames?: string[] };
