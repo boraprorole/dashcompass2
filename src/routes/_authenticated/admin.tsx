@@ -1168,7 +1168,7 @@ function CompaniesTab() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, name, logo_url }: { id: string; name: string; logo_url?: string | null }) => {
-      const { error } = await supabase.from("companies").update({ name, logo_url }).eq("id", id);
+      const { error } = await supabase.from("companies").update({ name, logo_url } as any).eq("id", id);
       if (error) throw error;
 
       // Sincroniza logo com relatórios da empresa
@@ -1462,7 +1462,7 @@ function CompaniesTab() {
                           
                           const { error: updateError } = await supabase
                             .from("companies")
-                            .update({ logo_url: publicUrl })
+                            .update({ logo_url: publicUrl } as any)
                             .eq("id", c.id);
                           
                           if (updateError) throw updateError;
@@ -1480,8 +1480,8 @@ function CompaniesTab() {
                       input.click();
                     }}
                   >
-                    {c.logo_url ? (
-                      <img src={c.logo_url} alt={c.name} className="h-full w-full object-cover" />
+                    {(c as any).logo_url ? (
+                      <img src={(c as any).logo_url} alt={c.name} className="h-full w-full object-cover" />
                     ) : companyLogos[c.id] ? (
                       <img src={companyLogos[c.id]} alt={c.name} className="h-full w-full object-cover" />
                     ) : (
