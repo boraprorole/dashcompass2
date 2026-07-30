@@ -67,14 +67,14 @@ export function BingManager({ reportId }: { reportId: string }) {
             </h3>
             <p className="text-sm text-muted-foreground">
               {status?.connected 
-                ? (isConntected ? status.siteUrl : "Conectado · Escolha o site abaixo")
+                ? (isConnected ? status.siteUrl : "Conectado · Escolha o site abaixo")
                 : "Acompanhe o desempenho do seu site no buscador da Microsoft."}
             </p>
           </div>
         </div>
         {status?.connected && (
           <div className="flex gap-2">
-            {isConntected && (
+            {isConnected && (
               <Button
                 variant="outline"
                 size="sm"
