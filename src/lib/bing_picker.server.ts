@@ -36,20 +36,24 @@ async function getBingAccessToken(refreshToken: string) {
     body: params.toString(),
   });
 
+  const body = await res.text();
+  if (debugMode) {
+    console.log("==== FETCH [getBingAccessToken] ====");
+    console.log("URL:", res.url);
+    console.log("STATUS:", res.status);
+    console.log("CONTENT-TYPE:", res.headers.get("content-type"));
+    console.log("BODY:", body.substring(0, 500));
+  }
+
+  if (body.startsWith("<!DOCTYPE")) {
+    throw new Error(`HTML recebido da URL ${res.url}\n\n${body.substring(0, 500)}`);
+  }
+
   if (!res.ok) {
-    const status = res.status;
-    const contentType = res.headers.get("content-type") || "";
-    const bodyText = await res.text();
-    
-    console.error(`[BING DIAGNOSTIC] Erro no Refresh Token:
-      Status: ${status}
-      Content-Type: ${contentType}
-      Body: ${bodyText.substring(0, 500)}`);
-      
-    throw new Error(`Bing refresh token error: ${status} ${bodyText.substring(0, 100)}`);
+    throw new Error(`Bing refresh token error: ${res.status} ${body.substring(0, 100)}`);
   }
   
-  const data = await res.json();
+  const data = JSON.parse(body);
   return data.access_token as string;
 }
 
@@ -87,30 +91,24 @@ export async function listBingSites(reportId: string) {
     }
   });
 
-  if (!res.ok) {
-    const status = res.status;
-    const contentType = res.headers.get("content-type") || "";
-    const errorBodyText = await res.text();
-    
-    console.error(`[BING DIAGNOSTIC] Erro ao listar sites:
-      Status: ${status}
-      Content-Type: ${contentType}
-      URL: ${apiUrl}
-      Body (primeiros 500): ${errorBodyText.substring(0, 500)}`);
-      
-    // Se o retorno for HTML, o fetch falhou na camada de rede ou roteamento interno do Bing (ou redirecionamento)
-    if (contentType.includes("text/html") || errorBodyText.trim().startsWith("<!DOCTYPE")) {
-      throw new Error(`Bing API returned HTML instead of JSON (Status ${status}). Possible redirect or invalid URL.`);
-    }
-
-    throw new Error(`Failed to fetch sites from Bing: ${status} ${errorBodyText.substring(0, 100)}`);
-  }
-  
-  const data = await res.json();
-  
+  const body = await res.text();
   if (debugMode) {
-    console.log(`[BING DIAGNOSTIC] Resposta GetUserSites (JSON):`, JSON.stringify(data).substring(0, 200));
+    console.log("==== FETCH [listBingSites] ====");
+    console.log("URL:", res.url);
+    console.log("STATUS:", res.status);
+    console.log("CONTENT-TYPE:", res.headers.get("content-type"));
+    console.log("BODY:", body.substring(0, 500));
   }
+
+  if (body.startsWith("<!DOCTYPE")) {
+    throw new Error(`HTML recebido da URL ${res.url}\n\n${body.substring(0, 500)}`);
+  }
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch sites from Bing: ${res.status} ${body.substring(0, 100)}`);
+  }
+  
+  const data = JSON.parse(body);
   
   // The Bing API returns { d: [ { Url: "..." }, ... ] }
   const sites = (data.d || []).map((s: any) => ({
@@ -169,9 +167,23 @@ export async function getBingMetricsReal(reportId: string, dateFrom?: string, da
     headers: { "Accept": "application/json" }
   });
 
+  const body = await statsRes.text();
+  const debugMode = process.env.BING_OAUTH_DEBUG === "true";
+  if (debugMode) {
+    console.log("==== FETCH [getBingMetricsReal] ====");
+    console.log("URL:", statsRes.url);
+    console.log("STATUS:", statsRes.status);
+    console.log("CONTENT-TYPE:", statsRes.headers.get("content-type"));
+    console.log("BODY:", body.substring(0, 500));
+  }
+
+  if (body.startsWith("<!DOCTYPE")) {
+    throw new Error(`HTML recebido da URL ${statsRes.url}\n\n${body.substring(0, 500)}`);
+  }
+
   let topKeywords: any[] = [];
   if (statsRes.ok) {
-    const statsData = await statsRes.json();
+    const statsData = JSON.parse(body);
     topKeywords = (statsData.d || []).map((kw: any) => ({
       query: kw.Query,
       clicks: kw.Clicks,
