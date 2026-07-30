@@ -47,7 +47,7 @@ import { Route as ApiPublicMetaOauthCallbackRouteImport } from './routes/api/pub
 import { Route as ApiPublicLinkedinOauthCallbackRouteImport } from './routes/api/public/linkedin/oauth.callback'
 import { Route as ApiPublicGoogleOauthCallbackRouteImport } from './routes/api/public/google/oauth.callback'
 import { Route as ApiPublicGaOauthCallbackRouteImport } from './routes/api/public/ga/oauth.callback'
-import { Route as ApiPublicBingOauthCallbackRouteImport } from './routes/api/public/bing.oauth.callback'
+import { Route as ApiPublicBingOauthCallbackRouteImport } from './routes/api/public/bing/oauth.callback'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',

@@ -30,7 +30,6 @@ export const Route = createFileRoute("/api/public/bing/oauth/callback")({
           let parsed: { reportId?: string; userId?: string } = {};
 
           try {
-            // Bing uses its own state format or the common signed one
             if (state.includes(".")) {
               parsed = (await verifyState(state)) as { reportId?: string; userId?: string };
             } else {
