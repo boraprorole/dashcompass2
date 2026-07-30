@@ -58,6 +58,14 @@ export const disconnectBing = createServerFn({ method: "POST" })
     return { success: true };
   });
 
+export const getBingStatus = createServerFn({ method: "GET" })
+  .inputValidator((data) => z.object({ reportId: z.string() }).parse(data))
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ data }) => {
+    const { getBingStatusReal } = await import("./bing_picker.server");
+    return await getBingStatusReal(data.reportId);
+  });
+
 export const getBingMetrics = createServerFn({ method: "GET" })
   .inputValidator((data) =>
     z.object({

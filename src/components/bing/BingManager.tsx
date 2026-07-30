@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { connectBing, getBingMetrics, getBingConnectUrl, disconnectBing } from "@/lib/bing.functions";
+import { connectBing, getBingMetrics, getBingConnectUrl, disconnectBing, getBingStatus } from "@/lib/bing.functions";
 import { listBingSites, chooseBingSite } from "@/lib/bing_picker.functions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,10 +21,11 @@ export function BingManager({ reportId }: { reportId: string }) {
   const disconnect = useServerFn(disconnectBing);
   const getConnectUrl = useServerFn(getBingConnectUrl);
   const fetchMetrics = useServerFn(getBingMetrics);
+  const fetchStatus = useServerFn(getBingStatus);
 
   const { data: status, isLoading, error: statusError } = useQuery({
     queryKey: ["bing-status", reportId],
-    queryFn: () => fetchMetrics({ data: { reportId } }),
+    queryFn: () => fetchStatus({ data: { reportId } }),
   });
 
   const handleDisconnect = async () => {
@@ -50,7 +51,7 @@ export function BingManager({ reportId }: { reportId: string }) {
 
 
 
-  const isConnected = status?.connected && status?.siteUrl && status.siteUrl !== "Aguardando sincronização...";
+  const isConnected = status?.connected && status?.propertySelected;
 
 
 
@@ -129,6 +130,7 @@ export function BingManager({ reportId }: { reportId: string }) {
             <div className="rounded bg-black/40 p-2 text-[9px] font-mono text-blue-300 border border-blue-500/20">
               <p>[BING DIAGNOSTIC]</p>
               <p>Connected: {String(status?.connected)}</p>
+              <p>Property Selected: {String(status?.propertySelected)}</p>
               <p>Site URL: {status?.siteUrl || 'null'}</p>
               <p>Error: {statusError ? (statusError as Error).message : 'none'}</p>
             </div>
