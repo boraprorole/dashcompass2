@@ -23,6 +23,17 @@ export const Route = createFileRoute("/api/public/bing/oauth/callback/")({
         const state = url.searchParams.get("state");
         const error = url.searchParams.get("error");
         
+        const debugMode = process.env.BING_OAUTH_DEBUG === "true";
+        if (debugMode) {
+          console.log("[BING OAUTH] Callback recebido", {
+            url: request.url,
+            codePresente: !!code,
+            codeLength: code?.length || 0,
+            statePresente: !!state,
+            errorPresente: !!error
+          });
+        }
+
         if (error) return html(`<h1>Autorização negada</h1><p>${error}</p><a href="/admin">Voltar</a>`, 400);
         if (!code || !state) return html(`<h1>Parâmetros ausentes</h1><a href="/admin">Voltar</a>`, 400);
 
@@ -34,6 +45,10 @@ export const Route = createFileRoute("/api/public/bing/oauth/callback/")({
               parsed = (await verifyState(state)) as { reportId?: string; userId?: string };
             } else {
               parsed = JSON.parse(atob(state));
+            }
+
+            if (debugMode) {
+              console.log("[BING OAUTH] State decodificado:", parsed);
             }
           } catch (e) {
             console.error("Bing State parse error:", e);
