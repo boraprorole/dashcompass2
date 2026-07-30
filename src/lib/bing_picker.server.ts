@@ -49,19 +49,29 @@ export async function listBingSites(reportId: string) {
 
   const accessToken = await getBingAccessToken(conn.refresh_token);
 
+  const apiUrl = `https://www.bing.com/webmasters/api/json/v2/GetUserSites?apikey=${accessToken}`;
+  
   if (debugMode) {
-    console.log(`[BING DIAGNOSTIC] Token obtido, chamando GetUserSites`);
+    console.log(`[BING DIAGNOSTIC] Token obtido, chamando GetUserSites em: ${apiUrl}`);
   }
 
-  const res = await fetch(`https://www.bing.com/webmasters/api/json/v2/GetUserSites?apikey=${accessToken}`, {
+  const res = await fetch(apiUrl, {
     method: "GET",
     headers: { "Accept": "application/json" }
   });
 
   if (!res.ok) {
-    const errorBody = await res.text();
-    console.error(`[BING DIAGNOSTIC] Erro ao listar sites: ${res.status} - ${errorBody}`);
-    throw new Error(`Failed to fetch sites from Bing: ${res.status}`);
+    const status = res.status;
+    const contentType = res.headers.get("content-type") || "";
+    const errorBodyText = await res.text();
+    
+    console.error(`[BING DIAGNOSTIC] Erro ao listar sites:
+      Status: ${status}
+      Content-Type: ${contentType}
+      URL: ${apiUrl}
+      Body (primeiros 500): ${errorBodyText.substring(0, 500)}`);
+      
+    throw new Error(`Failed to fetch sites from Bing: ${status} ${errorBodyText.substring(0, 100)}`);
   }
   
   const data = await res.json();
