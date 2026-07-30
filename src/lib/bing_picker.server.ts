@@ -181,36 +181,25 @@ export async function getBingMetricsReal(reportId: string, dateFrom?: string, da
   const siteUrl = conn.site_url;
 
   // 1. Get Summary Metrics (Query Stats)
-  const statsRes = await fetch(`https://www.bing.com/webmasters/api/json/v2/GetQueryStats?siteUrl=${encodeURIComponent(siteUrl)}&apikey=${accessToken}`, {
-    method: "GET",
-    headers: { "Accept": "application/json" }
-  });
-
-  const body = await statsRes.text();
-  const debugMode = process.env.BING_OAUTH_DEBUG === "true";
-  if (debugMode) {
-    console.log("==== FETCH [getBingMetricsReal] ====");
-    console.log("URL:", statsRes.url);
-    console.log("STATUS:", statsRes.status);
-    console.log("CONTENT-TYPE:", statsRes.headers.get("content-type"));
-    console.log("BODY:", body.substring(0, 500));
-  }
-
-  if (body.startsWith("<!DOCTYPE")) {
-    throw new Error(`HTML recebido da URL ${statsRes.url}\n\n${body.substring(0, 500)}`);
-  }
-
   let topKeywords: any[] = [];
-  if (statsRes.ok) {
-    const statsData = JSON.parse(body);
-    topKeywords = (statsData.d || []).map((kw: any) => ({
-      query: kw.Query,
-      clicks: kw.Clicks,
-      impressions: kw.Impressions,
-      ctr: kw.Impressions > 0 ? (kw.Clicks / kw.Impressions) * 100 : 0,
-      position: kw.AvgPos
-    })).sort((a: any, b: any) => b.clicks - a.clicks).slice(0, 10);
+  try {
+    const statsData = await bingApiFetch("GetQueryStats", accessToken, { siteUrl });
+    topKeywords = (statsData.d || [])
+      .map((kw: any) => ({
+        query: kw.Query,
+        clicks: kw.Clicks,
+        impressions: kw.Impressions,
+        ctr: kw.Impressions > 0 ? (kw.Clicks / kw.Impressions) * 100 : 0,
+        position: kw.AvgPos,
+      }))
+      .sort((a: any, b: any) => b.clicks - a.clicks)
+      .slice(0, 10);
+  } catch (err) {
+    // Não quebra a UI do relatório quando a API do Bing falha ou ainda não
+    // possui dados agregados para a propriedade selecionada.
+    console.error("[getBingMetricsReal] GetQueryStats falhou:", err);
   }
+
 
   return {
     connected: true,
