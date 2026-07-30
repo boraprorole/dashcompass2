@@ -115,7 +115,7 @@ export function BingManager({ reportId }: { reportId: string }) {
           Conexão Segura via OAuth
         </div>
         <p className="text-[11px] text-blue-300/80">
-          Acesse os dados do Bing Webmaster Tools de forma segura utilizando sua conta Microsoft.
+          Acesse os dados do Bing Webmaster Tools de forma segura utilizando sua conta do Bing Webmaster.
         </p>
         
 
@@ -133,7 +133,7 @@ export function BingManager({ reportId }: { reportId: string }) {
             }}
           >
             <Globe className="mr-2 h-4 w-4" />
-            Conectar com conta Microsoft
+            Conectar com Bing Webmaster
           </Button>
         </div>
       </div>
