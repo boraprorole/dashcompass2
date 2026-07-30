@@ -29,13 +29,12 @@ export async function exchangeBingCode(code: string) {
   const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
   if (!clientId || !clientSecret) throw new Error("Microsoft OAuth não configurado");
 
-  const params = new URLSearchParams({
-    client_id: clientId,
-    client_secret: clientSecret,
-    code,
-    grant_type: "authorization_code",
-    redirect_uri: REDIRECT_URI,
-  });
+  const params = new URLSearchParams();
+  params.append("client_id", clientId);
+  params.append("client_secret", clientSecret);
+  params.append("code", code);
+  params.append("grant_type", "authorization_code");
+  params.append("redirect_uri", REDIRECT_URI);
 
   const res = await fetch(BING_TOKEN_URL, {
     method: "POST",
