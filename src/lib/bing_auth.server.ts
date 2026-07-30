@@ -1,12 +1,9 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { signState } from "@/lib/ga.server";
 
-const BING_AUTH_URL = "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize";
-const BING_TOKEN_URL = "https://login.microsoftonline.com/organizations/oauth2/v2.0/token";
-const BING_SCOPES = [
-  "offline_access",
-  "https://www.bing.com/webmasters.readonly"
-].join(" ");
+const BING_AUTH_URL = "https://www.bing.com/webmasters/oauth/authorize";
+const BING_TOKEN_URL = "https://www.bing.com/webmasters/oauth/token";
+const BING_SCOPES = "webmaster.readonly";
 
 const REDIRECT_URI = "https://www.dashcompass.com/api/public/google.oauth.callback";
 
@@ -20,10 +17,8 @@ export async function getBingAuthUrl(reportId: string, userId: string) {
     client_id: clientId,
     response_type: "code",
     redirect_uri: REDIRECT_URI,
-    response_mode: "query",
     scope: BING_SCOPES,
-    state: state,
-    prompt: "consent"
+    state: state
   });
 
   return `${BING_AUTH_URL}?${params.toString()}`;
@@ -39,11 +34,11 @@ export async function exchangeBingCode(code: string) {
     headers: { "content-type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       client_id: clientId,
-      scope: BING_SCOPES,
-      code,
-      redirect_uri: REDIRECT_URI,
-      grant_type: "authorization_code",
       client_secret: clientSecret,
+      code,
+      grant_type: "authorization_code",
+      redirect_uri: REDIRECT_URI,
+      scope: BING_SCOPES,
     }),
   });
 
