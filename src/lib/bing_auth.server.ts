@@ -3,7 +3,7 @@ import { signState } from "@/lib/ga.server";
 
 const BING_AUTH_URL = "https://www.bing.com/webmasters/oauth/authorize";
 const BING_TOKEN_URL = "https://www.bing.com/webmasters/oauth/token";
-const BING_SCOPES = "https://www.bing.com/webmaster.readonly";
+const BING_SCOPES = "webmaster.manage";
 
 const REDIRECT_URI = "https://www.dashcompass.com/api/public/bing/oauth/callback";
 

@@ -47,7 +47,7 @@ export const Route = createFileRoute("/api/public/bing/oauth/callback")({
           await saveBingConnection({
             reportId: parsed.reportId,
             refreshToken: tokens.refresh_token,
-            siteUrl: "https://bing-connected.waiting-selection.com"
+            siteUrl: "Aguardando sincronização..."
           });
 
           return html(
