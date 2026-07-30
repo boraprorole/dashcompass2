@@ -52,7 +52,13 @@ function isCatastrophicSsrErrorBody(body: string, responseStatus: number): boole
 
 // h3 swallows in-handler throws into a normal 500 Response with body
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
-async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
+//
+// IMPORTANT: this only replaces the response with the branded HTML error page
+// for real browser page navigations (Accept: text/html). Data calls made by
+// the client — e.g. TanStack Start server functions (useServerFn) — expect a
+// JSON response. If we hand them HTML here, JSON.parse() on the client blows
+// up with a confusing "Unexpected token '<'" error and the real cause is lost.
+async function normalizeCatastrophicSsrResponse(request: Request, response: Response): Promise<Response> {
   if (response.status < 500) return response;
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) return response;
@@ -62,7 +68,20 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
     return response;
   }
 
-  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
+  const realError = consumeLastCapturedError();
+  console.error(realError ?? new Error(`h3 swallowed SSR error: ${body}`));
+
+  const acceptsHtml = (request.headers.get("accept") ?? "").includes("text/html");
+  if (!acceptsHtml) {
+    // Data/server-function call: surface the real error message as JSON
+    // instead of swapping in an HTML page.
+    const message = realError instanceof Error ? realError.message : "Erro interno do servidor";
+    return new Response(JSON.stringify({ error: message, message }), {
+      status: response.status,
+      headers: { "content-type": "application/json; charset=utf-8" },
+    });
+  }
+
   return brandedErrorResponse();
 }
 
@@ -71,9 +90,17 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return await normalizeCatastrophicSsrResponse(request, response);
     } catch (error) {
       console.error(error);
+      const acceptsHtml = (request.headers.get("accept") ?? "").includes("text/html");
+      if (!acceptsHtml) {
+        const message = error instanceof Error ? error.message : "Erro interno do servidor";
+        return new Response(JSON.stringify({ error: message, message }), {
+          status: 500,
+          headers: { "content-type": "application/json; charset=utf-8" },
+        });
+      }
       return brandedErrorResponse();
     }
   },
