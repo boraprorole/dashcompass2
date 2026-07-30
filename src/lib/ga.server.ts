@@ -48,6 +48,7 @@ export const GA_SCOPES = [
 const GA_OAUTH_ORIGIN = "https://www.dashcompass.com";
 
 export function getRedirectUri(_origin?: string) {
+  // Use the directory-based structure that Google Console expect
   return `${GA_OAUTH_ORIGIN}/api/public/google/oauth/callback`;
 }
 
