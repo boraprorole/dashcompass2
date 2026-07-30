@@ -2,6 +2,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 async function getBingAccessToken(refreshToken: string) {
   const BING_TOKEN_URL = "https://www.bing.com/webmasters/oauth/token";
+  const debugMode = process.env.BING_OAUTH_DEBUG === "true";
   
   const bingClientId = process.env.BING_CLIENT_ID?.trim();
   const msClientId = process.env.MICROSOFT_CLIENT_ID?.trim();
@@ -11,13 +12,20 @@ async function getBingAccessToken(refreshToken: string) {
   const msClientSecret = process.env.MICROSOFT_CLIENT_SECRET?.trim();
   const clientSecret = bingClientSecret || msClientSecret;
 
-  if (!clientId || !clientSecret) throw new Error("Credenciais do Bing/Microsoft não configuradas");
+  if (!clientId || !clientSecret) {
+    if (debugMode) console.error("[BING DIAGNOSTIC] Credenciais ausentes:", { clientId: !!clientId, clientSecret: !!clientSecret });
+    throw new Error("Credenciais do Bing/Microsoft não configuradas");
+  }
 
   const params = new URLSearchParams();
   params.append("client_id", clientId);
   params.append("client_secret", clientSecret);
   params.append("refresh_token", refreshToken);
   params.append("grant_type", "refresh_token");
+
+  if (debugMode) {
+    console.log(`[BING DIAGNOSTIC] Solicitando novo access_token em: ${BING_TOKEN_URL}`);
+  }
 
   const res = await fetch(BING_TOKEN_URL, {
     method: "POST",
@@ -28,7 +36,19 @@ async function getBingAccessToken(refreshToken: string) {
     body: params.toString(),
   });
 
-  if (!res.ok) throw new Error(`Bing refresh token error: ${res.status} ${await res.text()}`);
+  if (!res.ok) {
+    const status = res.status;
+    const contentType = res.headers.get("content-type") || "";
+    const bodyText = await res.text();
+    
+    console.error(`[BING DIAGNOSTIC] Erro no Refresh Token:
+      Status: ${status}
+      Content-Type: ${contentType}
+      Body: ${bodyText.substring(0, 500)}`);
+      
+    throw new Error(`Bing refresh token error: ${status} ${bodyText.substring(0, 100)}`);
+  }
+  
   const data = await res.json();
   return data.access_token as string;
 }
