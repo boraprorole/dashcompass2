@@ -1454,11 +1454,17 @@ function CompaniesTab() {
                           const path = `${crypto.randomUUID()}.${ext}`;
                           const { error: uploadError } = await supabase.storage
                             .from("company-logos")
-                            .upload(path, file);
+                            .upload(path, file, { contentType: file.type, upsert: true });
                           
                           if (uploadError) throw uploadError;
                           
-                          const { data: { publicUrl } } = supabase.storage.from("company-logos").getPublicUrl(path);
+                          // Bucket privado: usamos URL assinada de longa duração
+                          const { data: signed, error: signedError } = await supabase.storage
+                            .from("company-logos")
+                            .createSignedUrl(path, 60 * 60 * 24 * 365);
+                          
+                          if (signedError) throw signedError;
+                          const publicUrl = signed.signedUrl;
                           
                           const { error: updateError } = await supabase
                             .from("companies")
@@ -1469,6 +1475,7 @@ function CompaniesTab() {
                           
                           // Sincroniza relatórios
                           await supabase.from("reports").update({ logo_url: publicUrl }).eq("company_id", c.id);
+
                           
                           toast.success("Imagem da empresa atualizada!", { id: toastId });
                           qc.invalidateQueries({ queryKey: ["admin-companies"] });
