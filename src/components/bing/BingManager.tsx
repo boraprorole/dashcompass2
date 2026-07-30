@@ -105,10 +105,10 @@ export function BingManager({ reportId }: { reportId: string }) {
           </div>
           
           <BingSitePicker reportId={reportId} onSaved={() => queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] })} />
-        </div>
-      </Card>
-    );
-  }
+    </Card>
+  );
+}
+
 
   return (
     <Card className="glass-strong border-none rounded-2xl p-6">
