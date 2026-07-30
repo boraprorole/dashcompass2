@@ -40,8 +40,7 @@ export async function exchangeBingCode(code: string) {
   const res = await fetch(BING_TOKEN_URL, {
     method: "POST",
     headers: { 
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Authorization": `Basic ${btoa(`${clientId}:${clientSecret}`)}`
+      "Content-Type": "application/x-www-form-urlencoded"
     },
     body: params.toString(),
   });
