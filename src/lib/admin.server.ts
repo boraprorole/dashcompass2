@@ -5,7 +5,8 @@ async function assertAdmin(callerId: string) {
     .from("user_roles")
     .select("role")
     .eq("user_id", callerId)
-    .eq("role", "admin")
+    .in("role", ["admin", "admin_global", "admin_agencia"])
+    .limit(1)
     .maybeSingle();
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Forbidden: admin only");

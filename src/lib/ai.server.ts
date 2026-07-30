@@ -46,7 +46,8 @@ export async function assertAdmin(userId: string) {
     .from("user_roles")
     .select("role")
     .eq("user_id", userId)
-    .eq("role", "admin")
+    .in("role", ["admin", "admin_global", "admin_agencia"])
+    .limit(1)
     .maybeSingle();
   if (!data) throw new Error("Forbidden: admin only");
 }

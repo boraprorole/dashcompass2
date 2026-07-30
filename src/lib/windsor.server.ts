@@ -5,7 +5,8 @@ async function assertAdmin(callerId: string) {
     .from("user_roles")
     .select("role")
     .eq("user_id", callerId)
-    .eq("role", "admin")
+    .in("role", ["admin", "admin_global", "admin_agencia"])
+    .limit(1)
     .maybeSingle();
   if (!data) throw new Error("Forbidden: admin only");
 }
@@ -15,7 +16,8 @@ async function assertReportAccess(callerId: string, reportId: string) {
     .from("user_roles")
     .select("role")
     .eq("user_id", callerId)
-    .eq("role", "admin")
+    .in("role", ["admin", "admin_global", "admin_agencia"])
+    .limit(1)
     .maybeSingle();
   if (admin) return;
 
