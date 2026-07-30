@@ -1065,7 +1065,7 @@ function CompaniesTab() {
   const { isAdminGlobal, agencyId } = useAuth();
   const qc = useQueryClient();
   const [newCompanyName, setNewCompanyName] = useState("");
-  const [editingCompany, setEditingCompany] = useState<{ id: string; name: string } | null>(null);
+  const [editingCompany, setEditingCompany] = useState<{ id: string; name: string; logo_url?: string | null } | null>(null);
   const [newReportForCompany, setNewReportForCompany] = useState<string | null>(null);
   const [editingReport, setEditingReport] = useState<ReportRow | null>(null);
 
@@ -1167,9 +1167,14 @@ function CompaniesTab() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, name }: { id: string; name: string }) => {
-      const { error } = await supabase.from("companies").update({ name }).eq("id", id);
+    mutationFn: async ({ id, name, logo_url }: { id: string; name: string; logo_url?: string | null }) => {
+      const { error } = await supabase.from("companies").update({ name, logo_url }).eq("id", id);
       if (error) throw error;
+
+      // Sincroniza logo com relatórios da empresa
+      if (logo_url) {
+        await supabase.from("reports").update({ logo_url }).eq("company_id", id);
+      }
     },
     onSuccess: () => {
       toast.success("Empresa atualizada.");
@@ -1433,12 +1438,58 @@ function CompaniesTab() {
             return (
               <div key={c.id} className="glass-strong rounded-3xl p-5 space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary/15 text-primary">
-                    {companyLogos[c.id] ? (
+                  <div 
+                    className="group relative flex h-14 w-14 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-primary/15 text-primary transition-all hover:bg-primary/25"
+                    onClick={() => {
+                      const input = document.createElement('input');
+                      input.type = 'file';
+                      input.accept = 'image/*';
+                      input.onchange = async (e) => {
+                        const file = (e.target as HTMLInputElement).files?.[0];
+                        if (!file) return;
+                        
+                        const toastId = toast.loading("Enviando imagem...");
+                        try {
+                          const ext = file.name.split(".").pop()?.toLowerCase() || "png";
+                          const path = `${crypto.randomUUID()}.${ext}`;
+                          const { error: uploadError } = await supabase.storage
+                            .from("company-logos")
+                            .upload(path, file);
+                          
+                          if (uploadError) throw uploadError;
+                          
+                          const { data: { publicUrl } } = supabase.storage.from("company-logos").getPublicUrl(path);
+                          
+                          const { error: updateError } = await supabase
+                            .from("companies")
+                            .update({ logo_url: publicUrl })
+                            .eq("id", c.id);
+                          
+                          if (updateError) throw updateError;
+                          
+                          // Sincroniza relatórios
+                          await supabase.from("reports").update({ logo_url: publicUrl }).eq("company_id", c.id);
+                          
+                          toast.success("Imagem da empresa atualizada!", { id: toastId });
+                          qc.invalidateQueries({ queryKey: ["admin-companies"] });
+                          qc.invalidateQueries({ queryKey: ["admin-reports"] });
+                        } catch (err: any) {
+                          toast.error(err.message, { id: toastId });
+                        }
+                      };
+                      input.click();
+                    }}
+                  >
+                    {c.logo_url ? (
+                      <img src={c.logo_url} alt={c.name} className="h-full w-full object-cover" />
+                    ) : companyLogos[c.id] ? (
                       <img src={companyLogos[c.id]} alt={c.name} className="h-full w-full object-cover" />
                     ) : (
-                      <Building2 className="h-5 w-5" />
+                      <Building2 className="h-6 w-6" />
                     )}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                      <Upload className="h-5 w-5 text-white" />
+                    </div>
                   </div>
                   <div className="min-w-0 flex-1">
                     {editingCompany?.id === c.id ? (
