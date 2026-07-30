@@ -88,6 +88,25 @@ export async function chooseBingSite(reportId: string, siteUrl: string) {
   return { success: true };
 }
 
+export async function getBingStatusReal(reportId: string) {
+  const { data: conn } = await supabaseAdmin
+    .from("bing_connections")
+    .select("*")
+    .eq("report_id", reportId)
+    .maybeSingle();
+
+  if (!conn || !conn.refresh_token) {
+    return { connected: false };
+  }
+
+  return {
+    connected: true,
+    propertySelected: !!conn.site_url && conn.site_url !== "Aguardando sincronização...",
+    siteUrl: conn.site_url === "Aguardando sincronização..." ? null : conn.site_url,
+    updatedAt: conn.updated_at
+  };
+}
+
 export async function getBingMetricsReal(reportId: string, dateFrom?: string, dateTo?: string) {
   const { data: conn } = await supabaseAdmin
     .from("bing_connections")
@@ -96,14 +115,13 @@ export async function getBingMetricsReal(reportId: string, dateFrom?: string, da
     .maybeSingle();
 
   if (!conn || !conn.refresh_token || !conn.site_url || conn.site_url === "Aguardando sincronização...") {
-    return { connected: false };
+    return { connected: false, metrics: [], topKeywords: [] };
   }
 
   const accessToken = await getBingAccessToken(conn.refresh_token);
   const siteUrl = conn.site_url;
 
   // 1. Get Summary Metrics (Query Stats)
-  // https://learn.microsoft.com/en-us/bingwebmaster/api-reference#getquerystats
   const statsRes = await fetch(`https://www.bing.com/webmasters/api/json/v2/GetQueryStats?siteUrl=${encodeURIComponent(siteUrl)}&apikey=${accessToken}`, {
     method: "GET",
     headers: { "Accept": "application/json" }
@@ -121,11 +139,6 @@ export async function getBingMetricsReal(reportId: string, dateFrom?: string, da
     })).sort((a: any, b: any) => b.clicks - a.clicks).slice(0, 10);
   }
 
-  // 2. Get Daily Metrics
-  // We'll use GetTrafficStats which provides page-level stats, or simulate daily if needed.
-  // The Bing API is quite limited in "daily" historical views via simple endpoints without complex SOAP.
-  // We'll return the keywords and summary data.
-  
   return {
     connected: true,
     siteUrl: siteUrl,
