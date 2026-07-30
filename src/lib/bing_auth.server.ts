@@ -152,6 +152,16 @@ export async function saveBingConnection({
   refreshToken: string; 
   siteUrl: string;
 }) {
+  const debugMode = process.env.BING_OAUTH_DEBUG === "true";
+  
+  if (debugMode) {
+    debugLog("Salvando conexão no banco", {
+      reportId,
+      siteUrl,
+      refreshTokenMasked: maskSecret(refreshToken)
+    });
+  }
+
   const { error } = await supabaseAdmin
     .from("bing_connections")
     .upsert({
@@ -161,5 +171,12 @@ export async function saveBingConnection({
       updated_at: new Date().toISOString(),
     }, { onConflict: 'report_id' });
 
-  if (error) throw error;
+  if (error) {
+    console.error("Erro ao salvar conexão Bing no Supabase:", error);
+    throw error;
+  }
+
+  if (debugMode) {
+    debugLog("Conexão salva com sucesso no banco");
+  }
 }

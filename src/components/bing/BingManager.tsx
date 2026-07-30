@@ -22,7 +22,7 @@ export function BingManager({ reportId }: { reportId: string }) {
   const getConnectUrl = useServerFn(getBingConnectUrl);
   const fetchMetrics = useServerFn(getBingMetrics);
 
-  const { data: status, isLoading } = useQuery({
+  const { data: status, isLoading, error: statusError } = useQuery({
     queryKey: ["bing-status", reportId],
     queryFn: () => fetchMetrics({ data: { reportId } }),
   });
@@ -124,7 +124,17 @@ export function BingManager({ reportId }: { reportId: string }) {
           </div>
         </div>
       ) : (
-        <BingSitePicker reportId={reportId} onSaved={() => queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] })} />
+        <div className="space-y-4">
+          {process.env.NODE_ENV === 'development' && (
+            <div className="rounded bg-black/40 p-2 text-[9px] font-mono text-blue-300 border border-blue-500/20">
+              <p>[BING DIAGNOSTIC]</p>
+              <p>Connected: {String(status?.connected)}</p>
+              <p>Site URL: {status?.siteUrl || 'null'}</p>
+              <p>Error: {statusError ? (statusError as Error).message : 'none'}</p>
+            </div>
+          )}
+          <BingSitePicker reportId={reportId} onSaved={() => queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] })} />
+        </div>
       )}
     </Card>
   );

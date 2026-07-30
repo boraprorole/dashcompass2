@@ -2,10 +2,16 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 async function getBingAccessToken(refreshToken: string) {
   const BING_TOKEN_URL = "https://www.bing.com/webmasters/oauth/token";
-  const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
-  const clientSecret = process.env.MICROSOFT_CLIENT_SECRET?.trim();
+  
+  const bingClientId = process.env.BING_CLIENT_ID?.trim();
+  const msClientId = process.env.MICROSOFT_CLIENT_ID?.trim();
+  const clientId = bingClientId || msClientId;
 
-  if (!clientId || !clientSecret) throw new Error("Microsoft Client ID/Secret not configured");
+  const bingClientSecret = process.env.BING_CLIENT_SECRET?.trim();
+  const msClientSecret = process.env.MICROSOFT_CLIENT_SECRET?.trim();
+  const clientSecret = bingClientSecret || msClientSecret;
+
+  if (!clientId || !clientSecret) throw new Error("Credenciais do Bing/Microsoft não configuradas");
 
   const params = new URLSearchParams();
   params.append("client_id", clientId);
@@ -36,15 +42,33 @@ export async function listBingSites(reportId: string) {
 
   if (!conn?.refresh_token) throw new Error("Bing not connected");
 
+  const debugMode = process.env.BING_OAUTH_DEBUG === "true";
+  if (debugMode) {
+    console.log(`[BING DIAGNOSTIC] Iniciando listBingSites para reportId: ${reportId}`);
+  }
+
   const accessToken = await getBingAccessToken(conn.refresh_token);
+
+  if (debugMode) {
+    console.log(`[BING DIAGNOSTIC] Token obtido, chamando GetUserSites`);
+  }
 
   const res = await fetch(`https://www.bing.com/webmasters/api/json/v2/GetUserSites?apikey=${accessToken}`, {
     method: "GET",
     headers: { "Accept": "application/json" }
   });
 
-  if (!res.ok) throw new Error(`Failed to fetch sites from Bing: ${res.status}`);
+  if (!res.ok) {
+    const errorBody = await res.text();
+    console.error(`[BING DIAGNOSTIC] Erro ao listar sites: ${res.status} - ${errorBody}`);
+    throw new Error(`Failed to fetch sites from Bing: ${res.status}`);
+  }
+  
   const data = await res.json();
+  
+  if (debugMode) {
+    console.log(`[BING DIAGNOSTIC] Resposta GetUserSites:`, JSON.stringify(data).substring(0, 200));
+  }
   
   // The Bing API returns { d: [ { Url: "..." }, ... ] }
   const sites = (data.d || []).map((s: any) => ({
