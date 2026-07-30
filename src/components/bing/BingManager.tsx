@@ -34,6 +34,7 @@ export function BingManager({ reportId }: { reportId: string }) {
       await disconnect({ data: { reportId } });
       toast.success("Bing Webmaster Tools desconectado com sucesso");
       queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] });
+      queryClient.invalidateQueries({ queryKey: ["bing-metrics", reportId] });
     } catch (error) {
       toast.error("Erro ao desconectar Bing Webmaster Tools");
     }
@@ -46,6 +47,7 @@ export function BingManager({ reportId }: { reportId: string }) {
       </div>
     );
   }
+
 
 
   const query = useQuery({
