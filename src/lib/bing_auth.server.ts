@@ -8,8 +8,8 @@ const BING_SCOPES = "webmaster.manage";
 const REDIRECT_URI = "https://www.dashcompass.com/api/public/bing/oauth/callback";
 
 export async function getBingAuthUrl(reportId: string, userId: string) {
-  const clientId = process.env.MICROSOFT_CLIENT_ID;
-  if (!clientId) throw new Error("MICROSOFT_CLIENT_ID não configurado");
+  const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
+  if (!clientId) throw new Error("MICROSOFT_CLIENT_ID não configurado ou está em branco");
 
   const state = await signState({ reportId, userId, provider: 'bing' });
 
@@ -25,24 +25,27 @@ export async function getBingAuthUrl(reportId: string, userId: string) {
 }
 
 export async function exchangeBingCode(code: string) {
-  const clientId = process.env.MICROSOFT_CLIENT_ID;
-  const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
-  if (!clientId || !clientSecret) throw new Error("Microsoft OAuth não configurado");
+  const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
+  const clientSecret = process.env.MICROSOFT_CLIENT_SECRET?.trim();
+  if (!clientId || !clientSecret) throw new Error("Credenciais do Bing (Client ID/Secret) não configuradas no ambiente");
 
-  const params = new URLSearchParams({
-    client_id: clientId,
-    client_secret: clientSecret,
-    code,
-    grant_type: "authorization_code",
-    redirect_uri: REDIRECT_URI,
-  });
+  const params = new URLSearchParams();
+  params.append("client_id", clientId);
+  params.append("client_secret", clientSecret);
+  params.append("code", code);
+  params.append("grant_type", "authorization_code");
+  params.append("redirect_uri", REDIRECT_URI);
+
+  const body = params.toString();
+  console.log("Bing Token Exchange Body (sanitized):", body.replace(clientSecret, "REDACTED"));
 
   const res = await fetch(BING_TOKEN_URL, {
     method: "POST",
     headers: { 
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Accept": "application/json"
     },
-    body: params.toString(),
+    body: body,
   });
 
   if (!res.ok) throw new Error(`Bing token exchange: ${res.status} ${await res.text()}`);

@@ -14,7 +14,7 @@ a{color:#c25b5b;text-decoration:none;font-weight:500}</style></head>
   );
 }
 
-export const Route = createFileRoute("/api/public/bing/oauth/callback")({
+export const Route = createFileRoute("/api/public/bing/oauth/callback/")({
   server: {
     handlers: {
       GET: async ({ request }) => {
