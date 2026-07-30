@@ -312,6 +312,7 @@ export type Database = {
           agency_id: string | null
           created_at: string
           id: string
+          logo_url: string | null
           name: string
           updated_at: string
         }
@@ -319,6 +320,7 @@ export type Database = {
           agency_id?: string | null
           created_at?: string
           id?: string
+          logo_url?: string | null
           name: string
           updated_at?: string
         }
@@ -326,6 +328,7 @@ export type Database = {
           agency_id?: string | null
           created_at?: string
           id?: string
+          logo_url?: string | null
           name?: string
           updated_at?: string
         }
