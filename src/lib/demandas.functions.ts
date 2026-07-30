@@ -25,7 +25,8 @@ export const setDemandasEnabled = createServerFn({ method: "POST" })
       .from("user_roles")
       .select("role")
       .eq("user_id", context.userId)
-      .eq("role", "admin")
+      .in("role", ["admin", "admin_global", "admin_agencia"])
+      .limit(1)
       .maybeSingle();
     if (!role) throw new Error("Forbidden: admin only");
 
