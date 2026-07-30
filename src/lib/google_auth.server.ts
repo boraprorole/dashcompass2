@@ -15,6 +15,7 @@ export const GOOGLE_SCOPES = [
 const ORIGIN = "https://www.dashcompass.com";
 
 export function getGoogleRedirectUri() {
+  // Matches the directory-based structure in src/routes/api/public/google/oauth.callback.tsx
   return `${ORIGIN}/api/public/google/oauth/callback`;
 }
 
