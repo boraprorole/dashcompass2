@@ -21,8 +21,18 @@ function debugLog(message: string, data?: any) {
 }
 
 export async function getBingAuthUrl(reportId: string, userId: string) {
-  const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
-  if (!clientId) throw new Error("MICROSOFT_CLIENT_ID não configurado ou está em branco");
+  const bingClientId = process.env.BING_CLIENT_ID?.trim();
+  const msClientId = process.env.MICROSOFT_CLIENT_ID?.trim();
+  const clientId = bingClientId || msClientId;
+
+  if (process.env.BING_OAUTH_DEBUG === "true") {
+    debugLog("Iniciando fluxo de autorização", {
+      clientIdSource: bingClientId ? "BING_CLIENT_ID" : (msClientId ? "MICROSOFT_CLIENT_ID" : "nenhum"),
+      clientIdMasked: maskSecret(clientId)
+    });
+  }
+
+  if (!clientId) throw new Error("Client ID do Bing não configurado (BING_CLIENT_ID ou MICROSOFT_CLIENT_ID)");
 
   const state = await signState({ reportId, userId, provider: 'bing' });
 
@@ -38,15 +48,25 @@ export async function getBingAuthUrl(reportId: string, userId: string) {
 }
 
 export async function exchangeBingCode(code: string) {
-  const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
-  const clientSecret = process.env.MICROSOFT_CLIENT_SECRET?.trim();
+  const bingClientId = process.env.BING_CLIENT_ID?.trim();
+  const msClientId = process.env.MICROSOFT_CLIENT_ID?.trim();
+  const clientId = bingClientId || msClientId;
+
+  const bingClientSecret = process.env.BING_CLIENT_SECRET?.trim();
+  const msClientSecret = process.env.MICROSOFT_CLIENT_SECRET?.trim();
+  const clientSecret = bingClientSecret || msClientSecret;
+
   const debugMode = process.env.BING_OAUTH_DEBUG === "true";
 
   if (debugMode) {
-    debugLog("Iniciando troca de código por token");
+    debugLog("Iniciando troca de código por token", {
+      clientIdSource: bingClientId ? "BING_CLIENT_ID" : (msClientId ? "MICROSOFT_CLIENT_ID" : "nenhum"),
+      clientSecretSource: bingClientSecret ? "BING_CLIENT_SECRET" : (msClientSecret ? "MICROSOFT_CLIENT_SECRET" : "nenhum"),
+      clientSecretExists: !!clientSecret
+    });
     debugLog("Variáveis de ambiente:", {
-      BING_CLIENT_ID: maskSecret(clientId),
-      BING_CLIENT_SECRET: {
+      clientId: maskSecret(clientId),
+      clientSecret: {
         presente: !!clientSecret,
         tamanho: clientSecret?.length || 0,
         preview: clientSecret ? `${clientSecret.substring(0, 3)}...${clientSecret.substring(clientSecret.length - 3)}` : "n/a"
