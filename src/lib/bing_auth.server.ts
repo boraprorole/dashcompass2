@@ -5,7 +5,7 @@ const BING_AUTH_URL = "https://www.bing.com/webmasters/oauth/authorize";
 const BING_TOKEN_URL = "https://www.bing.com/webmasters/oauth/token";
 const BING_SCOPES = "webmaster.manage";
 
-const REDIRECT_URI = "https://www.dashcompass.com/api/public/bing/oauth/callback";
+const REDIRECT_URI = "https://www.dashcompass.com/api/public/bing/oauth/callback/";
 
 export async function getBingAuthUrl(reportId: string, userId: string) {
   const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
@@ -35,7 +35,6 @@ export async function exchangeBingCode(code: string) {
   params.append("code", code);
   params.append("grant_type", "authorization_code");
   params.append("redirect_uri", REDIRECT_URI);
-  params.append("scope", BING_SCOPES);
 
   const body = params.toString();
   console.log("Bing Token Exchange Body (sanitized):", body.replace(clientSecret, "REDACTED"));
