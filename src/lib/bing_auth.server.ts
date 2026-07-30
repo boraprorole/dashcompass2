@@ -36,12 +36,16 @@ export async function exchangeBingCode(code: string) {
   params.append("grant_type", "authorization_code");
   params.append("redirect_uri", REDIRECT_URI);
 
+  const body = params.toString();
+  console.log("Bing Token Exchange Body (sanitized):", body.replace(clientSecret, "REDACTED"));
+
   const res = await fetch(BING_TOKEN_URL, {
     method: "POST",
     headers: { 
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Accept": "application/json"
     },
-    body: params.toString(),
+    body: body,
   });
 
   if (!res.ok) throw new Error(`Bing token exchange: ${res.status} ${await res.text()}`);
