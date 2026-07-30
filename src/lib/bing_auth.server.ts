@@ -25,9 +25,9 @@ export async function getBingAuthUrl(reportId: string, userId: string) {
 }
 
 export async function exchangeBingCode(code: string) {
-  const clientId = process.env.MICROSOFT_CLIENT_ID;
-  const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
-  if (!clientId || !clientSecret) throw new Error("Microsoft OAuth não configurado");
+  const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
+  const clientSecret = process.env.MICROSOFT_CLIENT_SECRET?.trim();
+  if (!clientId || !clientSecret) throw new Error("Credenciais do Bing (Client ID/Secret) não configuradas no ambiente");
 
   const params = new URLSearchParams();
   params.append("client_id", clientId);
