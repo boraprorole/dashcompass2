@@ -34,6 +34,7 @@ export function BingManager({ reportId }: { reportId: string }) {
       await disconnect({ data: { reportId } });
       toast.success("Bing Webmaster Tools desconectado com sucesso");
       queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] });
+      queryClient.invalidateQueries({ queryKey: ["bing-metrics", reportId] });
     } catch (error) {
       toast.error("Erro ao desconectar Bing Webmaster Tools");
     }
@@ -48,7 +49,10 @@ export function BingManager({ reportId }: { reportId: string }) {
   }
 
 
-  const isConntected = status?.connected && status?.siteUrl && status.siteUrl !== "Aguardando sincronização...";
+
+  const isConnected = status?.connected && status?.siteUrl && status.siteUrl !== "Aguardando sincronização...";
+
+
 
   return (
     <Card className="glass-strong border-none rounded-2xl p-6">
@@ -63,14 +67,14 @@ export function BingManager({ reportId }: { reportId: string }) {
             </h3>
             <p className="text-sm text-muted-foreground">
               {status?.connected 
-                ? (isConntected ? status.siteUrl : "Conectado · Escolha o site abaixo")
+                ? (isConnected ? status.siteUrl : "Conectado · Escolha o site abaixo")
                 : "Acompanhe o desempenho do seu site no buscador da Microsoft."}
             </p>
           </div>
         </div>
         {status?.connected && (
           <div className="flex gap-2">
-            {isConntected && (
+            {isConnected && (
               <Button
                 variant="outline"
                 size="sm"
