@@ -17,10 +17,7 @@ import { Loader2, ExternalLink, ShieldCheck, Globe, Trash2 } from "lucide-react"
 import { toast } from "sonner";
 
 export function BingManager({ reportId }: { reportId: string }) {
-  const [siteUrl, setSiteUrl] = useState("");
-  const [apiKey, setApiKey] = useState("");
   const queryClient = useQueryClient();
-  const connect = useServerFn(connectBing);
   const disconnect = useServerFn(disconnectBing);
   const getConnectUrl = useServerFn(getBingConnectUrl);
   const fetchMetrics = useServerFn(getBingMetrics);
@@ -30,22 +27,6 @@ export function BingManager({ reportId }: { reportId: string }) {
     queryFn: () => fetchMetrics({ data: { reportId } }),
   });
 
-  const handleConnect = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!siteUrl) {
-      toast.error("Por favor, insira a URL do site");
-      return;
-    }
-
-    try {
-      await connect({ data: { reportId, siteUrl, apiKey } });
-      toast.success("Bing Webmaster Tools conectado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] });
-    } catch (error) {
-      toast.error("Erro ao conectar Bing Webmaster Tools");
-    }
-  };
-  
   const handleDisconnect = async () => {
     if (!confirm("Tem certeza que deseja desconectar o Bing Webmaster Tools?")) return;
     
@@ -105,10 +86,10 @@ export function BingManager({ reportId }: { reportId: string }) {
           </div>
           
           <BingSitePicker reportId={reportId} onSaved={() => queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] })} />
-    </Card>
-  );
-}
-
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className="glass-strong border-none rounded-2xl p-6">
@@ -124,7 +105,6 @@ export function BingManager({ reportId }: { reportId: string }) {
         </div>
       </div>
 
-      {/* Only show API Key connection if explicitly needed or for non-advanced users */}
       <div className="flex flex-col gap-3 rounded-lg bg-blue-500/10 p-4 text-xs text-blue-400 border border-blue-500/20">
         <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-blue-500">
           <ShieldCheck className="h-4 w-4" />
@@ -133,7 +113,6 @@ export function BingManager({ reportId }: { reportId: string }) {
         <p className="text-[11px] text-blue-300/80">
           Acesse os dados do Bing Webmaster Tools de forma segura utilizando sua conta do Bing Webmaster.
         </p>
-        
 
         <div className="mt-2 pt-2 border-t border-blue-500/10 space-y-3">
           <Button 
@@ -153,6 +132,9 @@ export function BingManager({ reportId }: { reportId: string }) {
           </Button>
         </div>
       </div>
+    </Card>
+  );
+}
 
 function BingSitePicker({ reportId, onSaved }: { reportId: string; onSaved: () => void }) {
   const list = useServerFn(listBingSites);
