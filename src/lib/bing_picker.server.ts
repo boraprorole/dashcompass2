@@ -54,21 +54,26 @@ async function getBingAccessToken(refreshToken: string) {
 }
 
 export async function listBingSites(reportId: string) {
+  const debugMode = process.env.BING_OAUTH_DEBUG === "true";
+  
+  if (debugMode) {
+    console.log(`[BING DIAGNOSTIC] Iniciando listBingSites para reportId: ${reportId}`);
+  }
+
   const { data: conn } = await supabaseAdmin
     .from("bing_connections")
     .select("refresh_token, site_url")
     .eq("report_id", reportId)
     .single();
 
-  if (!conn?.refresh_token) throw new Error("Bing not connected");
-
-  const debugMode = process.env.BING_OAUTH_DEBUG === "true";
-  if (debugMode) {
-    console.log(`[BING DIAGNOSTIC] Iniciando listBingSites para reportId: ${reportId}`);
+  if (!conn?.refresh_token) {
+    if (debugMode) console.error(`[BING DIAGNOSTIC] Conexão não encontrada para reportId: ${reportId}`);
+    throw new Error("Bing not connected");
   }
 
   const accessToken = await getBingAccessToken(conn.refresh_token);
 
+  // Bing Webmaster API v2 JSON endpoint
   const apiUrl = `https://www.bing.com/webmasters/api/json/v2/GetUserSites?apikey=${accessToken}`;
   
   if (debugMode) {
@@ -77,7 +82,9 @@ export async function listBingSites(reportId: string) {
 
   const res = await fetch(apiUrl, {
     method: "GET",
-    headers: { "Accept": "application/json" }
+    headers: { 
+      "Accept": "application/json" 
+    }
   });
 
   if (!res.ok) {
@@ -91,13 +98,18 @@ export async function listBingSites(reportId: string) {
       URL: ${apiUrl}
       Body (primeiros 500): ${errorBodyText.substring(0, 500)}`);
       
+    // Se o retorno for HTML, o fetch falhou na camada de rede ou roteamento interno do Bing (ou redirecionamento)
+    if (contentType.includes("text/html") || errorBodyText.trim().startsWith("<!DOCTYPE")) {
+      throw new Error(`Bing API returned HTML instead of JSON (Status ${status}). Possible redirect or invalid URL.`);
+    }
+
     throw new Error(`Failed to fetch sites from Bing: ${status} ${errorBodyText.substring(0, 100)}`);
   }
   
   const data = await res.json();
   
   if (debugMode) {
-    console.log(`[BING DIAGNOSTIC] Resposta GetUserSites:`, JSON.stringify(data).substring(0, 200));
+    console.log(`[BING DIAGNOSTIC] Resposta GetUserSites (JSON):`, JSON.stringify(data).substring(0, 200));
   }
   
   // The Bing API returns { d: [ { Url: "..." }, ... ] }
