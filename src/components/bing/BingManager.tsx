@@ -50,13 +50,8 @@ export function BingManager({ reportId }: { reportId: string }) {
 
 
 
-  const query = useQuery({
-    queryKey: ["bing-metrics", reportId],
-    queryFn: () => fetchMetrics({ data: { reportId } }),
-    staleTime: 0,
-  });
+  const isConnected = status?.connected && status?.siteUrl && status.siteUrl !== "Aguardando sincronização...";
 
-  const isConntected = status?.connected && status?.siteUrl && status.siteUrl !== "Aguardando sincronização...";
 
 
   return (
