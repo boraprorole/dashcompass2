@@ -60,7 +60,7 @@ export const Route = createFileRoute("/api/public/google/oauth/callback")({
             });
 
             return html(
-              `<h1>Bing Conectado</h1><p>Sua conta Microsoft foi vinculada com sucesso.</p><a href="/admin">Voltar ao admin</a>`,
+              `<h1>Bing Conectado</h1><p>Sua conta do Bing Webmaster foi vinculada com sucesso.</p><a href="/admin">Voltar ao admin</a>`,
             );
           }
 
