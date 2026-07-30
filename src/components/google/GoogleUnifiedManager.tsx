@@ -139,15 +139,6 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
         {isLoading && <p className="text-[10px] text-muted-foreground">Carregando conexões…</p>}
       </div>
       
-      <div className="mt-6">
-        <div className="flex items-center gap-2 mb-4 px-1">
-          <div className="rounded-lg bg-blue-500/10 p-1.5 text-blue-500">
-            <Globe className="h-4 w-4" />
-          </div>
-          <h3 className="text-sm font-semibold">Microsoft Ecosystem</h3>
-        </div>
-        <BingManager reportId={reportId} />
-      </div>
     </>
   );
 }

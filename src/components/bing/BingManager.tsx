@@ -48,7 +48,14 @@ export function BingManager({ reportId }: { reportId: string }) {
   }
 
 
+  const query = useQuery({
+    queryKey: ["bing-metrics", reportId],
+    queryFn: () => fetchMetrics({ data: { reportId } }),
+    staleTime: 0,
+  });
+
   const isConntected = status?.connected && status?.siteUrl && status.siteUrl !== "Aguardando sincronização...";
+
 
   return (
     <Card className="glass-strong border-none rounded-2xl p-6">
