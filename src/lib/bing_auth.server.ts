@@ -7,6 +7,19 @@ const BING_SCOPES = "webmaster.manage";
 
 const REDIRECT_URI = "https://www.dashcompass.com/api/public/bing/oauth/callback/";
 
+function maskSecret(secret: string | undefined): string {
+  if (!secret) return "não presente";
+  const len = secret.length;
+  if (len <= 8) return "********";
+  return `${secret.substring(0, 4)}****${secret.substring(len - 4)}`;
+}
+
+function debugLog(message: string, data?: any) {
+  if (process.env.BING_OAUTH_DEBUG === "true") {
+    console.log(`[BING OAUTH DEBUG] ${message}`, data ? JSON.stringify(data, null, 2) : "");
+  }
+}
+
 export async function getBingAuthUrl(reportId: string, userId: string) {
   const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
   if (!clientId) throw new Error("MICROSOFT_CLIENT_ID não configurado ou está em branco");
@@ -27,7 +40,24 @@ export async function getBingAuthUrl(reportId: string, userId: string) {
 export async function exchangeBingCode(code: string) {
   const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
   const clientSecret = process.env.MICROSOFT_CLIENT_SECRET?.trim();
-  if (!clientId || !clientSecret) throw new Error("Credenciais do Bing (Client ID/Secret) não configuradas no ambiente");
+  const debugMode = process.env.BING_OAUTH_DEBUG === "true";
+
+  if (debugMode) {
+    debugLog("Iniciando troca de código por token");
+    debugLog("Variáveis de ambiente:", {
+      BING_CLIENT_ID: maskSecret(clientId),
+      BING_CLIENT_SECRET: {
+        presente: !!clientSecret,
+        tamanho: clientSecret?.length || 0,
+        preview: clientSecret ? `${clientSecret.substring(0, 3)}...${clientSecret.substring(clientSecret.length - 3)}` : "n/a"
+      },
+      BING_REDIRECT_URI: REDIRECT_URI
+    });
+  }
+
+  if (!clientId || !clientSecret) {
+    throw new Error(`Configuração incompleta: BING_CLIENT_ID=${!!clientId}, BING_CLIENT_SECRET=${!!clientSecret}`);
+  }
 
   const params = new URLSearchParams();
   params.append("client_id", clientId);
@@ -36,8 +66,22 @@ export async function exchangeBingCode(code: string) {
   params.append("grant_type", "authorization_code");
   params.append("redirect_uri", REDIRECT_URI);
 
-  const body = params.toString();
-  console.log("Bing Token Exchange Body (sanitized):", body.replace(clientSecret, "REDACTED"));
+  if (debugMode) {
+    debugLog("Requisição preparada:", {
+      endpoint: BING_TOKEN_URL,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json"
+      },
+      body: {
+        grant_type: "authorization_code",
+        redirect_uri: REDIRECT_URI,
+        client_id: maskSecret(clientId),
+        code_length: code.length
+      }
+    });
+  }
 
   const res = await fetch(BING_TOKEN_URL, {
     method: "POST",
@@ -45,19 +89,38 @@ export async function exchangeBingCode(code: string) {
       "Content-Type": "application/x-www-form-urlencoded",
       "Accept": "application/json"
     },
-    body: body,
+    body: params.toString(),
   });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    console.error("Bing Token Exchange Error:", res.status, errorText);
-    throw new Error(`Bing token exchange: ${res.status} ${errorText}`);
+  const responseText = await res.text();
+  
+  if (debugMode) {
+    let parsedJson = null;
+    try { parsedJson = JSON.parse(responseText); } catch (e) {}
+    
+    debugLog("Resposta do Bing:", {
+      status: res.status,
+      statusText: res.statusText,
+      headers: Object.fromEntries(res.headers.entries()),
+      rawBody: responseText,
+      parsedJson
+    });
   }
-  return (await res.json()) as {
-    access_token: string;
-    refresh_token: string;
-    expires_in: number;
-  };
+
+  if (!res.ok) {
+    console.error("Bing Token Exchange Error:", res.status, responseText);
+    throw new Error(`Bing token exchange: ${res.status} ${responseText}`);
+  }
+
+  try {
+    return JSON.parse(responseText) as {
+      access_token: string;
+      refresh_token: string;
+      expires_in: number;
+    };
+  } catch (e) {
+    throw new Error("Erro ao parsear JSON de sucesso do Bing");
+  }
 }
 
 export async function saveBingConnection({ 
