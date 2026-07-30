@@ -112,34 +112,37 @@ export async function exchangeBingCode(code: string) {
     body: params.toString(),
   });
 
-  const responseText = await res.text();
+  const body = await res.text();
   
   if (debugMode) {
     let parsedJson = null;
-    try { parsedJson = JSON.parse(responseText); } catch (e) {}
+    try { parsedJson = JSON.parse(body); } catch (e) {}
     
-    debugLog("Resposta do Bing:", {
-      status: res.status,
-      statusText: res.statusText,
-      headers: Object.fromEntries(res.headers.entries()),
-      rawBody: responseText,
-      parsedJson
-    });
+    debugLog("==== FETCH [exchangeBingCode] ====");
+    debugLog("URL:", res.url);
+    debugLog("STATUS:", res.status);
+    debugLog("CONTENT-TYPE:", res.headers.get("content-type"));
+    debugLog("BODY:", body.substring(0, 500));
+    debugLog("PARSED JSON:", parsedJson);
+  }
+
+  if (body.startsWith("<!DOCTYPE")) {
+    throw new Error(`HTML recebido da URL ${res.url}\n\n${body.substring(0, 500)}`);
   }
 
   if (!res.ok) {
-    console.error("Bing Token Exchange Error:", res.status, responseText);
-    throw new Error(`Bing token exchange: ${res.status} ${responseText}`);
+    console.error("Bing Token Exchange Error:", res.status, body);
+    throw new Error(`Bing token exchange: ${res.status} ${body.substring(0, 100)}`);
   }
 
   try {
-    return JSON.parse(responseText) as {
+    return JSON.parse(body) as {
       access_token: string;
       refresh_token: string;
       expires_in: number;
     };
   } catch (e) {
-    throw new Error("Erro ao parsear JSON de sucesso do Bing");
+    throw new Error("Erro ao parsear JSON de sucesso do Bing: " + body.substring(0, 100));
   }
 }
 
