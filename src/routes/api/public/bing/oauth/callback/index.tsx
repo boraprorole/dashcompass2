@@ -65,6 +65,11 @@ export const Route = createFileRoute("/api/public/bing/oauth/callback/")({
             siteUrl: "Aguardando sincronização..."
           });
 
+          // Otimização: Tentar disparar uma sincronização inicial de sites (opcional aqui, o Picker lidará com isso)
+          if (debugMode) {
+            console.log("[BING OAUTH] Conexão salva. Aguardando sincronização de sites no frontend.");
+          }
+
           return html(
             `<h1>Bing Conectado</h1><p>Sua conta do Bing Webmaster foi vinculada com sucesso.</p><a href="/admin">Voltar ao admin</a>`,
           );
