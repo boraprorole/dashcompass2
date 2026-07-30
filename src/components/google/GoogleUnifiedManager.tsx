@@ -128,22 +128,6 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
             picker={gscConn ? <GscPicker reportId={reportId} type="web" placeholder="Escolher site (Web)" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
           />
           <ServiceCard
-            icon={<Search className="h-4 w-4 text-[#ff0050]" />}
-            label="Search Console (TikTok)"
-            email={conns?.gsc.find(c => c.type === 'tiktok')?.google_email || gscConn?.google_email}
-            connected={!!gscConn}
-            selected={conns?.gsc.find(c => c.type === 'tiktok')?.site_url ?? undefined}
-            picker={gscConn ? <GscPicker reportId={reportId} type="tiktok" placeholder="Escolher perfil TikTok" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
-          />
-          <ServiceCard
-            icon={<Search className="h-4 w-4 text-[#E1306C]" />}
-            label="Search Console (Instagram)"
-            email={conns?.gsc.find(c => c.type === 'instagram')?.google_email || gscConn?.google_email}
-            connected={!!gscConn}
-            selected={conns?.gsc.find(c => c.type === 'instagram')?.site_url ?? undefined}
-            picker={gscConn ? <GscPicker reportId={reportId} type="instagram" placeholder="Escolher perfil Instagram" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
-          />
-          <ServiceCard
             icon={<Presentation className="h-4 w-4" />}
             label="Google Ads"
             email={gadsConn?.google_email}
