@@ -35,7 +35,6 @@ export async function exchangeBingCode(code: string) {
     code,
     grant_type: "authorization_code",
     redirect_uri: REDIRECT_URI,
-    scope: BING_SCOPES,
   });
 
   const res = await fetch(BING_TOKEN_URL, {
