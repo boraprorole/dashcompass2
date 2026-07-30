@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { connectBing, getBingMetrics, getBingConnectUrl, disconnectBing } from "@/lib/bing.functions";
+import { listBingSites, chooseBingSite } from "@/lib/bing_picker.functions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Loader2, ExternalLink, ShieldCheck, AlertCircle, Globe, Trash2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2, ExternalLink, ShieldCheck, Globe, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export function BingManager({ reportId }: { reportId: string }) {
