@@ -8,8 +8,8 @@ const BING_SCOPES = "webmaster.manage";
 const REDIRECT_URI = "https://www.dashcompass.com/api/public/bing/oauth/callback";
 
 export async function getBingAuthUrl(reportId: string, userId: string) {
-  const clientId = process.env.MICROSOFT_CLIENT_ID;
-  if (!clientId) throw new Error("MICROSOFT_CLIENT_ID não configurado");
+  const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
+  if (!clientId) throw new Error("MICROSOFT_CLIENT_ID não configurado ou está em branco");
 
   const state = await signState({ reportId, userId, provider: 'bing' });
 
