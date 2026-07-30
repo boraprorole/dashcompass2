@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-export const listBingSites = createServerFn({ method: "GET" })
+export const listBingSites = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({ reportId: z.string() }).parse(data))
   .handler(async ({ data }) => {
