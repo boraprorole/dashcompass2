@@ -68,36 +68,7 @@ export const getBingMetrics = createServerFn({ method: "GET" })
   )
   .middleware([requireSupabaseAuth])
   .handler(async ({ data }) => {
-    const { reportId } = data;
-
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: connection, error } = await supabaseAdmin
-      .from("bing_connections")
-      .select("*")
-      .eq("report_id", reportId)
-      .maybeSingle();
-
-    if (error || !connection) {
-      return { connected: false };
-    }
-
-    // This would call the Bing Webmaster Tools API
-    // https://learn.microsoft.com/en-us/bingwebmaster/api-overview
-    
-    // Returning mock data for now to demonstrate the UI
-    return {
-      connected: true,
-      siteUrl: connection.site_url,
-      metrics: [
-        { date: "2024-07-01", clicks: 120, impressions: 4500, ctr: 2.6, position: 12.4 },
-        { date: "2024-07-02", clicks: 150, impressions: 4800, ctr: 3.1, position: 11.8 },
-        { date: "2024-07-03", clicks: 110, impressions: 4200, ctr: 2.6, position: 13.1 },
-        { date: "2024-07-04", clicks: 180, impressions: 5200, ctr: 3.4, position: 10.5 },
-      ],
-      topKeywords: [
-        { query: "dashcompass", clicks: 50, impressions: 200, ctr: 25, position: 1.2 },
-        { query: "marketing dashboard", clicks: 30, impressions: 1200, ctr: 2.5, position: 5.4 },
-        { query: "seo reporting tool", clicks: 25, impressions: 800, ctr: 3.1, position: 4.2 },
-      ]
-    };
+    const { reportId, dateFrom, dateTo } = data;
+    const { getBingMetricsReal } = await import("./bing_picker.server");
+    return await getBingMetricsReal(reportId, dateFrom, dateTo);
   });
