@@ -47,22 +47,6 @@ export const Route = createFileRoute("/api/public/google/oauth/callback")({
 
           if (!parsed.reportId || !parsed.userId) throw new Error("state incompleto ou inválido");
           
-          if (provider === "bing") {
-            const { exchangeBingCode, saveBingConnection } = await import("@/lib/bing_auth.server");
-            const tokens = await exchangeBingCode(code);
-            
-            // For Bing, we might need a default site URL or fetch it later. 
-            // For now, we save what we have.
-            await saveBingConnection({
-              reportId: parsed.reportId,
-              refreshToken: tokens.refresh_token,
-              siteUrl: "https://bing-connected.waiting-selection.com"
-            });
-
-            return html(
-              `<h1>Bing Conectado</h1><p>Sua conta do Bing Webmaster foi vinculada com sucesso.</p><a href="/admin">Voltar ao admin</a>`,
-            );
-          }
 
           const tokens = await exchangeCode(code, url.origin, getGoogleRedirectUri());
           if (!tokens.refresh_token) {

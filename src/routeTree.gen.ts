@@ -47,6 +47,7 @@ import { Route as ApiPublicMetaOauthCallbackRouteImport } from './routes/api/pub
 import { Route as ApiPublicLinkedinOauthCallbackRouteImport } from './routes/api/public/linkedin.oauth.callback'
 import { Route as ApiPublicGoogleOauthCallbackRouteImport } from './routes/api/public/google.oauth.callback'
 import { Route as ApiPublicGaOauthCallbackRouteImport } from './routes/api/public/ga.oauth.callback'
+import { Route as ApiPublicBingOauthCallbackRouteImport } from './routes/api/public/bing.oauth.callback'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -250,6 +251,12 @@ const ApiPublicGaOauthCallbackRoute =
     path: '/api/public/ga/oauth/callback',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicBingOauthCallbackRoute =
+  ApiPublicBingOauthCallbackRouteImport.update({
+    id: '/api/public/bing/oauth/callback',
+    path: '/api/public/bing/oauth/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -282,6 +289,7 @@ export interface FileRoutesByFullPath {
   '/api/public/stripe-webhook-mock-callback': typeof ApiPublicStripeWebhookMockCallbackRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/reports/': typeof AuthenticatedReportsIndexRoute
+  '/api/public/bing/oauth/callback': typeof ApiPublicBingOauthCallbackRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
@@ -321,6 +329,7 @@ export interface FileRoutesByTo {
   '/api/public/stripe-webhook-mock-callback': typeof ApiPublicStripeWebhookMockCallbackRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/reports': typeof AuthenticatedReportsIndexRoute
+  '/api/public/bing/oauth/callback': typeof ApiPublicBingOauthCallbackRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
@@ -362,6 +371,7 @@ export interface FileRoutesById {
   '/api/public/stripe-webhook-mock-callback': typeof ApiPublicStripeWebhookMockCallbackRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
+  '/api/public/bing/oauth/callback': typeof ApiPublicBingOauthCallbackRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
@@ -403,6 +413,7 @@ export interface FileRouteTypes {
     | '/api/public/stripe-webhook-mock-callback'
     | '/auth/tiktok/callback'
     | '/reports/'
+    | '/api/public/bing/oauth/callback'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
@@ -442,6 +453,7 @@ export interface FileRouteTypes {
     | '/api/public/stripe-webhook-mock-callback'
     | '/auth/tiktok/callback'
     | '/reports'
+    | '/api/public/bing/oauth/callback'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
@@ -482,6 +494,7 @@ export interface FileRouteTypes {
     | '/api/public/stripe-webhook-mock-callback'
     | '/auth/tiktok/callback'
     | '/_authenticated/reports/'
+    | '/api/public/bing/oauth/callback'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
@@ -512,6 +525,7 @@ export interface RootRouteChildren {
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicStripeWebhookMockCallbackRoute: typeof ApiPublicStripeWebhookMockCallbackRoute
   AuthTiktokCallbackRoute: typeof AuthTiktokCallbackRoute
+  ApiPublicBingOauthCallbackRoute: typeof ApiPublicBingOauthCallbackRoute
   ApiPublicGaOauthCallbackRoute: typeof ApiPublicGaOauthCallbackRoute
   ApiPublicGoogleOauthCallbackRoute: typeof ApiPublicGoogleOauthCallbackRoute
   ApiPublicLinkedinOauthCallbackRoute: typeof ApiPublicLinkedinOauthCallbackRoute
@@ -789,6 +803,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicGaOauthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/bing/oauth/callback': {
+      id: '/api/public/bing/oauth/callback'
+      path: '/api/public/bing/oauth/callback'
+      fullPath: '/api/public/bing/oauth/callback'
+      preLoaderRoute: typeof ApiPublicBingOauthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -847,6 +868,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicStripeWebhookMockCallbackRoute:
     ApiPublicStripeWebhookMockCallbackRoute,
   AuthTiktokCallbackRoute: AuthTiktokCallbackRoute,
+  ApiPublicBingOauthCallbackRoute: ApiPublicBingOauthCallbackRoute,
   ApiPublicGaOauthCallbackRoute: ApiPublicGaOauthCallbackRoute,
   ApiPublicGoogleOauthCallbackRoute: ApiPublicGoogleOauthCallbackRoute,
   ApiPublicLinkedinOauthCallbackRoute: ApiPublicLinkedinOauthCallbackRoute,
