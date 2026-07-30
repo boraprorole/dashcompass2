@@ -2,10 +2,16 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 async function getBingAccessToken(refreshToken: string) {
   const BING_TOKEN_URL = "https://www.bing.com/webmasters/oauth/token";
-  const clientId = process.env.MICROSOFT_CLIENT_ID?.trim();
-  const clientSecret = process.env.MICROSOFT_CLIENT_SECRET?.trim();
+  
+  const bingClientId = process.env.BING_CLIENT_ID?.trim();
+  const msClientId = process.env.MICROSOFT_CLIENT_ID?.trim();
+  const clientId = bingClientId || msClientId;
 
-  if (!clientId || !clientSecret) throw new Error("Microsoft Client ID/Secret not configured");
+  const bingClientSecret = process.env.BING_CLIENT_SECRET?.trim();
+  const msClientSecret = process.env.MICROSOFT_CLIENT_SECRET?.trim();
+  const clientSecret = bingClientSecret || msClientSecret;
+
+  if (!clientId || !clientSecret) throw new Error("Credenciais do Bing/Microsoft não configuradas");
 
   const params = new URLSearchParams();
   params.append("client_id", clientId);
