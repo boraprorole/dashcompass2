@@ -57,9 +57,58 @@ async function getBingAccessToken(refreshToken: string) {
   return data.access_token as string;
 }
 
+const BING_API_BASE = "https://ssl.bing.com/webmaster/api.svc/json";
+
+/**
+ * Chamada autenticada à API do Bing Webmaster Tools.
+ *
+ * IMPORTANTE: com token OAuth é obrigatório usar o host `ssl.bing.com` com o
+ * header `Authorization: Bearer`. O host `www.bing.com/webmasters/api/...`
+ * devolve a página HTML do portal (HTTP 200 com <!DOCTYPE html>), e o
+ * parâmetro `?apikey=` só funciona com chaves de API estáticas — com token
+ * OAuth ele retorna 400 InvalidApiKey.
+ */
+async function bingApiFetch(method: string, accessToken: string, query: Record<string, string> = {}) {
+  const debugMode = process.env.BING_OAUTH_DEBUG === "true";
+  const qs = new URLSearchParams(query).toString();
+  const url = `${BING_API_BASE}/${method}${qs ? `?${qs}` : ""}`;
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const body = await res.text();
+
+  if (debugMode) {
+    console.log(`==== FETCH [bing:${method}] ====`);
+    console.log("URL:", res.url);
+    console.log("STATUS:", res.status);
+    console.log("CONTENT-TYPE:", res.headers.get("content-type"));
+    console.log("BODY:", body.substring(0, 500));
+  }
+
+  if (body.startsWith("<!DOCTYPE") || body.startsWith("<html")) {
+    throw new Error(`Bing ${method}: HTML recebido em vez de JSON (${res.url})`);
+  }
+
+  if (!res.ok) {
+    throw new Error(`Bing ${method} falhou: ${res.status} ${body.substring(0, 150)}`);
+  }
+
+  try {
+    return JSON.parse(body);
+  } catch {
+    throw new Error(`Bing ${method}: resposta não é JSON válido: ${body.substring(0, 150)}`);
+  }
+}
+
 export async function listBingSites(reportId: string) {
   const debugMode = process.env.BING_OAUTH_DEBUG === "true";
-  
+
   if (debugMode) {
     console.log(`[BING DIAGNOSTIC] Iniciando listBingSites para reportId: ${reportId}`);
   }
@@ -77,46 +126,16 @@ export async function listBingSites(reportId: string) {
 
   const accessToken = await getBingAccessToken(conn.refresh_token);
 
-  // Bing Webmaster API v2 JSON endpoint
-  const apiUrl = `https://www.bing.com/webmasters/api/json/v2/GetUserSites?apikey=${accessToken}`;
-  
-  if (debugMode) {
-    console.log(`[BING DIAGNOSTIC] Token obtido, chamando GetUserSites em: ${apiUrl}`);
-  }
+  const data = await bingApiFetch("GetUserSites", accessToken);
 
-  const res = await fetch(apiUrl, {
-    method: "GET",
-    headers: { 
-      "Accept": "application/json" 
-    }
-  });
-
-  const body = await res.text();
-  if (debugMode) {
-    console.log("==== FETCH [listBingSites] ====");
-    console.log("URL:", res.url);
-    console.log("STATUS:", res.status);
-    console.log("CONTENT-TYPE:", res.headers.get("content-type"));
-    console.log("BODY:", body.substring(0, 500));
-  }
-
-  if (body.startsWith("<!DOCTYPE")) {
-    throw new Error(`HTML recebido da URL ${res.url}\n\n${body.substring(0, 500)}`);
-  }
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch sites from Bing: ${res.status} ${body.substring(0, 100)}`);
-  }
-  
-  const data = JSON.parse(body);
-  
-  // The Bing API returns { d: [ { Url: "..." }, ... ] }
+  // A API do Bing retorna { d: [ { Url: "...", IsVerified: true }, ... ] }
   const sites = (data.d || []).map((s: any) => ({
-    siteUrl: s.Url || s.url
+    siteUrl: s.Url || s.url,
   }));
 
   return { sites, current: conn.site_url };
 }
+
 
 export async function chooseBingSite(reportId: string, siteUrl: string) {
   const { error } = await supabaseAdmin
