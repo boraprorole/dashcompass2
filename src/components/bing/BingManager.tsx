@@ -6,13 +6,7 @@ import { listBingSites, chooseBingSite } from "@/lib/bing_picker.functions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, ExternalLink, ShieldCheck, Globe, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,14 +17,18 @@ export function BingManager({ reportId }: { reportId: string }) {
   const fetchMetrics = useServerFn(getBingMetrics);
   const fetchStatus = useServerFn(getBingStatus);
 
-  const { data: status, isLoading, error: statusError } = useQuery({
+  const {
+    data: status,
+    isLoading,
+    error: statusError,
+  } = useQuery({
     queryKey: ["bing-status", reportId],
     queryFn: () => fetchStatus({ data: { reportId } }),
   });
 
   const handleDisconnect = async () => {
     if (!confirm("Tem certeza que deseja desconectar o Bing Webmaster Tools?")) return;
-    
+
     try {
       await disconnect({ data: { reportId } });
       toast.success("Bing Webmaster Tools desconectado com sucesso");
@@ -49,17 +47,15 @@ export function BingManager({ reportId }: { reportId: string }) {
     );
   }
 
-
-
   const isConnected = status?.connected && status?.propertySelected;
-
-
 
   return (
     <Card className="glass-strong border-none rounded-2xl p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className={`flex h-10 w-10 items-center justify-center rounded-full ${status?.connected ? "bg-blue-500/10 text-blue-500" : "bg-primary/10 text-primary"}`}>
+          <div
+            className={`flex h-10 w-10 items-center justify-center rounded-full ${status?.connected ? "bg-blue-500/10 text-blue-500" : "bg-primary/10 text-primary"}`}
+          >
             {status?.connected ? <ShieldCheck className="h-6 w-6" /> : <Globe className="h-6 w-6" />}
           </div>
           <div>
@@ -67,8 +63,10 @@ export function BingManager({ reportId }: { reportId: string }) {
               {status?.connected ? "Bing Webmaster Tools" : "Conectar Bing Webmaster Tools"}
             </h3>
             <p className="text-sm text-muted-foreground">
-              {status?.connected 
-                ? (isConnected ? status.siteUrl : "Conectado · Escolha o site abaixo")
+              {status?.connected
+                ? isConnected
+                  ? status.siteUrl
+                  : "Conectado · Escolha o site abaixo"
                 : "Acompanhe o desempenho do seu site no buscador da Microsoft."}
             </p>
           </div>
@@ -107,8 +105,8 @@ export function BingManager({ reportId }: { reportId: string }) {
           </p>
 
           <div className="mt-2 pt-2 border-t border-blue-500/10 space-y-3">
-            <Button 
-              type="button" 
+            <Button
+              type="button"
               className="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs h-9"
               onClick={async () => {
                 try {
@@ -126,16 +124,19 @@ export function BingManager({ reportId }: { reportId: string }) {
         </div>
       ) : (
         <div className="space-y-4">
-          {process.env.NODE_ENV === 'development' && (
+          {process.env.NODE_ENV === "development" && (
             <div className="rounded bg-black/40 p-2 text-[9px] font-mono text-blue-300 border border-blue-500/20">
               <p>[BING DIAGNOSTIC]</p>
               <p>Connected: {String(status?.connected)}</p>
               <p>Property Selected: {String(status?.propertySelected)}</p>
-              <p>Site URL: {status?.siteUrl || 'null'}</p>
-              <p>Error: {statusError ? (statusError as Error).message : 'none'}</p>
+              <p>Site URL: {status?.siteUrl || "null"}</p>
+              <p>Error: {statusError ? (statusError as Error).message : "none"}</p>
             </div>
           )}
-          <BingSitePicker reportId={reportId} onSaved={() => queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] })} />
+          <BingSitePicker
+            reportId={reportId}
+            onSaved={() => queryClient.invalidateQueries({ queryKey: ["bing-status", reportId] })}
+          />
         </div>
       )}
     </Card>
@@ -153,7 +154,11 @@ function BingSitePicker({ reportId, onSaved }: { reportId: string; onSaved: () =
 
   const mut = useMutation({
     mutationFn: (siteUrl: string) => choose({ data: { reportId, siteUrl } }),
-    onSuccess: () => {
+    onSuccess: (result: any) => {
+      if (result?.error) {
+        toast.error(result.message ?? "Erro ao vincular site do Bing");
+        return;
+      }
       toast.success("Site do Bing vinculado");
       onSaved();
     },
@@ -161,26 +166,30 @@ function BingSitePicker({ reportId, onSaved }: { reportId: string; onSaved: () =
   });
 
   if (isLoading) return <PickerSkeleton label="Carregando sites…" />;
-  if (error) return (
-    <div className="space-y-2">
-      <PickerError message={(error as Error).message} />
-      <Button 
-        variant="outline" 
-        size="sm" 
-        className="w-full text-[10px] h-7"
-        onClick={() => refetch()}
-      >
-        Tentar novamente
-      </Button>
-    </div>
-  );
+
+  const fetchFailed = Boolean(error) || Boolean((data as any)?.error);
+  const failureMessage = error
+    ? (error as Error).message
+    : ((data as any)?.message ?? "Erro ao carregar sites do Bing");
+
+  if (fetchFailed)
+    return (
+      <div className="space-y-2">
+        <PickerError message={failureMessage} />
+        <Button variant="outline" size="sm" className="w-full text-[10px] h-7" onClick={() => refetch()}>
+          Tentar novamente
+        </Button>
+      </div>
+    );
 
   const current = data?.current && data.current !== "Aguardando sincronização..." ? data.current : undefined;
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Escolher Propriedade do Bing</p>
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          Escolher Propriedade do Bing
+        </p>
         {current && (
           <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-[9px] h-4">
             OK
