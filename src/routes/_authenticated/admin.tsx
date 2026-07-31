@@ -265,7 +265,7 @@ function UsersTab() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-users"],
-    queryFn: () => fetchUsers(),
+    queryFn: () => fetchUsers() as Promise<AdminUser[]>,
   });
 
   const mutation = useMutation({
