@@ -306,6 +306,11 @@ function UsersTab() {
                       <ShieldCheck className="h-3 w-3" /> Admin
                     </span>
                   )}
+                  {u.isAgencyAdmin && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-primary">
+                      <ShieldCheck className="h-3 w-3" /> Admin Agência
+                    </span>
+                  )}
                   {u.isTeam && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-foreground/80">
                       <Users className="h-3 w-3" /> Equipe
