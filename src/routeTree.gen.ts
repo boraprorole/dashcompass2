@@ -43,7 +43,7 @@ import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.
 import { Route as ApiPublicTiktokOauthCallbackRouteImport } from './routes/api/public/tiktok/oauth.callback'
 import { Route as ApiPublicRdstationOauthCallbackRouteImport } from './routes/api/public/rdstation/oauth.callback'
 import { Route as ApiPublicPipedriveOauthCallbackRouteImport } from './routes/api/public/pipedrive/oauth.callback'
-import { Route as ApiPublicMetaOauthCallbackRouteImport } from './routes/api/public/meta/oauth.callback'
+import { Route as ApiPublicMetaOauthCallbackRouteImport } from './routes/api/public/meta/oauth/callback'
 import { Route as ApiPublicLinkedinOauthCallbackRouteImport } from './routes/api/public/linkedin/oauth.callback'
 import { Route as ApiPublicGoogleOauthCallbackRouteImport } from './routes/api/public/google/oauth.callback'
 import { Route as ApiPublicGaOauthCallbackRouteImport } from './routes/api/public/ga/oauth.callback'
