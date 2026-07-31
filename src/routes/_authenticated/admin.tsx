@@ -245,6 +245,19 @@ function AdminPage() {
 
 /* ---------------- Users tab ---------------- */
 
+type AdminUser = {
+  id: string;
+  email: string;
+  createdAt: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  isAdmin: boolean;
+  isAgencyAdmin: boolean;
+  isTeam: boolean;
+  isConexoes: boolean;
+  companyId: string | null;
+};
+
 function UsersTab() {
   const fetchUsers = useServerFn(listUsers);
   const updateRole = useServerFn(setUserRole);
