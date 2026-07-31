@@ -1295,6 +1295,16 @@ function CompaniesTab() {
           <details className="group mt-2">
             <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
               <Link2 className="mr-1 inline h-3 w-3" />
+              Meta Ecosystem (OAuth: FB Pages, IG, Ads)
+            </summary>
+            <div className="mt-2">
+              <MetaManager reportId={r.id} />
+            </div>
+          </details>
+
+          <details className="group mt-2">
+            <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
+              <Link2 className="mr-1 inline h-3 w-3" />
               Microsoft Ecosystem (Bing)
             </summary>
             <div className="mt-2">
