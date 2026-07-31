@@ -24,6 +24,7 @@ import { GoogleAdsCsvManager } from "@/components/googleads/GoogleAdsCsvManager"
 import { GoogleUnifiedManager } from "@/components/google/GoogleUnifiedManager";
 import { BingManager } from "@/components/bing/BingManager";
 import { TikTokManager } from "@/components/tiktok/TikTokManager";
+import { MetaManager } from "@/components/meta/MetaManager";
 import { WindsorSettingsTab } from "@/components/windsor/WindsorSettingsTab";
 import { AdminAITab } from "@/components/ai/AdminAITab";
 import { AdminDemandasTab } from "@/components/demandas/AdminDemandasTab";
