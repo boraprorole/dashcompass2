@@ -29,7 +29,8 @@ export async function listUsersImpl(callerId: string) {
   ]);
 
   const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
-  const adminSet = new Set((roles ?? []).filter((r) => r.role === "admin").map((r) => r.user_id));
+  const adminSet = new Set((roles ?? []).filter((r) => r.role === "admin" || r.role === "admin_global").map((r) => r.user_id));
+  const agencyAdminSet = new Set((roles ?? []).filter((r) => r.role === "admin_agencia").map((r) => r.user_id));
   const teamSet = new Set((roles ?? []).filter((r) => r.role === "team").map((r) => r.user_id));
   const conexoesSet = new Set((roles ?? []).filter((r) => r.role === "conexoes").map((r) => r.user_id));
 
@@ -41,6 +42,7 @@ export async function listUsersImpl(callerId: string) {
       displayName: profileMap.get(u.id)?.display_name ?? null,
       avatarUrl: profileMap.get(u.id)?.avatar_url ?? null,
       isAdmin: adminSet.has(u.id),
+      isAgencyAdmin: agencyAdminSet.has(u.id),
       isTeam: teamSet.has(u.id),
       isConexoes: conexoesSet.has(u.id),
       companyId: profileMap.get(u.id)?.company_id ?? null,
@@ -51,7 +53,7 @@ export async function listUsersImpl(callerId: string) {
 export async function setUserRoleImpl(
   callerId: string,
   targetUserId: string,
-  role: "admin" | "team" | "conexoes",
+  role: "admin" | "team" | "conexoes" | "admin_agencia" | "admin_global",
   assign: boolean,
 ) {
 

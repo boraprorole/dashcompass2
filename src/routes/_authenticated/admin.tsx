@@ -24,6 +24,7 @@ import { GoogleAdsCsvManager } from "@/components/googleads/GoogleAdsCsvManager"
 import { GoogleUnifiedManager } from "@/components/google/GoogleUnifiedManager";
 import { BingManager } from "@/components/bing/BingManager";
 import { TikTokManager } from "@/components/tiktok/TikTokManager";
+import { MetaManager } from "@/components/meta/MetaManager";
 import { WindsorSettingsTab } from "@/components/windsor/WindsorSettingsTab";
 import { AdminAITab } from "@/components/ai/AdminAITab";
 import { AdminDemandasTab } from "@/components/demandas/AdminDemandasTab";
@@ -255,7 +256,7 @@ function UsersTab() {
   });
 
   const mutation = useMutation({
-    mutationFn: (vars: { userId: string; role: "admin" | "team" | "conexoes"; assign: boolean }) =>
+    mutationFn: (vars: { userId: string; role: "admin" | "team" | "conexoes" | "admin_agencia" | "admin_global"; assign: boolean }) =>
       updateRole({ data: vars }),
 
     onSuccess: () => {
@@ -316,8 +317,18 @@ function UsersTab() {
                     }
                   />
                 </div>
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Conexões</span>
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Admin Agência</span>
+                          <Switch
+                            checked={u.isAgencyAdmin}
+                            disabled={mutation.isPending}
+                            onCheckedChange={(checked) =>
+                              mutation.mutate({ userId: u.id, role: "admin_agencia", assign: checked })
+                            }
+                          />
+                        </div>
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Conexões</span>
                   <Switch
                     checked={u.isConexoes}
                     disabled={mutation.isPending}
@@ -1288,6 +1299,16 @@ function CompaniesTab() {
             </summary>
             <div className="mt-2">
               <GoogleUnifiedManager reportId={r.id} />
+            </div>
+          </details>
+
+          <details className="group mt-2">
+            <summary className="cursor-pointer text-xs font-medium text-primary hover:underline">
+              <Link2 className="mr-1 inline h-3 w-3" />
+              Meta Ecosystem (OAuth: FB Pages, IG, Ads)
+            </summary>
+            <div className="mt-2">
+              <MetaManager reportId={r.id} />
             </div>
           </details>
 
