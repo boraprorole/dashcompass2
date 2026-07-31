@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { exchangeMetaCode, exchangeForLongLivedToken, getFacebookMe, discoverMetaAssets, saveMetaConnection, verifyMetaState } from "@/lib/meta.server";
 
 export const Route = createFileRoute("/api/public/meta/oauth/callback")({
@@ -13,7 +13,8 @@ export const Route = createFileRoute("/api/public/meta/oauth/callback")({
 
         if (error || !code || !state) {
           const msg = error_description || error || "Parâmetros OAuth ausentes";
-          return redirect({ to: `/reports?error=${encodeURIComponent(msg)}` });
+          // @ts-ignore - dynamic URL
+          return new Response(null, { status: 302, headers: { Location: `/reports?error=${encodeURIComponent(msg)}` } });
         }
 
         try {
@@ -46,11 +47,13 @@ export const Route = createFileRoute("/api/public/meta/oauth/callback")({
           });
 
           // 7. Sucesso! Redirecionar para o admin ou relatório
-          return redirect({ to: "/_authenticated/admin?tab=reports&success=meta-connected" });
+          // @ts-ignore - dynamic URL
+          return new Response(null, { status: 302, headers: { Location: "/_authenticated/admin?tab=reports&success=meta-connected" } });
         } catch (e) {
           console.error("[Meta Callback Error]", e);
           const msg = (e as Error).message || "Falha na integração com Meta";
-          return redirect({ to: `/_authenticated/admin?tab=reports&error=${encodeURIComponent(msg)}` });
+          // @ts-ignore - dynamic URL
+          return new Response(null, { status: 302, headers: { Location: `/_authenticated/admin?tab=reports&error=${encodeURIComponent(msg)}` } });
         }
       },
     },
