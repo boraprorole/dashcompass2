@@ -245,6 +245,19 @@ function AdminPage() {
 
 /* ---------------- Users tab ---------------- */
 
+type AdminUser = {
+  id: string;
+  email: string;
+  createdAt: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  isAdmin: boolean;
+  isAgencyAdmin: boolean;
+  isTeam: boolean;
+  isConexoes: boolean;
+  companyId: string | null;
+};
+
 function UsersTab() {
   const fetchUsers = useServerFn(listUsers);
   const updateRole = useServerFn(setUserRole);
@@ -252,7 +265,7 @@ function UsersTab() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-users"],
-    queryFn: () => fetchUsers(),
+    queryFn: () => fetchUsers() as Promise<AdminUser[]>,
   });
 
   const mutation = useMutation({
@@ -291,6 +304,11 @@ function UsersTab() {
                   {u.isAdmin && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-primary">
                       <ShieldCheck className="h-3 w-3" /> Admin
+                    </span>
+                  )}
+                  {u.isAgencyAdmin && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-primary">
+                      <ShieldCheck className="h-3 w-3" /> Admin Agência
                     </span>
                   )}
                   {u.isTeam && (
