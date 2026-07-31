@@ -317,8 +317,18 @@ function UsersTab() {
                     }
                   />
                 </div>
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Conexões</span>
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Admin Agência</span>
+                          <Switch
+                            checked={u.isAgencyAdmin}
+                            disabled={mutation.isPending}
+                            onCheckedChange={(checked) =>
+                              mutation.mutate({ userId: u.id, role: "admin_agencia", assign: checked })
+                            }
+                          />
+                        </div>
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Conexões</span>
                   <Switch
                     checked={u.isConexoes}
                     disabled={mutation.isPending}
