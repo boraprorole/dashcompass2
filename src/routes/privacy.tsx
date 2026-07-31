@@ -4,14 +4,14 @@ export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
       { title: "Política de Privacidade — DashCompass" },
-      { name: "description", content: "Política de Privacidade e Termos de Uso do DashCompass - Em conformidade com LGPD e requisitos do Google, LinkedIn, TikTok e Facebook." },
+      { name: "description", content: "Política de Privacidade do DashCompass - Em conformidade com LGPD e requisitos de verificação do Google OAuth." },
     ],
   }),
   component: PrivacyPage,
 });
 
 function PrivacyPage() {
-  const lastUpdated = "27 de Julho de 2026";
+  const lastUpdated = "31 de Julho de 2026";
 
   return (
     <div className="min-h-screen bg-background py-20 px-4 md:px-8">
@@ -23,7 +23,7 @@ function PrivacyPage() {
           <section className="bg-white/5 p-6 rounded-2xl border border-white/5">
             <h2 className="text-xl font-semibold text-foreground mb-4">1. Introdução e Compromisso com a LGPD</h2>
             <p>
-              O <strong>DashCompass</strong> (operado por The Fcking Company LLC) está totalmente comprometido com a proteção de seus dados pessoais em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)</strong> do Brasil e padrões internacionais de privacidade. Esta política detalha como coletamos, processamos e protegemos suas informações ao utilizar nosso software SaaS.
+              O <strong>DashCompass</strong> (operado por The Fcking Company LLC) está totalmente comprometido com a proteção de seus dados pessoais em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)</strong> do Brasil, o <strong>GDPR</strong> e padrões internacionais de privacidade. Esta política detalha como coletamos, processamos e protegemos suas informações ao utilizar nosso software SaaS.
             </p>
           </section>
 
@@ -37,60 +37,125 @@ function PrivacyPage() {
             </ul>
           </section>
 
-          <section className="border-l-4 border-primary pl-6 py-2">
-            <h2 className="text-xl font-semibold text-foreground mb-4">3. Integrações de Terceiros e Verificação</h2>
-            
-            <div className="space-y-6">
+          <section className="bg-primary/5 p-6 rounded-2xl border border-primary/20">
+            <h2 className="text-xl font-semibold text-foreground mb-4">3. Google API Data Usage (Uso de Dados de APIs do Google)</h2>
+            <div className="space-y-4">
+              <p>
+                O DashCompass acessa dados de serviços do Google para fornecer funcionalidades de dashboard e relatórios. O acesso ocorre exclusivamente através de autorização explícita do usuário via OAuth.
+              </p>
               <div>
-                <h3 className="text-lg font-medium text-foreground mb-2">3.1. Google Services (Ads, Search Console, GA4)</h3>
-                <p>
-                  O uso das informações recebidas das APIs do Google obedecerá à <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Política de Dados do Usuário dos Serviços de API do Google</a>. 
-                  Acessamos seus dados exclusivamente para exibição em seu painel privado. Não armazenamos seus dados brutos de marketing em nossos servidores de forma permanente, agindo apenas como uma camada de visualização em tempo real.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-medium text-foreground mb-2">3.2. LinkedIn, Facebook e TikTok Ads</h3>
-                <p>
-                  Para conexões com LinkedIn Marketing API, Meta (Facebook/Instagram) Ads API e TikTok For Business API:
-                </p>
+                <h3 className="text-lg font-medium text-foreground mb-2">Dados Acessados</h3>
+                <p>Podemos acessar informações das seguintes APIs, conforme autorizado por você:</p>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>Os tokens de acesso são criptografados e armazenados em ambiente seguro.</li>
-                  <li>Os dados são utilizados apenas para gerar relatórios de performance solicitados pelo usuário.</li>
-                  <li>Não compartilhamos dados entre diferentes contas de clientes (multi-tenant isolation).</li>
+                  <li><strong>Google Analytics 4:</strong> Propriedades, métricas de tráfego e conversão.</li>
+                  <li><strong>Google Search Console:</strong> Performance de busca, consultas e páginas.</li>
+                  <li><strong>Google Ads:</strong> Campanhas, grupos de anúncios, anúncios e métricas de performance (impressões, cliques, custos).</li>
                 </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-medium text-foreground mb-2">Finalidades do Tratamento</h3>
+                <p>Estes dados são utilizados unicamente para:</p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Exibição de dashboards integrados na plataforma.</li>
+                  <li>Geração de relatórios de marketing personalizados.</li>
+                  <li>Consolidação de métricas de múltiplos canais.</li>
+                  <li>Sincronização de contas e outras funcionalidades solicitadas pelo usuário.</li>
+                </ul>
+                <p className="mt-2 text-foreground font-medium italic">
+                  Os dados não são utilizados para nenhuma finalidade diferente da experiência do usuário dentro da plataforma DashCompass.
+                </p>
               </div>
             </div>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">4. Direitos do Titular (LGPD)</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-4">4. Data Sharing (Compartilhamento de Dados)</h2>
+            <p>Em relação aos dados obtidos via APIs do Google e outras integrações:</p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li><strong>Não Venda:</strong> Os dados do Google NÃO são vendidos para terceiros.</li>
+              <li><strong>Não Publicidade:</strong> NÃO são compartilhados com anunciantes ou utilizados para publicidade personalizada.</li>
+              <li><strong>Não Brokers:</strong> NÃO são compartilhados com data brokers.</li>
+              <li><strong>Não Perfilamento:</strong> NÃO são utilizados para criação de perfis comerciais fora da plataforma.</li>
+              <li><strong>Restrição:</strong> Os dados só podem ser compartilhados quando exigido por lei ou quando estritamente necessário para operar as funcionalidades técnicas da plataforma (como processamento interno criptografado).</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-foreground mb-4">5. Artificial Intelligence and Machine Learning</h2>
+            <p>
+              O DashCompass valoriza a integridade dos seus dados de marketing:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Os dados provenientes das APIs do Google <strong>NÃO são utilizados</strong> para desenvolver, melhorar ou treinar modelos de Inteligência Artificial ou Machine Learning.</li>
+              <li>Os dados <strong>NÃO são enviados</strong> para terceiros para fins de treinamento de IA.</li>
+              <li>Qualquer recurso de IA disponível na plataforma (como o Compass AI) utiliza apenas informações autorizadas pelo usuário para fornecer insights e funcionalidades dentro da própria conta, sem reaproveitamento desses dados para treinamento de modelos globais.</li>
+            </ul>
+          </section>
+
+          <section className="border-l-4 border-primary pl-6 py-2">
+            <h2 className="text-xl font-semibold text-foreground mb-4">6. Integrações Adicionais (LinkedIn, Facebook e TikTok)</h2>
+            <p>
+              Para conexões com LinkedIn Marketing API, Meta (Facebook/Instagram) Ads API e TikTok For Business API:
+            </p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Os tokens de acesso são criptografados e armazenados em ambiente seguro.</li>
+              <li>Os dados são utilizados apenas para gerar relatórios de performance solicitados pelo usuário.</li>
+              <li>Mantemos isolamento total entre diferentes contas de clientes (multi-tenant isolation).</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-foreground mb-4">7. Data Security (Segurança de Dados)</h2>
+            <p>
+              Implementamos medidas rigorosas para proteger suas informações:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li><strong>Criptografia em Trânsito:</strong> Toda comunicação entre seu navegador e nossos servidores utiliza HTTPS com TLS 1.2+.</li>
+              <li><strong>Criptografia em Repouso:</strong> Tokens OAuth e credenciais sensíveis são armazenados utilizando criptografia AES-256.</li>
+              <li><strong>Acesso Restrito:</strong> O acesso a credenciais de API é limitado a processos automatizados com acesso restrito e monitorado.</li>
+              <li><strong>Monitoramento:</strong> Nossos servidores possuem monitoramento contínuo e controles de segurança ativos 24/7.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-foreground mb-4">8. Data Retention and Deletion (Retenção e Exclusão)</h2>
+            <p>
+              Você mantém o controle total sobre seus dados:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li><strong>Desconexão:</strong> Usuários podem desconectar sua Conta Google ou qualquer outra integração a qualquer momento através do painel de configurações.</li>
+              <li><strong>Revogação:</strong> Os tokens OAuth podem ser revogados diretamente no console de segurança do provedor (ex: Google Security Checkup).</li>
+              <li><strong>Exclusão Permanente:</strong> A exclusão da conta DashCompass remove permanentemente todos os tokens e dados relacionados de nossa base de dados em até 30 dias.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-foreground mb-4">9. Direitos do Titular (LGPD)</h2>
             <p>Em conformidade com a LGPD, garantimos a você o direito de:</p>
             <ul className="list-disc pl-5 space-y-1">
               <li>Confirmação da existência de tratamento de dados.</li>
               <li>Acesso, correção e anonimização de dados incompletos ou inexatos.</li>
               <li>Eliminação de dados pessoais tratados com o consentimento do titular.</li>
               <li>Portabilidade dos dados a outro fornecedor de serviço.</li>
-              <li>Informação sobre o compartilhamento de dados com entidades públicas e privadas.</li>
+              <li>Informação sobre o compartilhamento de dados.</li>
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">5. Retenção e Exclusão</h2>
-            <p>
-              Mantemos seus dados pessoais apenas pelo tempo necessário para cumprir as finalidades descritas. Ao encerrar sua conta DashCompass, todos os tokens de conexão com APIs externas são revogados e deletados permanentemente de nossa base de dados em até 30 dias.
+          <section className="bg-primary/10 p-6 rounded-2xl border border-primary/30">
+            <h2 className="text-xl font-semibold text-foreground mb-4">10. Google API Services User Data Policy Compliance</h2>
+            <p className="mb-4">
+              O DashCompass declara conformidade explícita com as exigências do Google:
+            </p>
+            <div className="bg-background/50 p-4 rounded-lg border border-white/5 font-mono text-xs mb-4">
+              "The use and transfer of information received from Google APIs by DashCompass adheres to the Google API Services User Data Policy, including the Limited Use requirements."
+            </div>
+            <p className="italic">
+              O uso e a transferência de informações recebidas das APIs do Google pelo DashCompass obedecem à Política de Dados do Usuário dos Serviços de API do Google, incluindo os requisitos de Uso Limitado.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">6. Segurança da Informação</h2>
-            <p>
-              Utilizamos criptografia de ponta (AES-256) para armazenamento de credenciais sensíveis e protocolos TLS para toda transmissão de dados. Nossos servidores são protegidos por firewalls avançados e monitoramento 24/7.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">7. Contato e DPO</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-4">11. Contato e DPO</h2>
             <p>
               Para exercer seus direitos ou tirar dúvidas, entre em contato com nosso Encarregado de Proteção de Dados (DPO) através do e-mail: <span className="text-primary font-mono">legal@dashcompass.com</span>
             </p>
@@ -109,3 +174,4 @@ function PrivacyPage() {
     </div>
   );
 }
+
