@@ -256,7 +256,7 @@ function UsersTab() {
   });
 
   const mutation = useMutation({
-    mutationFn: (vars: { userId: string; role: "admin" | "team" | "conexoes"; assign: boolean }) =>
+    mutationFn: (vars: { userId: string; role: "admin" | "team" | "conexoes" | "admin_agencia" | "admin_global"; assign: boolean }) =>
       updateRole({ data: vars }),
 
     onSuccess: () => {
