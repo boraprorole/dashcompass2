@@ -276,7 +276,7 @@ function UsersTab() {
         <div className="p-8 text-destructive">Erro ao carregar usuários.</div>
       ) : (
         <ul className="divide-y divide-border/40">
-          {data?.map((u) => (
+          {(data as any[])?.map((u) => (
             <li key={u.id} className="flex items-center gap-4 p-4 md:p-5">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/15 text-sm font-semibold text-primary">
                 {u.avatarUrl ? (
