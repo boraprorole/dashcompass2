@@ -330,16 +330,17 @@ export async function getGrantedTargetIds(
   };
   const businessIds = collect(["business_management"], false) ?? new Set<string>();
   return {
-    pageIds: collect([
-      "pages_show_list",
-      "pages_read_engagement",
-      "pages_manage_metadata",
-      "pages_read_user_content",
-      "pages_manage_posts",
-      "pages_manage_engagement",
-    ], true),
-    // Fallback: se o escopo ads_read foi concedido mas não há target_ids granulares,
-    // permitimos amplo acesso (null) para que as contas apareçam no seletor do app.
+    pageIds: collect(
+      [
+        "pages_show_list",
+        "pages_read_engagement",
+        "pages_manage_metadata",
+        "pages_read_user_content",
+        "pages_manage_posts",
+        "pages_manage_engagement",
+      ],
+      true,
+    ),
     adAccountIds: collect(["ads_read", "ads_management"], true),
     businessIds,
   };
