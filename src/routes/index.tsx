@@ -450,6 +450,7 @@ function LandingPage() {
                 "Why did my CPA increase yesterday?",
                 "Which influencer generated more conversions?",
                 "Compare this month with the previous one.",
+                "Which advanced scopes do I need?",
                 "Where should I invest more budget?"
               ] : [
                 "Qual campanha trouxe mais vendas?",
