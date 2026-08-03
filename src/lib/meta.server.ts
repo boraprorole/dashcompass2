@@ -330,9 +330,9 @@ export async function getGrantedTargetIds(
       "pages_manage_posts",
       "pages_manage_engagement",
     ], true),
-    // Segurança: se o Meta não devolve target_ids granulares para Ads, não tratamos como
-    // "tudo liberado". Isso evita listar todas as contas de anúncio do usuário.
-    adAccountIds: collect(["ads_read", "ads_management"], false),
+    // Fallback: se o escopo ads_read foi concedido mas não há target_ids granulares,
+    // permitimos amplo acesso (null) para que as contas apareçam no seletor do app.
+    adAccountIds: collect(["ads_read", "ads_management"], true),
     businessIds,
   };
 }
