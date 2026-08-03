@@ -265,11 +265,11 @@ export async function listUserAdAccounts(
     for (const edge of ["owned_ad_accounts", "client_ad_accounts"] as const) {
       try {
         const accounts = await graphList<AdAccount>(
-          `https://graph.facebook.com/${FB_GRAPH_VERSION}/${businessId}/${edge}?fields=id,account_id,name,currency&limit=100&access_token=${token}`,
+          `https://graph.facebook.com/${FB_GRAPH_VERSION}/${businessId}/${edge}?fields=id,account_id,name,currency&limit=250&access_token=${token}`,
         );
         for (const a of accounts) add(a, businessId);
-      } catch {
-        // Sem permissão nessa borda — tenta a próxima.
+      } catch (err) {
+        console.warn(`[Meta API] Business ${businessId} edge ${edge} failed`, err);
       }
     }
   }
