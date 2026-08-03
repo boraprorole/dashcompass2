@@ -450,12 +450,14 @@ function LandingPage() {
                 "Why did my CPA increase yesterday?",
                 "Which influencer generated more conversions?",
                 "Compare this month with the previous one.",
+                "Which advanced scopes do I need?",
                 "Where should I invest more budget?"
               ] : [
                 "Qual campanha trouxe mais vendas?",
                 "Por que meu CPA aumentou ontem?",
                 "Qual influenciador gerou mais conversões?",
                 "Compare este mês com o anterior.",
+                "Quais escopos avançados eu preciso?",
                 "Onde devo investir mais orçamento?"
               ]).map((q, i) => (
                 <div key={i} className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-between group cursor-default">
