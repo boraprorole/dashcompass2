@@ -247,11 +247,13 @@ export async function listUserAdAccounts(
 
   try {
     const res = await fetch(
-      `https://graph.facebook.com/${FB_GRAPH_VERSION}/me/adaccounts?fields=id,account_id,name,currency&limit=100&access_token=${token}`,
+      `https://graph.facebook.com/${FB_GRAPH_VERSION}/me/adaccounts?fields=id,account_id,name,currency&limit=250&access_token=${token}`,
     );
     if (res.ok) {
       const json = (await res.json()) as { data?: AdAccount[] };
       for (const a of json.data ?? []) add(a);
+    } else {
+      console.warn(`[Meta API] /me/adaccounts failed: ${res.status} ${await res.text()}`);
     }
   } catch {
     // ads_read pode não estar aprovado — segue para bordas de Business.
