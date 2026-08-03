@@ -34,8 +34,6 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as AuthenticatedReportsIndexRouteImport } from './routes/_authenticated/reports.index'
 import { Route as AuthTiktokCallbackRouteImport } from './routes/auth.tiktok.callback'
-import { Route as ApiPublicStripeWebhookMockCallbackRouteImport } from './routes/api/public/stripe-webhook-mock-callback'
-import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as ApiAiChatRouteImport } from './routes/api/ai.chat'
 import { Route as AuthenticatedReportsReportIdRouteImport } from './routes/_authenticated/reports.$reportId'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
@@ -177,17 +175,6 @@ const AuthTiktokCallbackRoute = AuthTiktokCallbackRouteImport.update({
   path: '/auth/tiktok/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicStripeWebhookMockCallbackRoute =
-  ApiPublicStripeWebhookMockCallbackRouteImport.update({
-    id: '/api/public/stripe-webhook-mock-callback',
-    path: '/api/public/stripe-webhook-mock-callback',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
-  id: '/api/public/stripe-webhook',
-  path: '/api/public/stripe-webhook',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiAiChatRoute = ApiAiChatRouteImport.update({
   id: '/api/ai/chat',
   path: '/api/ai/chat',
@@ -292,8 +279,6 @@ export interface FileRoutesByFullPath {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
   '/api/ai/chat': typeof ApiAiChatRoute
-  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
-  '/api/public/stripe-webhook-mock-callback': typeof ApiPublicStripeWebhookMockCallbackRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/reports/': typeof AuthenticatedReportsIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -333,8 +318,6 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
   '/api/ai/chat': typeof ApiAiChatRoute
-  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
-  '/api/public/stripe-webhook-mock-callback': typeof ApiPublicStripeWebhookMockCallbackRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/reports': typeof AuthenticatedReportsIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -376,8 +359,6 @@ export interface FileRoutesById {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
   '/api/ai/chat': typeof ApiAiChatRoute
-  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
-  '/api/public/stripe-webhook-mock-callback': typeof ApiPublicStripeWebhookMockCallbackRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -419,8 +400,6 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/reports/$reportId'
     | '/api/ai/chat'
-    | '/api/public/stripe-webhook'
-    | '/api/public/stripe-webhook-mock-callback'
     | '/auth/tiktok/callback'
     | '/reports/'
     | '/api/public/payments/webhook'
@@ -460,8 +439,6 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/reports/$reportId'
     | '/api/ai/chat'
-    | '/api/public/stripe-webhook'
-    | '/api/public/stripe-webhook-mock-callback'
     | '/auth/tiktok/callback'
     | '/reports'
     | '/api/public/payments/webhook'
@@ -502,8 +479,6 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/reports/$reportId'
     | '/api/ai/chat'
-    | '/api/public/stripe-webhook'
-    | '/api/public/stripe-webhook-mock-callback'
     | '/auth/tiktok/callback'
     | '/_authenticated/reports/'
     | '/api/public/payments/webhook'
@@ -535,8 +510,6 @@ export interface RootRouteChildren {
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiAiChatRoute: typeof ApiAiChatRoute
-  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
-  ApiPublicStripeWebhookMockCallbackRoute: typeof ApiPublicStripeWebhookMockCallbackRoute
   AuthTiktokCallbackRoute: typeof AuthTiktokCallbackRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   ApiPublicGaOauthCallbackRoute: typeof ApiPublicGaOauthCallbackRoute
@@ -726,20 +699,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthTiktokCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/stripe-webhook-mock-callback': {
-      id: '/api/public/stripe-webhook-mock-callback'
-      path: '/api/public/stripe-webhook-mock-callback'
-      fullPath: '/api/public/stripe-webhook-mock-callback'
-      preLoaderRoute: typeof ApiPublicStripeWebhookMockCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/stripe-webhook': {
-      id: '/api/public/stripe-webhook'
-      path: '/api/public/stripe-webhook'
-      fullPath: '/api/public/stripe-webhook'
-      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/ai/chat': {
       id: '/api/ai/chat'
       path: '/api/ai/chat'
@@ -885,9 +844,6 @@ const rootRouteChildren: RootRouteChildren = {
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiAiChatRoute: ApiAiChatRoute,
-  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
-  ApiPublicStripeWebhookMockCallbackRoute:
-    ApiPublicStripeWebhookMockCallbackRoute,
   AuthTiktokCallbackRoute: AuthTiktokCallbackRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   ApiPublicGaOauthCallbackRoute: ApiPublicGaOauthCallbackRoute,
