@@ -1357,33 +1357,42 @@ function AudienceSection({
 function BreakdownList({
   title,
   items,
+  showPercentage = false,
 }: {
   title: string;
   items: Array<{ label: string; value: number }>;
+  showPercentage?: boolean;
 }) {
+  const total = items.reduce((acc, i) => acc + i.value, 0);
   const max = Math.max(...items.map((i) => i.value), 1);
+
   return (
     <div className="rounded-xl border border-border/50 p-3">
       <div className="mb-2 text-[11px] uppercase tracking-wide text-muted-foreground">
         {title}
       </div>
       <div className="space-y-1.5">
-        {items.map((i) => (
-          <div key={i.label}>
-            <div className="flex justify-between text-xs">
-              <span className="truncate pr-2">{i.label}</span>
-              <span className="font-medium tabular-nums">
-                {i.value.toLocaleString("pt-BR")}
-              </span>
+        {items.map((i) => {
+          const percentage = total > 0 ? (i.value / total) * 100 : 0;
+          return (
+            <div key={i.label}>
+              <div className="flex justify-between text-xs">
+                <span className="truncate pr-2">{i.label}</span>
+                <span className="font-medium tabular-nums">
+                  {showPercentage 
+                    ? `${percentage.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`
+                    : i.value.toLocaleString("pt-BR")}
+                </span>
+              </div>
+              <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
+                <div
+                  className="h-full bg-primary/70"
+                  style={{ width: `${(i.value / max) * 100}%` }}
+                />
+              </div>
             </div>
-            <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
-              <div
-                className="h-full bg-primary/70"
-                style={{ width: `${(i.value / max) * 100}%` }}
-              />
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
