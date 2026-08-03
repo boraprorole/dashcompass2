@@ -21,11 +21,21 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { useState } from "react";
+import { Label } from "@/components/ui/label";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+} from "@/components/ui/dropdown-menu";
 
 export function MetaManager({ reportId }: { reportId: string }) {
   const startOAuth = useServerFn(startMetaOAuth);
@@ -172,68 +182,120 @@ function ConnectionCard({ conn, onDelete, isDeleting }: { conn: any; onDelete: (
 
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleContent className="pt-3 space-y-4 border-t border-border/20 mt-3">
-          {/* Ad Accounts */}
-          {disc.ad_accounts?.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-[10px] font-semibold flex items-center gap-1 uppercase tracking-wider text-muted-foreground">
-                <BarChart3 className="h-2.5 w-2.5" /> Ad Accounts
-              </p>
-              <div className="grid grid-cols-1 gap-1.5 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-                {disc.ad_accounts.map((ad: any) => (
-                  <div key={ad.account_id} className="flex items-center gap-2">
-                    <Checkbox 
-                      id={`ad-${ad.account_id}`} 
+          {/* Ad Accounts Dropdown */}
+          <div className="space-y-2">
+            <Label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+              <BarChart3 className="h-2.5 w-2.5" /> Ad Accounts
+            </Label>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="w-full justify-between text-xs h-8 bg-white/5 border-white/10">
+                  {currentSelection.ad_accounts.length > 0 
+                    ? `${currentSelection.ad_accounts.length} selecionado(s)` 
+                    : "Selecionar contas de anúncio"}
+                  <ChevronDown className="h-3 w-3 opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[300px]" align="start">
+                <DropdownMenuLabel className="text-[10px]">Contas de Anúncio</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {disc.ad_accounts?.length > 0 ? (
+                  disc.ad_accounts.map((ad: any) => (
+                    <DropdownMenuCheckboxItem
+                      key={ad.account_id}
                       checked={currentSelection.ad_accounts.includes(ad.account_id)}
                       onCheckedChange={() => toggleAsset('ad_accounts', ad.account_id)}
-                      disabled={selectionMut.isPending}
-                    />
-                    <label htmlFor={`ad-${ad.account_id}`} className="text-[11px] truncate cursor-pointer leading-none">
-                      {ad.name || ad.account_id} <span className="text-[9px] text-muted-foreground">({ad.currency})</span>
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Facebook Pages & Instagrams */}
-          {disc.pages?.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-[10px] font-semibold flex items-center gap-1 uppercase tracking-wider text-muted-foreground">
-                <Facebook className="h-2.5 w-2.5" /> Pages & Instagram
-              </p>
-              <div className="grid grid-cols-1 gap-2.5 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                {disc.pages.map((page: any) => (
-                  <div key={page.id} className="space-y-1.5 p-2 rounded bg-white/5 border border-white/5">
-                    <div className="flex items-center gap-2">
-                      <Checkbox 
-                        id={`page-${page.id}`} 
-                        checked={currentSelection.pages.includes(page.id)}
-                        onCheckedChange={() => toggleAsset('pages', page.id)}
-                        disabled={selectionMut.isPending}
-                      />
-                      <label htmlFor={`page-${page.id}`} className="text-[11px] font-medium truncate cursor-pointer flex items-center gap-1">
-                        <Facebook className="h-2.5 w-2.5 text-[#1877F2]" /> {page.name}
-                      </label>
-                    </div>
-                    {page.instagram && (
-                      <div className="flex items-center gap-2 ml-5 border-l border-white/10 pl-2">
-                        <Checkbox 
-                          id={`ig-${page.instagram.id}`} 
-                          checked={currentSelection.instagrams.includes(page.instagram.id)}
-                          onCheckedChange={() => toggleAsset('instagrams', page.instagram.id)}
-                          disabled={selectionMut.isPending}
-                        />
-                        <label htmlFor={`ig-${page.instagram.id}`} className="text-[10px] truncate cursor-pointer flex items-center gap-1 text-muted-foreground">
-                          <Instagram className="h-2.5 w-2.5 text-[#E4405F]" /> @{page.instagram.username || page.instagram.id}
-                        </label>
+                      className="text-xs"
+                    >
+                      <div className="flex flex-col">
+                        <span>{ad.name || ad.account_id}</span>
+                        <span className="text-[9px] text-muted-foreground">{ad.currency}</span>
                       </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+                    </DropdownMenuCheckboxItem>
+                  ))
+                ) : (
+                  <div className="p-2 text-[10px] text-muted-foreground italic">Nenhuma conta encontrada</div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Facebook Pages Dropdown */}
+          <div className="space-y-2">
+            <Label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+              <Facebook className="h-2.5 w-2.5" /> Facebook Pages
+            </Label>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="w-full justify-between text-xs h-8 bg-white/5 border-white/10">
+                  {currentSelection.pages.length > 0 
+                    ? `${currentSelection.pages.length} selecionada(s)` 
+                    : "Selecionar páginas"}
+                  <ChevronDown className="h-3 w-3 opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[300px]" align="start">
+                <DropdownMenuLabel className="text-[10px]">Páginas do Facebook</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {disc.pages?.length > 0 ? (
+                  disc.pages.map((page: any) => (
+                    <DropdownMenuCheckboxItem
+                      key={page.id}
+                      checked={currentSelection.pages.includes(page.id)}
+                      onCheckedChange={() => toggleAsset('pages', page.id)}
+                      className="text-xs"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Facebook className="h-3 w-3 text-[#1877F2]" />
+                        <span>{page.name}</span>
+                      </div>
+                    </DropdownMenuCheckboxItem>
+                  ))
+                ) : (
+                  <div className="p-2 text-[10px] text-muted-foreground italic">Nenhuma página encontrada</div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Instagram Profiles Dropdown */}
+          <div className="space-y-2">
+            <Label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+              <Instagram className="h-2.5 w-2.5" /> Instagram Profiles
+            </Label>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="w-full justify-between text-xs h-8 bg-white/5 border-white/10">
+                  {currentSelection.instagrams.length > 0 
+                    ? `${currentSelection.instagrams.length} selecionado(s)` 
+                    : "Selecionar perfis"}
+                  <ChevronDown className="h-3 w-3 opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[300px]" align="start">
+                <DropdownMenuLabel className="text-[10px]">Perfis do Instagram</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {disc.pages?.filter((p: any) => p.instagram)?.length > 0 ? (
+                  disc.pages.filter((p: any) => p.instagram).map((page: any) => (
+                    <DropdownMenuCheckboxItem
+                      key={page.instagram.id}
+                      checked={currentSelection.instagrams.includes(page.instagram.id)}
+                      onCheckedChange={() => toggleAsset('instagrams', page.instagram.id)}
+                      className="text-xs"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Instagram className="h-3 w-3 text-[#E4405F]" />
+                        <span>@{page.instagram.username || page.instagram.id}</span>
+                        <span className="text-[9px] text-muted-foreground italic ml-auto">via {page.name}</span>
+                      </div>
+                    </DropdownMenuCheckboxItem>
+                  ))
+                ) : (
+                  <div className="p-2 text-[10px] text-muted-foreground italic">Nenhum perfil Instagram Business encontrado</div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </CollapsibleContent>
       </Collapsible>
     </div>
