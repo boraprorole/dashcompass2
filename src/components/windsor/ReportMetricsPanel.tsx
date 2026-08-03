@@ -1335,16 +1335,16 @@ function AudienceSection({
                 </div>
               )}
               {a.age.length > 0 && (
-                <BreakdownList title="Faixa etária" items={a.age} />
+                <BreakdownList title="Faixa etária" items={a.age} showPercentage={true} />
               )}
               {a.country.length > 0 && (
-                <BreakdownList title="Países" items={a.country.slice(0, 6)} />
+                <BreakdownList title="Países" items={a.country.slice(0, 6)} showPercentage={true} />
               )}
               {a.city.length > 0 && (
-                <BreakdownList title="Cidades" items={a.city.slice(0, 6)} />
+                <BreakdownList title="Cidades" items={a.city.slice(0, 6)} showPercentage={true} />
               )}
               {a.gender_age.length > 0 && a.age.length === 0 && (
-                <BreakdownList title="Gênero × Idade" items={a.gender_age.slice(0, 8)} />
+                <BreakdownList title="Gênero × Idade" items={a.gender_age.slice(0, 8)} showPercentage={true} />
               )}
             </div>
           </div>
