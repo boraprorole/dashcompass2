@@ -247,11 +247,13 @@ export async function listUserAdAccounts(
 
   try {
     const res = await fetch(
-      `https://graph.facebook.com/${FB_GRAPH_VERSION}/me/adaccounts?fields=id,account_id,name,currency&limit=100&access_token=${token}`,
+      `https://graph.facebook.com/${FB_GRAPH_VERSION}/me/adaccounts?fields=id,account_id,name,currency&limit=250&access_token=${token}`,
     );
     if (res.ok) {
       const json = (await res.json()) as { data?: AdAccount[] };
       for (const a of json.data ?? []) add(a);
+    } else {
+      console.warn(`[Meta API] /me/adaccounts failed: ${res.status} ${await res.text()}`);
     }
   } catch {
     // ads_read pode não estar aprovado — segue para bordas de Business.
@@ -263,11 +265,11 @@ export async function listUserAdAccounts(
     for (const edge of ["owned_ad_accounts", "client_ad_accounts"] as const) {
       try {
         const accounts = await graphList<AdAccount>(
-          `https://graph.facebook.com/${FB_GRAPH_VERSION}/${businessId}/${edge}?fields=id,account_id,name,currency&limit=100&access_token=${token}`,
+          `https://graph.facebook.com/${FB_GRAPH_VERSION}/${businessId}/${edge}?fields=id,account_id,name,currency&limit=250&access_token=${token}`,
         );
         for (const a of accounts) add(a, businessId);
-      } catch {
-        // Sem permissão nessa borda — tenta a próxima.
+      } catch (err) {
+        console.warn(`[Meta API] Business ${businessId} edge ${edge} failed`, err);
       }
     }
   }
@@ -306,7 +308,15 @@ export async function getGrantedTargetIds(
   const collect = (family: string[], allowUnrestricted: boolean): Set<string> | null => {
     const grantedInFamily = family.some((s) => scopes.includes(s));
     const granularMatches = gs.filter((g) => family.includes(g.scope));
+
+    // Se a permissão geral da família foi concedida (ex: ads_read),
+    // mas não há entradas granulares específicas (asset selection),
+    // tratamos como acesso irrestrito (null).
+    if (grantedInFamily && granularMatches.length === 0) return null;
+
+    // Se nada foi concedido, filtra tudo.
     if (!grantedInFamily && granularMatches.length === 0) return new Set();
+
     const ids = new Set<string>();
     let sawUnrestricted = false;
     for (const g of granularMatches) {
@@ -316,22 +326,23 @@ export async function getGrantedTargetIds(
       }
       for (const id of g.target_ids) ids.add(id);
     }
-    if (granularMatches.length === 0) return allowUnrestricted ? null : new Set();
-    if (sawUnrestricted && ids.size === 0) return allowUnrestricted ? null : new Set();
+    
+    if (sawUnrestricted) return null;
     return ids;
   };
   const businessIds = collect(["business_management"], false) ?? new Set<string>();
   return {
-    pageIds: collect([
-      "pages_show_list",
-      "pages_read_engagement",
-      "pages_manage_metadata",
-      "pages_read_user_content",
-      "pages_manage_posts",
-      "pages_manage_engagement",
-    ], true),
-    // Fallback: se o escopo ads_read foi concedido mas não há target_ids granulares,
-    // permitimos amplo acesso (null) para que as contas apareçam no seletor do app.
+    pageIds: collect(
+      [
+        "pages_show_list",
+        "pages_read_engagement",
+        "pages_manage_metadata",
+        "pages_read_user_content",
+        "pages_manage_posts",
+        "pages_manage_engagement",
+      ],
+      true,
+    ),
     adAccountIds: collect(["ads_read", "ads_management"], true),
     businessIds,
   };
@@ -414,8 +425,14 @@ export async function discoverMetaAssets(accessToken: string): Promise<{
       }
     }
   }
+
+  // Sempre permitir descoberta via Business ID se o Business foi autorizado
   for (const ad of allAdAccounts) {
     if (ad.business_id && granted.businessIds.has(ad.business_id)) {
+      addAdOnce(adsByAccountId, ad);
+    }
+    // Se o grant foi irrestrito para ads_read, garantimos que esteja no mapa de descoberta
+    if (adIds === null) {
       addAdOnce(adsByAccountId, ad);
     }
   }
