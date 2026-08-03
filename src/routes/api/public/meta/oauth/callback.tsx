@@ -48,12 +48,12 @@ export const Route = createFileRoute("/api/public/meta/oauth/callback")({
 
           // 7. Sucesso! Redirecionar para o admin ou relatório
           // @ts-ignore - dynamic URL
-          return new Response(null, { status: 302, headers: { Location: "/_authenticated/admin?tab=reports&success=meta-connected" } });
+          return new Response(null, { status: 302, headers: { Location: "/admin?tab=reports&success=meta-connected" } });
         } catch (e) {
           console.error("[Meta Callback Error]", e);
           const msg = (e as Error).message || "Falha na integração com Meta";
           // @ts-ignore - dynamic URL
-          return new Response(null, { status: 302, headers: { Location: `/_authenticated/admin?tab=reports&error=${encodeURIComponent(msg)}` } });
+          return new Response(null, { status: 302, headers: { Location: `/admin?tab=reports&error=${encodeURIComponent(msg)}` } });
         }
       },
     },
