@@ -830,6 +830,48 @@ export type Database = {
           },
         ]
       }
+      pricing_settings: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          features_en: string[]
+          features_pt: string[]
+          key: string
+          label: string
+          sort_order: number
+          updated_at: string
+          value_brl: number
+          value_usd: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          features_en?: string[]
+          features_pt?: string[]
+          key: string
+          label: string
+          sort_order?: number
+          updated_at?: string
+          value_brl?: number
+          value_usd?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          features_en?: string[]
+          features_pt?: string[]
+          key?: string
+          label?: string
+          sort_order?: number
+          updated_at?: string
+          value_brl?: number
+          value_usd?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1115,6 +1157,54 @@ export type Database = {
           },
         ]
       }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          environment: string
+          id: string
+          price_id: string | null
+          product_id: string | null
+          status: string
+          stripe_customer_id: string
+          stripe_subscription_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          environment?: string
+          id?: string
+          price_id?: string | null
+          product_id?: string | null
+          status?: string
+          stripe_customer_id: string
+          stripe_subscription_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          environment?: string
+          id?: string
+          price_id?: string | null
+          product_id?: string | null
+          status?: string
+          stripe_customer_id?: string
+          stripe_subscription_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       tiktok_connections: {
         Row: {
           access_token: string | null
@@ -1263,6 +1353,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_active_subscription: {
+        Args: { check_env?: string; user_uuid: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
