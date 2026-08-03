@@ -425,8 +425,14 @@ export async function discoverMetaAssets(accessToken: string): Promise<{
       }
     }
   }
+
+  // Sempre permitir descoberta via Business ID se o Business foi autorizado
   for (const ad of allAdAccounts) {
     if (ad.business_id && granted.businessIds.has(ad.business_id)) {
+      addAdOnce(adsByAccountId, ad);
+    }
+    // Se o grant foi irrestrito para ads_read, garantimos que esteja no mapa de descoberta
+    if (adIds === null) {
       addAdOnce(adsByAccountId, ad);
     }
   }
