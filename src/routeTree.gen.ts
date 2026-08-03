@@ -20,6 +20,7 @@ import { Route as CadastroEmpresaRouteImport } from './routes/cadastro-empresa'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as CompanyRegistrationRouteImport } from './routes/Company-registration'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CheckoutReturnRouteImport } from './routes/checkout/return'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthenticatedScheduleRouteImport } from './routes/_authenticated/schedule'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -34,12 +35,11 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as AuthenticatedReportsIndexRouteImport } from './routes/_authenticated/reports.index'
 import { Route as AuthTiktokCallbackRouteImport } from './routes/auth.tiktok.callback'
-import { Route as ApiPublicStripeWebhookMockCallbackRouteImport } from './routes/api/public/stripe-webhook-mock-callback'
-import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as ApiAiChatRouteImport } from './routes/api/ai.chat'
 import { Route as AuthenticatedReportsReportIdRouteImport } from './routes/_authenticated/reports.$reportId'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as ApiPublicTiktokOauthCallbackRouteImport } from './routes/api/public/tiktok/oauth.callback'
 import { Route as ApiPublicRdstationOauthCallbackRouteImport } from './routes/api/public/rdstation/oauth.callback'
 import { Route as ApiPublicPipedriveOauthCallbackRouteImport } from './routes/api/public/pipedrive/oauth.callback'
@@ -101,6 +101,11 @@ const CompanyRegistrationRoute = CompanyRegistrationRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
+  id: '/checkout/return',
+  path: '/checkout/return',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
@@ -176,17 +181,6 @@ const AuthTiktokCallbackRoute = AuthTiktokCallbackRouteImport.update({
   path: '/auth/tiktok/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicStripeWebhookMockCallbackRoute =
-  ApiPublicStripeWebhookMockCallbackRouteImport.update({
-    id: '/api/public/stripe-webhook-mock-callback',
-    path: '/api/public/stripe-webhook-mock-callback',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
-  id: '/api/public/stripe-webhook',
-  path: '/api/public/stripe-webhook',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiAiChatRoute = ApiAiChatRouteImport.update({
   id: '/api/ai/chat',
   path: '/api/ai/chat',
@@ -209,6 +203,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaymentsWebhookRoute =
+  ApiPublicPaymentsWebhookRouteImport.update({
+    id: '/api/public/payments/webhook',
+    path: '/api/public/payments/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicTiktokOauthCallbackRoute =
   ApiPublicTiktokOauthCallbackRouteImport.update({
     id: '/api/public/tiktok/oauth/callback',
@@ -281,14 +281,14 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/schedule': typeof AuthenticatedScheduleRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/checkout/return': typeof CheckoutReturnRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
   '/api/ai/chat': typeof ApiAiChatRoute
-  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
-  '/api/public/stripe-webhook-mock-callback': typeof ApiPublicStripeWebhookMockCallbackRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/reports/': typeof AuthenticatedReportsIndexRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
@@ -321,14 +321,14 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/schedule': typeof AuthenticatedScheduleRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/checkout/return': typeof CheckoutReturnRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
   '/api/ai/chat': typeof ApiAiChatRoute
-  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
-  '/api/public/stripe-webhook-mock-callback': typeof ApiPublicStripeWebhookMockCallbackRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/reports': typeof AuthenticatedReportsIndexRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
@@ -363,14 +363,14 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/schedule': typeof AuthenticatedScheduleRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/checkout/return': typeof CheckoutReturnRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
   '/api/ai/chat': typeof ApiAiChatRoute
-  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
-  '/api/public/stripe-webhook-mock-callback': typeof ApiPublicStripeWebhookMockCallbackRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
@@ -405,14 +405,14 @@ export interface FileRouteTypes {
     | '/profile'
     | '/schedule'
     | '/auth/callback'
+    | '/checkout/return'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/reports/$reportId'
     | '/api/ai/chat'
-    | '/api/public/stripe-webhook'
-    | '/api/public/stripe-webhook-mock-callback'
     | '/auth/tiktok/callback'
     | '/reports/'
+    | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
@@ -445,14 +445,14 @@ export interface FileRouteTypes {
     | '/profile'
     | '/schedule'
     | '/auth/callback'
+    | '/checkout/return'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/reports/$reportId'
     | '/api/ai/chat'
-    | '/api/public/stripe-webhook'
-    | '/api/public/stripe-webhook-mock-callback'
     | '/auth/tiktok/callback'
     | '/reports'
+    | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
@@ -486,14 +486,14 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/schedule'
     | '/auth/callback'
+    | '/checkout/return'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/reports/$reportId'
     | '/api/ai/chat'
-    | '/api/public/stripe-webhook'
-    | '/api/public/stripe-webhook-mock-callback'
     | '/auth/tiktok/callback'
     | '/_authenticated/reports/'
+    | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
@@ -519,12 +519,12 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  CheckoutReturnRoute: typeof CheckoutReturnRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiAiChatRoute: typeof ApiAiChatRoute
-  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
-  ApiPublicStripeWebhookMockCallbackRoute: typeof ApiPublicStripeWebhookMockCallbackRoute
   AuthTiktokCallbackRoute: typeof AuthTiktokCallbackRoute
+  ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   ApiPublicGaOauthCallbackRoute: typeof ApiPublicGaOauthCallbackRoute
   ApiPublicGoogleOauthCallbackRoute: typeof ApiPublicGoogleOauthCallbackRoute
   ApiPublicLinkedinOauthCallbackRoute: typeof ApiPublicLinkedinOauthCallbackRoute
@@ -612,6 +612,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout/return': {
+      id: '/checkout/return'
+      path: '/checkout/return'
+      fullPath: '/checkout/return'
+      preLoaderRoute: typeof CheckoutReturnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/callback': {
@@ -712,20 +719,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthTiktokCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/stripe-webhook-mock-callback': {
-      id: '/api/public/stripe-webhook-mock-callback'
-      path: '/api/public/stripe-webhook-mock-callback'
-      fullPath: '/api/public/stripe-webhook-mock-callback'
-      preLoaderRoute: typeof ApiPublicStripeWebhookMockCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/stripe-webhook': {
-      id: '/api/public/stripe-webhook'
-      path: '/api/public/stripe-webhook'
-      fullPath: '/api/public/stripe-webhook'
-      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/ai/chat': {
       id: '/api/ai/chat'
       path: '/api/ai/chat'
@@ -752,6 +745,13 @@ declare module '@tanstack/react-router' {
       path: '/.lovable/oauth/consent'
       fullPath: '/.lovable/oauth/consent'
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/payments/webhook': {
+      id: '/api/public/payments/webhook'
+      path: '/api/public/payments/webhook'
+      fullPath: '/api/public/payments/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/tiktok/oauth/callback': {
@@ -861,13 +861,12 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  CheckoutReturnRoute: CheckoutReturnRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiAiChatRoute: ApiAiChatRoute,
-  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
-  ApiPublicStripeWebhookMockCallbackRoute:
-    ApiPublicStripeWebhookMockCallbackRoute,
   AuthTiktokCallbackRoute: AuthTiktokCallbackRoute,
+  ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   ApiPublicGaOauthCallbackRoute: ApiPublicGaOauthCallbackRoute,
   ApiPublicGoogleOauthCallbackRoute: ApiPublicGoogleOauthCallbackRoute,
   ApiPublicLinkedinOauthCallbackRoute: ApiPublicLinkedinOauthCallbackRoute,

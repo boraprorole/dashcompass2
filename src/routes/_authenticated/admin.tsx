@@ -2087,7 +2087,10 @@ function PricingTab() {
   const { data: pricing, isLoading } = useQuery({
     queryKey: ["pricing-settings"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("pricing_settings" as any).select("*");
+      const { data, error } = await supabase
+        .from("pricing_settings" as any)
+        .select("*")
+        .order("sort_order", { ascending: true });
       if (error) throw error;
       return data as any[];
     },
@@ -2110,9 +2113,15 @@ function PricingTab() {
     const formData = new FormData(e.target as HTMLFormElement);
     const updates = (pricing || []).map(p => ({
       key: p.key,
+      label: (formData.get(`${p.key}_label`) as string)?.trim() || p.label,
       value_brl: parseFloat(formData.get(`${p.key}_brl`) as string),
       value_usd: parseFloat(formData.get(`${p.key}_usd`) as string),
+      active: formData.get(`${p.key}_active`) === "on",
     }));
+    if (updates.some(u => !Number.isFinite(u.value_brl) || !Number.isFinite(u.value_usd))) {
+      toast.error("Informe valores numéricos válidos para todos os planos.");
+      return;
+    }
     mutation.mutate(updates);
   };
 
@@ -2127,13 +2136,29 @@ function PricingTab() {
       
       <p className="text-sm text-muted-foreground max-w-lg">
         Configure os preços dos planos exibidos na Landing Page e no Checkout para BRL e USD.
+        O checkout do Stripe cobra exatamente o valor salvo aqui.
       </p>
 
       <form onSubmit={handleSave} className="space-y-6 pt-4">
         <div className="grid gap-6">
           {(pricing as any[])?.map((plan) => (
             <div key={plan.key} className="p-6 rounded-2xl bg-[#111] border border-border space-y-4">
-              <h4 className="font-bold uppercase tracking-wider text-primary">{plan.key.replace('_', ' ')}</h4>
+              <div className="flex items-center justify-between gap-4">
+                <h4 className="font-bold uppercase tracking-wider text-primary">{plan.key.replace('_', ' ')}</h4>
+                <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    name={`${plan.key}_active`}
+                    defaultChecked={plan.active !== false}
+                    className="accent-primary h-4 w-4"
+                  />
+                  Plano ativo
+                </label>
+              </div>
+              <div className="space-y-2">
+                <Label>Nome exibido</Label>
+                <Input name={`${plan.key}_label`} defaultValue={plan.label} />
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Valor BRL (R$)</Label>
@@ -2157,6 +2182,7 @@ function PricingTab() {
             </div>
           ))}
         </div>
+
         
         <Button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
