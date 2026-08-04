@@ -38,7 +38,17 @@ export function BingPanel({
     );
   }
 
-  if (error || !data?.connected) {
+  if (error) {
+    return (
+      <Card className="glass-strong border-none rounded-3xl flex flex-col items-center justify-center p-12 text-center">
+        <AlertCircle className="mb-4 h-12 w-12 text-destructive/60" />
+        <h3 className="text-lg font-semibold text-foreground">Não foi possível carregar os dados do Bing</h3>
+        <p className="max-w-md text-sm text-muted-foreground">{(error as Error).message}</p>
+      </Card>
+    );
+  }
+
+  if (!data?.connected) {
     return (
       <Card className="glass-strong border-none rounded-3xl flex flex-col items-center justify-center p-12 text-center">
         <AlertCircle className="mb-4 h-12 w-12 text-muted-foreground/50" />
@@ -51,9 +61,23 @@ export function BingPanel({
     );
   }
 
-  const metrics = data.metrics || [];
-  const topKeywords = data.topKeywords || [];
-  
+  const num = (v: unknown): number => (typeof v === "number" && Number.isFinite(v) ? v : Number(v) || 0);
+
+  const metrics = (data.metrics || []).map((m: any) => ({
+    date: m?.date ?? "",
+    clicks: num(m?.clicks),
+    impressions: num(m?.impressions),
+    ctr: num(m?.ctr),
+    position: num(m?.position),
+  }));
+  const topKeywords = (data.topKeywords || []).map((kw: any) => ({
+    query: typeof kw?.query === "string" ? kw.query : "—",
+    clicks: num(kw?.clicks),
+    impressions: num(kw?.impressions),
+    ctr: num(kw?.ctr),
+    position: num(kw?.position),
+  }));
+
   const totalClicks = metrics.reduce((acc: number, m: any) => acc + m.clicks, 0);
   const totalImpressions = metrics.reduce((acc: number, m: any) => acc + m.impressions, 0);
   const avgCtr = metrics.length > 0 ? metrics.reduce((acc: number, m: any) => acc + m.ctr, 0) / metrics.length : 0;
@@ -137,6 +161,13 @@ export function BingPanel({
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
+                {topKeywords.length === 0 && (
+                  <tr>
+                    <td className="px-6 py-8 text-center text-muted-foreground" colSpan={5}>
+                      Sem dados de palavras-chave disponíveis para esta propriedade ainda.
+                    </td>
+                  </tr>
+                )}
                 {topKeywords.map((kw: any, idx: number) => (
                   <tr key={idx} className="hover:bg-white/5">
                     <td className="px-6 py-4 font-medium text-foreground">{kw.query}</td>
