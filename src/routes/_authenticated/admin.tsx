@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { listUsers, setUserRole } from "@/lib/admin.functions";
+import { listUsers, setUserRole, linkUserToAgency } from "@/lib/admin.functions";
 import { SubscriptionDialog } from "@/components/admin/SubscriptionDialog";
 
 import {
