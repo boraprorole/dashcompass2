@@ -69,11 +69,13 @@ function LandingPage() {
     { name: "Integrations", href: "#integrations" },
     { name: "AI", href: "#ai" },
     { name: "Pricing", href: "#pricing" },
+    { name: "Blog", href: "/blog" },
   ] : [
     { name: "Produto", href: "#features" },
     { name: "Integrações", href: "#integrations" },
     { name: "IA", href: "#ai" },
     { name: "Preços", href: "#pricing" },
+    { name: "Blog", href: "/blog" },
   ];
 
   const plans = isEn ? [
@@ -221,13 +223,23 @@ function LandingPage() {
 
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href} 
-                className="text-sm font-medium text-white/60 hover:text-white transition-colors"
-              >
-                {link.name}
-              </a>
+              link.href.startsWith("#") ? (
+                <a 
+                  key={link.name} 
+                  href={link.href} 
+                  className="text-sm font-medium text-white/60 hover:text-white transition-colors"
+                >
+                  {link.name}
+                </a>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.href as any}
+                  className="text-sm font-medium text-white/60 hover:text-white transition-colors"
+                >
+                  {link.name}
+                </Link>
+              )
             ))}
           </div>
 
@@ -271,14 +283,25 @@ function LandingPage() {
             className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-white/5 p-6 space-y-4"
           >
             {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href} 
-                className="block text-lg text-white/70 hover:text-white"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.name}
-              </a>
+              link.href.startsWith("#") ? (
+                <a 
+                  key={link.name} 
+                  href={link.href} 
+                  className="block text-lg text-white/70 hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </a>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.href as any}
+                  className="block text-lg text-white/70 hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              )
             ))}
             <div className="pt-4 flex flex-col gap-4 border-t border-white/5">
               <div className="flex bg-white/5 rounded-lg p-1 border border-white/10 w-fit">
