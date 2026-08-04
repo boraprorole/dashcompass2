@@ -4,6 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { listUsers, setUserRole } from "@/lib/admin.functions";
+import { SubscriptionDialog } from "@/components/admin/SubscriptionDialog";
+
 import {
   listReportsAdmin,
   createReport,
@@ -262,11 +264,13 @@ function UsersTab() {
   const fetchUsers = useServerFn(listUsers);
   const updateRole = useServerFn(setUserRole);
   const qc = useQueryClient();
+  const [subUser, setSubUser] = useState<{ id: string; email: string } | null>(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-users"],
     queryFn: () => fetchUsers() as Promise<AdminUser[]>,
   });
+
 
   const mutation = useMutation({
     mutationFn: (vars: { userId: string; role: "admin" | "team" | "conexoes" | "admin_agencia" | "admin_global"; assign: boolean }) =>
@@ -365,6 +369,13 @@ function UsersTab() {
                     }
                   />
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSubUser({ id: u.id, email: u.email })}
+                >
+                  Assinatura
+                </Button>
               </div>
 
             </li>
@@ -377,9 +388,19 @@ function UsersTab() {
           )}
         </ul>
       )}
+
+      {subUser && (
+        <SubscriptionDialog
+          userId={subUser.id}
+          userEmail={subUser.email}
+          open={!!subUser}
+          onOpenChange={(open) => !open && setSubUser(null)}
+        />
+      )}
     </div>
   );
 }
+
 
 /* ---------------- Reports tab ---------------- */
 

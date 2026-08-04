@@ -88,6 +88,17 @@ async function provisionAccount(userId: string, companyName: string) {
   await supabase.from("profiles").update({ company_id: companyId }).eq("id", userId);
 }
 
+async function logEvent(
+  userId: string,
+  eventType: string,
+  description: string,
+) {
+  if (!userId) return;
+  await getSupabase()
+    .from("subscription_events")
+    .insert({ user_id: userId, event_type: eventType, source: "stripe", description } as never);
+}
+
 async function upsertSubscription(subscription: any, env: StripeEnv) {
   const userId = subscription.metadata?.userId;
   if (!userId) {
@@ -104,6 +115,7 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
   const productId = item?.price?.product ?? null;
   const periodStart = item?.current_period_start ?? subscription.current_period_start;
   const periodEnd = item?.current_period_end ?? subscription.current_period_end;
+  const iso = (s?: number | null) => (s ? new Date(s * 1000).toISOString() : null);
 
   await getSupabase()
     .from("subscriptions")
@@ -114,19 +126,63 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
         stripe_customer_id: subscription.customer,
         product_id: productId,
         price_id: priceId,
+        plan_label: subscription.metadata?.planKey ?? null,
         status: subscription.status,
-        current_period_start: periodStart ? new Date(periodStart * 1000).toISOString() : null,
-        current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
+        subscription_provider: "stripe",
+        current_period_start: iso(periodStart),
+        current_period_end: iso(periodEnd),
+        subscription_starts_at: iso(periodStart),
+        subscription_ends_at: iso(periodEnd),
+        trial_ends_at: iso(subscription.trial_end),
+        canceled_at: iso(subscription.canceled_at),
+        latest_invoice:
+          typeof subscription.latest_invoice === "string" ? subscription.latest_invoice : null,
         cancel_at_period_end: subscription.cancel_at_period_end || false,
         environment: env,
+        last_sync_at: new Date().toISOString(),
+        manual_override: false,
         updated_at: new Date().toISOString(),
-      },
+      } as never,
       { onConflict: "stripe_subscription_id" },
     );
+
+  await logEvent(userId, "subscription_synced", `Stripe status: ${subscription.status}.`);
 
   if (["active", "trialing"].includes(subscription.status)) {
     await provisionAccount(userId, subscription.metadata?.companyName ?? "");
   }
+}
+
+/** Atualiza status a partir de eventos de fatura. */
+async function handleInvoice(invoice: any, env: StripeEnv, paid: boolean) {
+  const subscriptionId = invoice.subscription;
+  if (!subscriptionId || typeof subscriptionId !== "string") return;
+
+  const db = getSupabase();
+  const { data: row } = await db
+    .from("subscriptions")
+    .select("id, user_id")
+    .eq("stripe_subscription_id", subscriptionId)
+    .eq("environment", env)
+    .maybeSingle();
+
+  await db
+    .from("subscriptions")
+    .update({
+      latest_invoice: invoice.id,
+      ...(paid ? {} : { status: "past_due" }),
+      last_sync_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    } as never)
+    .eq("stripe_subscription_id", subscriptionId)
+    .eq("environment", env);
+
+  const userId = (row as { user_id?: string } | null)?.user_id ?? "";
+  await logEvent(
+    userId,
+    paid ? "invoice_paid" : "invoice_payment_failed",
+    paid ? `Fatura ${invoice.id} paga.` : `Falha no pagamento da fatura ${invoice.id}.`,
+  );
 }
 
 async function handleWebhook(req: Request, env: StripeEnv) {
@@ -137,12 +193,26 @@ async function handleWebhook(req: Request, env: StripeEnv) {
     case "customer.subscription.updated":
       await upsertSubscription(event.data.object, env);
       break;
-    case "customer.subscription.deleted":
+    case "customer.subscription.deleted": {
+      const sub = event.data.object;
       await getSupabase()
         .from("subscriptions")
-        .update({ status: "canceled", updated_at: new Date().toISOString() })
-        .eq("stripe_subscription_id", event.data.object.id)
+        .update({
+          status: "canceled",
+          canceled_at: new Date().toISOString(),
+          last_sync_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        } as never)
+        .eq("stripe_subscription_id", sub.id)
         .eq("environment", env);
+      await logEvent(sub.metadata?.userId ?? "", "subscription_deleted", "Assinatura cancelada no Stripe.");
+      break;
+    }
+    case "invoice.paid":
+      await handleInvoice(event.data.object, env, true);
+      break;
+    case "invoice.payment_failed":
+      await handleInvoice(event.data.object, env, false);
       break;
     case "checkout.session.completed": {
       const session = event.data.object;
@@ -151,6 +221,7 @@ async function handleWebhook(req: Request, env: StripeEnv) {
           session.metadata?.userId ?? "",
           session.metadata?.companyName ?? "",
         );
+        await logEvent(session.metadata?.userId ?? "", "checkout_completed", "Checkout concluído.");
       }
       break;
     }
@@ -164,6 +235,7 @@ async function handleWebhook(req: Request, env: StripeEnv) {
       console.log("Unhandled event:", event.type);
   }
 }
+
 
 export const Route = createFileRoute("/api/public/payments/webhook")({
   server: {

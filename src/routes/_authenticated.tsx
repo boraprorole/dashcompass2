@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getDemandasEnabled } from "@/lib/demandas.functions";
 import { Logo } from "@/components/Logo";
+import { SubscriptionGate } from "@/components/subscription/SubscriptionGate";
+
 
 
 export const Route = createFileRoute("/_authenticated")({
@@ -234,7 +236,10 @@ function AuthenticatedLayout() {
           isCollapsed ? "md:ml-[92px]" : "md:ml-[240px]"
         )}
       >
-        <Outlet />
+        <SubscriptionGate>
+          <Outlet />
+        </SubscriptionGate>
+
 
         {/* Mobile bottom nav */}
         <nav className="glass fixed inset-x-3 bottom-3 z-20 flex justify-around rounded-2xl p-2 md:hidden">
