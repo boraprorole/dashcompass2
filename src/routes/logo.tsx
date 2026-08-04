@@ -34,7 +34,7 @@ function LogoPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const downloadPng = (variant: 'black' | 'white' | 'primary-bg', aspect: '1:1' | '16:9' = '1:1') => {
+  const downloadPng = (variant: 'black' | 'white' | 'primary-bg', aspect: '1:1' | '16:9' | 'favicon' = '1:1') => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -49,6 +49,9 @@ function LogoPage() {
       if (aspect === '1:1') {
         canvas.width = 1024;
         canvas.height = 1024;
+      } else if (aspect === 'favicon') {
+        canvas.width = 32;
+        canvas.height = 32;
       } else {
         canvas.width = 1920;
         canvas.height = 1080;
@@ -69,8 +72,8 @@ function LogoPage() {
       const tCtx = tempCanvas.getContext('2d');
       if (!tCtx) return;
 
-      if (aspect === '1:1') {
-        const padding = canvas.width * 0.25;
+      if (aspect === '1:1' || aspect === 'favicon') {
+        const padding = aspect === 'favicon' ? canvas.width * 0.1 : canvas.width * 0.25;
         const size = canvas.width - (padding * 2);
         tCtx.drawImage(img, padding, padding, size, size);
       } else {
@@ -99,8 +102,6 @@ function LogoPage() {
       
       if (variant === 'primary-bg') {
         tCtx.fillStyle = "#000000";
-      } else if (variant === 'white') {
-        tCtx.fillStyle = primaryColor;
       } else {
         tCtx.fillStyle = primaryColor;
       }
@@ -112,7 +113,7 @@ function LogoPage() {
       link.download = `dashcompass-logo-${variant}-${aspect.replace(':', '-')}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
-      toast.success("Logo baixado com sucesso!");
+      toast.success(aspect === 'favicon' ? "Favicon (10KB aprox) baixado!" : "Logo baixado com sucesso!");
     };
   };
 
@@ -210,6 +211,81 @@ function LogoPage() {
         </div>
 
         <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-white text-center">Versões Otimizadas (Favicon / ~10KB)</h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="glass-strong flex flex-col items-center space-y-6 rounded-none p-6">
+              <div className="flex aspect-square w-16 items-center justify-center bg-black">
+                <div 
+                  className="h-10 w-10" 
+                  style={{ 
+                    backgroundColor: primaryColor,
+                    WebkitMaskImage: `url(${logoAsset.url})`,
+                    maskImage: `url(${logoAsset.url})`,
+                    WebkitMaskRepeat: 'no-repeat',
+                    maskRepeat: 'no-repeat',
+                    WebkitMaskSize: 'contain',
+                    maskSize: 'contain'
+                  }}
+                />
+              </div>
+              <Button 
+                onClick={() => downloadPng('black', 'favicon')} 
+                className="w-full gap-2 rounded-none bg-primary text-black hover:bg-primary/90"
+              >
+                <Download className="h-4 w-4" /> Favicon (Preto)
+              </Button>
+            </div>
+
+            <div className="glass-strong flex flex-col items-center space-y-6 rounded-none p-6">
+              <div className="flex aspect-square w-16 items-center justify-center bg-white">
+                <div 
+                  className="h-10 w-10" 
+                  style={{ 
+                    backgroundColor: primaryColor,
+                    WebkitMaskImage: `url(${logoAsset.url})`,
+                    maskImage: `url(${logoAsset.url})`,
+                    WebkitMaskRepeat: 'no-repeat',
+                    maskRepeat: 'no-repeat',
+                    WebkitMaskSize: 'contain',
+                    maskSize: 'contain'
+                  }}
+                />
+              </div>
+              <Button 
+                onClick={() => downloadPng('white', 'favicon')} 
+                className="w-full gap-2 rounded-none bg-primary text-black hover:bg-primary/90"
+              >
+                <Download className="h-4 w-4" /> Favicon (Branco)
+              </Button>
+            </div>
+
+            <div className="glass-strong flex flex-col items-center space-y-6 rounded-none p-6 sm:col-span-2 lg:col-span-1">
+              <div 
+                className="flex aspect-square w-16 items-center justify-center"
+                style={{ backgroundColor: primaryColor }}
+              >
+                <div 
+                  className="h-10 w-10 bg-black" 
+                  style={{ 
+                    WebkitMaskImage: `url(${logoAsset.url})`,
+                    maskImage: `url(${logoAsset.url})`,
+                    WebkitMaskRepeat: 'no-repeat',
+                    maskRepeat: 'no-repeat',
+                    WebkitMaskSize: 'contain',
+                    maskSize: 'contain'
+                  }}
+                />
+              </div>
+              <Button 
+                onClick={() => downloadPng('primary-bg', 'favicon')} 
+                className="w-full gap-2 rounded-none bg-primary text-black hover:bg-primary/90"
+              >
+                <Download className="h-4 w-4" /> Favicon (Cor)
+              </Button>
+            </div>
+          </div>
+        </div>
+
           <h2 className="text-2xl font-bold text-white text-center">Versões 16:9 (Símbolo + Texto)</h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* 16:9 Black */}
