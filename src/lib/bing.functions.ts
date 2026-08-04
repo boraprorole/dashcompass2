@@ -80,3 +80,11 @@ export const getBingMetrics = createServerFn({ method: "GET" })
     const { getBingMetricsReal } = await import("./bing_picker.server");
     return await getBingMetricsReal(reportId, dateFrom, dateTo);
   });
+
+export const getBingAiCitations = createServerFn({ method: "GET" })
+  .inputValidator((data) => z.object({ reportId: z.string() }).parse(data))
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ data }) => {
+    const { getBingAiCitationsReal } = await import("./bing_picker.server");
+    return await getBingAiCitationsReal(data.reportId);
+  });
