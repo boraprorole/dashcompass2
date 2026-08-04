@@ -107,9 +107,14 @@ export const Route = createFileRoute("/api/debug/bing-ai-test")({
 
         const sentHeaders: Record<string, string> = {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-          Accept: "application/json, text/plain, */*",
+          Origin: "https://www.bing.com",
+          Referer: `https://www.bing.com/webmasters/aiperformance?siteUrl=${siteUrl}`,
+          Accept: "application/json, text/javascript, */*; q=0.01",
+          "Content-Type": "application/json;charset=UTF-8",
+          "User-Agent": "Mozilla/5.0",
+          "X-Requested-With": "XMLHttpRequest",
         };
+
 
         const loggedHeaders = { ...sentHeaders, Authorization: "Bearer <omitido>" };
 
