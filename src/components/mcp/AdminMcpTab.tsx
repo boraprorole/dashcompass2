@@ -259,6 +259,10 @@ export function AdminMcpTab() {
         </div>
       </div>
 
+      <KeyedLinksCard />
+
+
+
       {/* Como conectar */}
       <div className="glass-strong space-y-4 rounded-3xl p-6">
         <div className="flex items-center gap-3">
