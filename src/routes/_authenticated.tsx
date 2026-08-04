@@ -234,7 +234,10 @@ function AuthenticatedLayout() {
           isCollapsed ? "md:ml-[92px]" : "md:ml-[240px]"
         )}
       >
-        <Outlet />
+        <SubscriptionGate>
+          <Outlet />
+        </SubscriptionGate>
+
 
         {/* Mobile bottom nav */}
         <nav className="glass fixed inset-x-3 bottom-3 z-20 flex justify-around rounded-2xl p-2 md:hidden">
