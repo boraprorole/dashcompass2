@@ -119,6 +119,8 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
             email={gaConn?.google_email}
             connected={!!gaConn}
             selected={gaConn?.ga_property_id && gaConn.ga_property_id !== "PENDING" ? gaConn.ga_property_id : undefined}
+            reportId={reportId}
+            service="ga"
             picker={gaConn ? <GaPicker reportId={reportId} onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
           />
           <ServiceCard
@@ -127,6 +129,8 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
             email={gscConn?.google_email}
             connected={!!gscConn}
             selected={conns?.gsc.find(c => c.type === 'web')?.site_url ?? undefined}
+            reportId={reportId}
+            service="gsc"
             picker={gscConn ? <GscPicker reportId={reportId} type="web" placeholder="Escolher site (Web)" onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
           />
           <ServiceCard
@@ -135,9 +139,12 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
             email={gadsConn?.google_email}
             connected={!!gadsConn}
             selected={gadsConn?.customer_id ?? undefined}
+            reportId={reportId}
+            service="gads"
             picker={gadsConn ? <GadsPicker reportId={reportId} onSaved={() => qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] })} /> : null}
           />
         </div>
+
         {isLoading && <p className="text-[10px] text-muted-foreground">Carregando conexões…</p>}
       </div>
       
