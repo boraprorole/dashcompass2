@@ -466,6 +466,7 @@ function UsersTab() {
           onOpenChange={(open) => !open && setSubUser(null)}
         />
       )}
+      </div>
     </div>
   );
 }
