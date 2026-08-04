@@ -16,7 +16,7 @@ export default defineTool({
       .describe("Relative period. Default last_30d."),
     dateFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
     dateTo: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-    limit: z.number().int().min(1).max(24).optional(),
+    limit: z.number().int().min(1).max(200).optional(),
     sortBy: z.enum(["engagement", "reach", "likes", "views"]).optional(),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
