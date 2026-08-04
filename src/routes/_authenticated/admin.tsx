@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { listUsers, setUserRole } from "@/lib/admin.functions";
+import { listUsers, setUserRole, linkUserToAgency } from "@/lib/admin.functions";
 import { SubscriptionDialog } from "@/components/admin/SubscriptionDialog";
 
 import {
@@ -260,9 +260,76 @@ type AdminUser = {
   companyId: string | null;
 };
 
+function LinkUserToAgencyCard() {
+  const linkUser = useServerFn(linkUserToAgency);
+  const qc = useQueryClient();
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<"user" | "team">("user");
+  const [active, setActive] = useState(true);
+
+  const mutation = useMutation({
+    mutationFn: () => linkUser({ data: { email, role, active } }),
+    onSuccess: () => {
+      toast.success(active ? "E-mail vinculado à agência." : "Vínculo removido.");
+      setEmail("");
+      qc.invalidateQueries({ queryKey: ["admin-users"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <div className="glass-strong mb-4 rounded-3xl p-5">
+      <div className="mb-4 flex items-center gap-2">
+        <Users className="h-4 w-4 text-primary" />
+        <h3 className="text-sm font-semibold">Vincular e-mail à agência</h3>
+      </div>
+      <div className="flex flex-col gap-4 md:flex-row md:items-end">
+        <div className="flex-1 space-y-1.5">
+          <Label htmlFor="link-email" className="text-xs text-muted-foreground">E-mail do usuário</Label>
+          <Input
+            id="link-email"
+            type="email"
+            placeholder="nome@empresa.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="space-y-1.5 md:w-48">
+          <Label className="text-xs text-muted-foreground">Perfil</Label>
+          <Select value={role} onValueChange={(v) => setRole(v as "user" | "team")}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="user">Usuário</SelectItem>
+              <SelectItem value="team">Equipe</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Ativar</span>
+          <Switch checked={active} onCheckedChange={setActive} />
+        </div>
+        <Button
+          onClick={() => mutation.mutate()}
+          disabled={mutation.isPending || !email.trim()}
+        >
+          {mutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+          {active ? "Vincular" : "Desvincular"}
+        </Button>
+      </div>
+      <p className="mt-3 text-xs text-muted-foreground">
+        O usuário precisa já ter criado a conta no DashCompass. Ao vincular, ele passa a
+        pertencer à sua agência com o perfil selecionado.
+      </p>
+    </div>
+  );
+}
+
 function UsersTab() {
   const fetchUsers = useServerFn(listUsers);
   const updateRole = useServerFn(setUserRole);
+  const { isAdminGlobal } = useAuth();
   const qc = useQueryClient();
   const [subUser, setSubUser] = useState<{ id: string; email: string } | null>(null);
 
@@ -284,7 +351,9 @@ function UsersTab() {
   });
 
   return (
-    <div className="glass-strong overflow-hidden rounded-3xl">
+    <div>
+      {!isAdminGlobal && <LinkUserToAgencyCard />}
+      <div className="glass-strong overflow-hidden rounded-3xl">
       {isLoading ? (
         <div className="flex items-center justify-center p-12 text-muted-foreground">
           <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Carregando...
@@ -397,6 +466,7 @@ function UsersTab() {
           onOpenChange={(open) => !open && setSubUser(null)}
         />
       )}
+      </div>
     </div>
   );
 }
