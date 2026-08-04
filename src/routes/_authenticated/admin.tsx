@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { listUsers, setUserRole, linkUserToAgency } from "@/lib/admin.functions";
 import { SubscriptionDialog } from "@/components/admin/SubscriptionDialog";
+import { AgencyBillingTab } from "@/components/admin/AgencyBillingTab";
 
 import {
   listReportsAdmin,
@@ -91,6 +92,7 @@ import {
   Palette,
   Settings,
   CircleDollarSign,
+  Wallet,
 } from "lucide-react";
 
 import { toast } from "sonner";
@@ -159,6 +161,12 @@ function AdminPage() {
             <Users className="h-4 w-4" /> Usuários
           </TabsTrigger>
           
+          {!isAdminGlobal && isAdminAgencia && (
+            <TabsTrigger value="billing" className="gap-2">
+              <Wallet className="h-4 w-4" /> Financeiro & Uso
+            </TabsTrigger>
+          )}
+
           {isAdminGlobal && (
             <TabsTrigger value="visual" className="gap-2">
               <Palette className="h-4 w-4" /> ID Visual
@@ -210,6 +218,9 @@ function AdminPage() {
         </TabsContent>
         <TabsContent value="users">
           <UsersTab />
+        </TabsContent>
+        <TabsContent value="billing">
+          <AgencyBillingTab />
         </TabsContent>
         <TabsContent value="visual">
           <VisualIdTab />
