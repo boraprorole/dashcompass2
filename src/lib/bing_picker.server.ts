@@ -1,6 +1,6 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-async function getBingAccessToken(refreshToken: string) {
+export async function getBingAccessToken(refreshToken: string) {
   const BING_TOKEN_URL = "https://www.bing.com/webmasters/oauth/token";
   const debugMode = process.env.BING_OAUTH_DEBUG === "true";
   
