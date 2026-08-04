@@ -18,7 +18,7 @@ export const posts = [
   {
     slug: "o-futuro-do-marketing-com-ia",
     title: "O Futuro do Marketing Digital com Inteligência Artificial",
-    excerpt: "Como o GPT-5 e modelos preditivos estão mudando a forma como agências gerenciam campanhas de alta performance.",
+    excerpt: "Sobreviva à era do GEO e AEO. Descubra como o GPT-5 e a IA preditiva do DashCompass estão redefinindo a autoridade de marca e a conversão digital.",
     date: "02 Ago 2026",
     author: "Equipe DashCompass",
     category: "Tendências",
