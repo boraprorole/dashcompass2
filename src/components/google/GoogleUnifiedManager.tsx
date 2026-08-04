@@ -152,6 +152,14 @@ export function GoogleUnifiedManager({ reportId }: { reportId: string }) {
   );
 }
 
+type GoogleService = "ga" | "gsc" | "gads";
+
+const SERVICE_LABEL: Record<GoogleService, string> = {
+  ga: "Google Analytics (GA4)",
+  gsc: "Search Console",
+  gads: "Google Ads",
+};
+
 function ServiceCard({
   icon,
   label,
@@ -159,6 +167,8 @@ function ServiceCard({
   connected,
   selected,
   picker,
+  reportId,
+  service,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -166,7 +176,24 @@ function ServiceCard({
   connected: boolean;
   selected?: string;
   picker: React.ReactNode;
+  reportId: string;
+  service: GoogleService;
 }) {
+  const qc = useQueryClient();
+  const disconnectOne = useServerFn(disconnectGoogleService);
+
+  const disconnectMut = useMutation({
+    mutationFn: () => disconnectOne({ data: { reportId, service } }),
+    onSuccess: () => {
+      toast.success(`${SERVICE_LABEL[service]} desvinculado.`);
+      qc.invalidateQueries({ queryKey: ["google-unified-conns", reportId] });
+      qc.invalidateQueries({ queryKey: ["ga4-properties", reportId] });
+      qc.invalidateQueries({ queryKey: ["gsc-sites", reportId] });
+      qc.invalidateQueries({ queryKey: ["gads-customers", reportId] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-border/30 bg-background/20 p-3">
       <div className="flex items-center gap-3">
@@ -180,18 +207,40 @@ function ServiceCard({
           </p>
         </div>
         {connected && (
-          <Badge
-            variant="secondary"
-            className={`border-none text-[9px] h-4 ${selected ? "bg-primary/10 text-primary" : "bg-amber-500/10 text-amber-500"}`}
-          >
-            {selected ? "OK" : "Escolher"}
-          </Badge>
+          <>
+            <Badge
+              variant="secondary"
+              className={`border-none text-[9px] h-4 ${selected ? "bg-primary/10 text-primary" : "bg-amber-500/10 text-amber-500"}`}
+            >
+              {selected ? "OK" : "Escolher"}
+            </Badge>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={`Desvincular ${SERVICE_LABEL[service]}`}
+              title={`Desvincular ${SERVICE_LABEL[service]}`}
+              className="h-6 w-6 shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+              disabled={disconnectMut.isPending}
+              onClick={() => {
+                if (confirm(`Desvincular ${SERVICE_LABEL[service]} deste relatório?`)) {
+                  disconnectMut.mutate();
+                }
+              }}
+            >
+              {disconnectMut.isPending ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Trash2 className="h-3.5 w-3.5" />
+              )}
+            </Button>
+          </>
         )}
       </div>
       {picker}
     </div>
   );
 }
+
 
 function GaPicker({ reportId, onSaved }: { reportId: string; onSaved: () => void }) {
   const qc = useQueryClient();
