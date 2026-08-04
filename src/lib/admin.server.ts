@@ -27,10 +27,6 @@ async function getCallerContext(callerId: string): Promise<CallerContext> {
   return { isGlobal, agencyId };
 }
 
-async function assertAdmin(callerId: string) {
-  await getCallerContext(callerId);
-}
-
 export async function listUsersImpl(callerId: string) {
   const caller = await getCallerContext(callerId);
 
