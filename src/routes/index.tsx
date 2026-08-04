@@ -69,6 +69,7 @@ function LandingPage() {
     { name: "Integrations", href: "#integrations" },
     { name: "AI", href: "#ai" },
     { name: "Pricing", href: "#pricing" },
+    { name: "Blog", href: "/blog" },
   ] : [
     { name: "Produto", href: "#features" },
     { name: "Integrações", href: "#integrations" },
