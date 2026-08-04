@@ -3,6 +3,7 @@ import listMyReports from "./tools/list_my_reports";
 import getReport from "./tools/get_report";
 import getReportMetrics from "./tools/get_report_metrics";
 import getInstagramTopPosts from "./tools/get_instagram_top_posts";
+import getInstagramFullReport from "./tools/get_instagram_full_report";
 import getInstagramAudience from "./tools/get_instagram_audience";
 import getMetaAdsCreatives from "./tools/get_meta_ads_creatives";
 import searchNews from "./tools/search_news";
