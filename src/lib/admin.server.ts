@@ -147,12 +147,19 @@ export async function setUserRoleImpl(
   assign: boolean,
 ) {
 
-  await assertAdmin(callerId);
+  const caller = await getCallerContext(callerId);
 
   if (assign) {
+    // Admin de agência sempre vincula o papel à própria agência.
+    const payload: { user_id: string; role: typeof role; agency_id?: string } = {
+      user_id: targetUserId,
+      role,
+    };
+    if (!caller.isGlobal && caller.agencyId) payload.agency_id = caller.agencyId;
+
     const { error } = await supabaseAdmin
       .from("user_roles")
-      .upsert({ user_id: targetUserId, role }, { onConflict: "user_id,role" });
+      .upsert(payload, { onConflict: "user_id,role" });
     if (error) throw new Error(error.message);
   } else {
     if (role === "admin" && targetUserId === callerId) {
