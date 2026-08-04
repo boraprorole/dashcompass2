@@ -262,11 +262,13 @@ function UsersTab() {
   const fetchUsers = useServerFn(listUsers);
   const updateRole = useServerFn(setUserRole);
   const qc = useQueryClient();
+  const [subUser, setSubUser] = useState<{ id: string; email: string } | null>(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-users"],
     queryFn: () => fetchUsers() as Promise<AdminUser[]>,
   });
+
 
   const mutation = useMutation({
     mutationFn: (vars: { userId: string; role: "admin" | "team" | "conexoes" | "admin_agencia" | "admin_global"; assign: boolean }) =>
