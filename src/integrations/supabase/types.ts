@@ -1157,49 +1157,123 @@ export type Database = {
           },
         ]
       }
+      subscription_events: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          description: string | null
+          event_type: string
+          id: string
+          metadata: Json
+          source: string
+          subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          description?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json
+          source?: string
+          subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json
+          source?: string
+          subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscription_events_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscriptions: {
         Row: {
           cancel_at_period_end: boolean
+          canceled_at: string | null
           created_at: string
           current_period_end: string | null
           current_period_start: string | null
           environment: string
+          grace_period_ends_at: string | null
           id: string
+          last_sync_at: string | null
+          latest_invoice: string | null
+          manual_override: boolean
+          plan_label: string | null
           price_id: string | null
           product_id: string | null
           status: string
           stripe_customer_id: string
           stripe_subscription_id: string
+          subscription_ends_at: string | null
+          subscription_provider: string
+          subscription_starts_at: string | null
+          trial_ends_at: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           cancel_at_period_end?: boolean
+          canceled_at?: string | null
           created_at?: string
           current_period_end?: string | null
           current_period_start?: string | null
           environment?: string
+          grace_period_ends_at?: string | null
           id?: string
+          last_sync_at?: string | null
+          latest_invoice?: string | null
+          manual_override?: boolean
+          plan_label?: string | null
           price_id?: string | null
           product_id?: string | null
           status?: string
           stripe_customer_id: string
           stripe_subscription_id: string
+          subscription_ends_at?: string | null
+          subscription_provider?: string
+          subscription_starts_at?: string | null
+          trial_ends_at?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           cancel_at_period_end?: boolean
+          canceled_at?: string | null
           created_at?: string
           current_period_end?: string | null
           current_period_start?: string | null
           environment?: string
+          grace_period_ends_at?: string | null
           id?: string
+          last_sync_at?: string | null
+          latest_invoice?: string | null
+          manual_override?: boolean
+          plan_label?: string | null
           price_id?: string | null
           product_id?: string | null
           status?: string
           stripe_customer_id?: string
           stripe_subscription_id?: string
+          subscription_ends_at?: string | null
+          subscription_provider?: string
+          subscription_starts_at?: string | null
+          trial_ends_at?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1364,6 +1438,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      subscription_access: { Args: { _user_id: string }; Returns: Json }
     }
     Enums: {
       app_role:
