@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getDemandasEnabled } from "@/lib/demandas.functions";
 import { Logo } from "@/components/Logo";
+import { SubscriptionGate } from "@/components/subscription/SubscriptionGate";
+
 
 
 export const Route = createFileRoute("/_authenticated")({
