@@ -283,14 +283,25 @@ function LandingPage() {
             className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-white/5 p-6 space-y-4"
           >
             {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href} 
-                className="block text-lg text-white/70 hover:text-white"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.name}
-              </a>
+              link.href.startsWith("#") ? (
+                <a 
+                  key={link.name} 
+                  href={link.href} 
+                  className="block text-lg text-white/70 hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </a>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.href as any}
+                  className="block text-lg text-white/70 hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              )
             ))}
             <div className="pt-4 flex flex-col gap-4 border-t border-white/5">
               <div className="flex bg-white/5 rounded-lg p-1 border border-white/10 w-fit">
