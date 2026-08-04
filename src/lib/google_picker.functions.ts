@@ -71,3 +71,43 @@ export const disconnectGoogleUnified = createServerFn({ method: "POST" })
     
     return { success: true };
   });
+
+/**
+ * Desvincula UM serviço Google específico (GA4, GSC ou Google Ads) do relatório.
+ * Valida o acesso do usuário ao relatório antes de remover a conexão.
+ */
+export const disconnectGoogleService = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z
+      .object({
+        reportId: z.string().uuid(),
+        service: z.enum(["ga", "gsc", "gads"]),
+      })
+      .parse(input),
+  )
+  .handler(async ({ context, data }) => {
+    // Verificação de acesso via RLS: se o usuário não enxerga o relatório, aborta.
+    const { data: report, error } = await context.supabase
+      .from("reports")
+      .select("id")
+      .eq("id", data.reportId)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!report) throw new Error("Relatório não encontrado ou sem permissão.");
+
+    const TABLE_BY_SERVICE = {
+      ga: "ga_connections",
+      gsc: "gsc_connections",
+      gads: "google_ads_connections",
+    } as const;
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error: delError } = await supabaseAdmin
+      .from(TABLE_BY_SERVICE[data.service])
+      .delete()
+      .eq("report_id", data.reportId);
+    if (delError) throw new Error(delError.message);
+
+    return { success: true, service: data.service };
+  });
