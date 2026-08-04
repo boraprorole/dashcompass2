@@ -286,7 +286,9 @@ function LogoPage() {
           </div>
         </div>
 
+        <div className="space-y-6">
           <h2 className="text-2xl font-bold text-white text-center">Versões 16:9 (Símbolo + Texto)</h2>
+
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* 16:9 Black */}
             <div className="glass-strong flex flex-col items-center space-y-6 rounded-none p-6 transition-transform hover:scale-[1.02]">
