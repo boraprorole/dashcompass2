@@ -91,9 +91,141 @@ function Copyable({ value }: { value: string }) {
   );
 }
 
+function KeyedLinksCard() {
+  const qc = useQueryClient();
+  const [label, setLabel] = useState("");
+  const [newKey, setNewKey] = useState<string | null>(null);
+
+  const { data: keys = [], isLoading } = useQuery({
+    queryKey: ["mcp-keys"],
+    queryFn: () => listMcpKeys(),
+  });
+
+  const createMut = useMutation({
+    mutationFn: (value: string) => createMcpKey({ data: { label: value } }),
+    onSuccess: (res) => {
+      setNewKey(res.key);
+      setLabel("");
+      void qc.invalidateQueries({ queryKey: ["mcp-keys"] });
+      toast.success("Chave criada. Copie agora — ela não será exibida novamente.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const revokeMut = useMutation({
+    mutationFn: (id: string) => revokeMcpKey({ data: { id } }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["mcp-keys"] });
+      toast.success("Chave revogada.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const active = keys.filter((k) => !k.revoked_at);
+
+  return (
+    <div className="glass-strong space-y-5 rounded-3xl p-6">
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary">
+          <KeyRound className="h-5 w-5" />
+        </div>
+        <div className="flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-lg font-semibold">Link já autenticado</h2>
+            <Badge variant="destructive" className="gap-1">
+              <ShieldAlert className="h-3 w-3" /> A URL é a credencial
+            </Badge>
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Gere uma URL MCP que dispensa login no cliente. Ela roda com as mesmas
+            permissões da sua conta — quem tiver o link acessa seus relatórios até
+            você revogar.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Input
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+          placeholder="Nome da chave (ex.: Claude Desktop do Felipe)"
+          className="flex-1"
+        />
+        <Button
+          onClick={() => createMut.mutate(label)}
+          disabled={!label.trim() || createMut.isPending}
+        >
+          {createMut.isPending ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <KeyRound className="mr-2 h-4 w-4" />
+          )}
+          Gerar chave
+        </Button>
+      </div>
+
+      {newKey && (
+        <div className="space-y-2 rounded-2xl border border-primary/40 bg-primary/5 p-4">
+          <p className="text-xs font-medium text-primary">
+            Copie agora — esta é a única vez que a URL completa aparece.
+          </p>
+          <Copyable value={`${KEYED_BASE}${newKey}`} />
+          <Button size="sm" variant="ghost" onClick={() => setNewKey(null)}>
+            Já copiei, ocultar
+          </Button>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        {isLoading && <p className="text-xs text-muted-foreground">Carregando chaves…</p>}
+        {!isLoading && active.length === 0 && (
+          <p className="text-xs text-muted-foreground">Nenhuma chave ativa.</p>
+        )}
+        {active.map((k) => (
+          <div
+            key={k.id}
+            className="flex items-center gap-3 rounded-xl border border-border/40 bg-background/40 p-3"
+          >
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium">{k.label}</p>
+              <p className="font-mono text-[11px] text-muted-foreground">
+                {k.token_prefix}••••••••••
+                {k.last_used_at
+                  ? ` · último uso ${new Date(k.last_used_at).toLocaleString("pt-BR")}`
+                  : " · nunca usada"}
+              </p>
+            </div>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8 text-destructive"
+              disabled={revokeMut.isPending}
+              onClick={() => {
+                if (confirm(`Revogar a chave "${k.label}"? O link deixa de funcionar.`)) {
+                  revokeMut.mutate(k.id);
+                }
+              }}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-[11px] text-muted-foreground">
+        Cole a URL completa em qualquer cliente MCP remoto (Streamable HTTP). Se o
+        cliente permitir headers, você também pode usar{" "}
+        <code className="font-mono">{KEYED_BASE}key</code> com{" "}
+        <code className="font-mono">Authorization: Bearer &lt;chave&gt;</code>.
+      </p>
+    </div>
+  );
+}
+
 export function AdminMcpTab() {
   return (
     <div className="space-y-6">
+
       {/* Header / URL */}
       <div className="glass-strong space-y-5 rounded-3xl p-6">
         <div className="flex items-start gap-3">
