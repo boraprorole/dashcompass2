@@ -88,25 +88,65 @@ function BlogPost() {
             </p>
             
             <div className="space-y-6 text-white/60 leading-relaxed text-lg">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              </p>
-              
-              <h2 className="text-2xl font-bold text-white mt-12 mb-6">A importância da unificação</h2>
-              
-              <p>
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
+              {post.slug === "como-integrar-google-ads-e-meta-ads" ? (
+                <>
+                  <p>
+                    No cenário atual do marketing digital, a fragmentação de dados é o maior inimigo do ROAS (Retorno sobre Investimento em Publicidade). Gerenciar Google Ads e Meta Ads em silos separados não apenas consome tempo, mas esconde insights críticos sobre a jornada multicanal do consumidor.
+                  </p>
 
-              <div className="my-12 p-8 glass-strong rounded-2xl border-l-4 border-primary">
-                <p className="text-white italic text-xl">
-                  "A inteligência artificial não substitui o estrategista, ela o empodera com dados que antes eram impossíveis de processar em tempo real."
-                </p>
-              </div>
+                  <h2 className="text-3xl font-bold text-white mt-12 mb-6">Por que a integração é vital para SEO e GEO (Generative Engine Optimization)?</h2>
+                  <p>
+                    Com a ascensão do <strong>AEO (Answer Engine Optimization)</strong> e das buscas generativas (SGE), os motores de busca agora priorizam entidades e contextos. Ter um dashboard unificado permite que você alimente sua estratégia de conteúdo com dados reais de intenção (Google) e interesse (Meta), criando uma sinergia que algoritmos de IA adoram recomendar.
+                  </p>
 
-              <p>
-                Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.
-              </p>
+                  <h3 className="text-2xl font-bold text-white mt-8 mb-4">1. Visão Holística da Atribuição</h3>
+                  <p>
+                    Muitas conversões começam com um anúncio de descoberta no Instagram e terminam com uma busca direta no Google. Sem a integração, ambos os canais podem reivindicar o crédito (atribuição duplicada) ou você pode subestimar o impacto do topo de funil do Meta.
+                  </p>
+
+                  <h3 className="text-2xl font-bold text-white mt-8 mb-4">2. Otimização de Orçamento em Tempo Real</h3>
+                  <p>
+                    Um dashboard unificado no <strong>DashCompass</strong> permite identificar qual criativo está performando melhor cross-platform. Se o CPA no Google está subindo, mas o Meta está trazendo tráfego qualificado a baixo custo, a realocação deve ser imediata.
+                  </p>
+
+                  <div className="my-12 p-8 glass-strong rounded-2xl border-l-4 border-primary">
+                    <p className="text-white italic text-xl">
+                      "A integração de dados não é mais um diferencial competitivo, é o requisito básico para a sobrevivência de qualquer agência que busca escala em 2026."
+                    </p>
+                  </div>
+
+                  <h3 className="text-2xl font-bold text-white mt-8 mb-4">3. Preparando para o Futuro: GEO e Pesquisa por IA</h3>
+                  <p>
+                    O GEO exige que sua marca seja uma autoridade consistente em todos os pontos de contato. Ao alinhar as métricas de Google e Meta, você garante que as narrativas de marca sejam coerentes, facilitando o trabalho de LLMs em identificar sua empresa como a solução ideal para os usuários.
+                  </p>
+
+                  <h2 className="text-3xl font-bold text-white mt-12 mb-6">Conclusão</h2>
+                  <p>
+                    Integrar Google e Meta Ads no DashCompass é o primeiro passo para sair do operacional e focar no estratégico. Utilize nossa inteligência artificial para detectar anomalias e oportunidades que passariam despercebidas em planilhas manuais.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p>
+                    A Inteligência Artificial não é mais uma promessa; é o motor que impulsiona as maiores agências do mundo. Com o lançamento do GPT-5 Nano e modelos de visão computacional, a forma como analisamos dados de marketing mudou para sempre.
+                  </p>
+                  
+                  <h2 className="text-2xl font-bold text-white mt-12 mb-6">A Era da Automação Cognitiva</h2>
+                  <p>
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  </p>
+
+                  <div className="my-12 p-8 glass-strong rounded-2xl border-l-4 border-primary">
+                    <p className="text-white italic text-xl">
+                      "A inteligência artificial não substitui o estrategista, ela o empodera com dados que antes eram impossíveis de processar em tempo real."
+                    </p>
+                  </div>
+
+                  <p>
+                    Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.
+                  </p>
+                </>
+              )}
             </div>
           </div>
 

@@ -8,7 +8,7 @@ export const posts = [
   {
     slug: "como-integrar-google-ads-e-meta-ads",
     title: "Como integrar Google Ads e Meta Ads em um único Dashboard",
-    excerpt: "Descubra como a unificação de canais pode transformar sua análise de marketing e otimizar seu ROAS global.",
+    excerpt: "Domine a atribuição multicanal e impulsione seu ROAS global. Entenda como a integração de dados favorece estratégias de SEO, GEO e AEO em 2026.",
     date: "04 Ago 2026",
     author: "Felipe Gouveia",
     category: "Tutorial",
