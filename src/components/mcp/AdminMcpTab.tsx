@@ -1,19 +1,28 @@
 import { useState } from "react";
 import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { listMcpKeys, createMcpKey, revokeMcpKey } from "@/lib/mcp-keys.functions";
 import {
   Radio,
   Copy,
   Check,
   ExternalLink,
   ShieldCheck,
+  ShieldAlert,
   BookOpen,
   Terminal,
   Sparkles,
+  KeyRound,
+  Trash2,
+  Loader2,
 } from "lucide-react";
 
 const MCP_URL = "https://www.dashcompass.com/mcp";
+const KEYED_BASE = "https://www.dashcompass.com/api/public/mcp/";
+
 
 const TOOLS = [
   {
