@@ -74,6 +74,7 @@ function LandingPage() {
     { name: "Integrações", href: "#integrations" },
     { name: "IA", href: "#ai" },
     { name: "Preços", href: "#pricing" },
+    { name: "Blog", href: "/blog" },
   ];
 
   const plans = isEn ? [
