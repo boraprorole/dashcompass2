@@ -161,6 +161,64 @@
         "outputSchema": null
       },
       {
+        "name": "get_instagram_full_report",
+        "title": "Get full Instagram dataset",
+        "description": "COMPLETE Instagram dataset for a report — use this whenever the user asks for an analysis, diagnosis, insights or strategy about Instagram. Returns everything at once: account KPIs with previous-period comparison and daily series, audience demographics (gender, age, cities, countries), the full list of posts in the period (caption, hashtags, permalink, media type, timestamp, likes, comments, shares, saves, reach, views, engagement) and derived analytics (averages, engagement rate, performance by format, by weekday, by hour, top hashtags and mentions).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The report UUID"
+            },
+            "datePreset": {
+              "type": "string",
+              "enum": [
+                "last_7d",
+                "last_30d",
+                "last_90d",
+                "last_y"
+              ],
+              "description": "Relative period. Default last_30d."
+            },
+            "dateFrom": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "dateTo": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "postLimit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "description": "Max posts to return. Default 200 (all posts in the period)."
+            },
+            "includeMetrics": {
+              "type": "boolean",
+              "description": "Include account KPIs + daily series. Default true."
+            },
+            "includeAudience": {
+              "type": "boolean",
+              "description": "Include audience demographics. Default true."
+            }
+          },
+          "required": [
+            "report_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
         "name": "get_instagram_audience",
         "title": "Get Instagram audience demographics",
         "description": "Audience demographics (gender, age, gender+age, top cities, top countries) for each Instagram account linked to the report. Works with both Windsor and Meta OAuth connected accounts.",

@@ -26,6 +26,7 @@ export default defineMcp({
     getReport, 
     getReportMetrics, 
     getInstagramTopPosts, 
+    getInstagramFullReport,
     getInstagramAudience, 
     getMetaAdsCreatives,
     searchNews
