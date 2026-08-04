@@ -43,6 +43,7 @@ import { Route as AuthenticatedReportsReportIdRouteImport } from './routes/_auth
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
+import { Route as ApiPublicMcpKeyRouteImport } from './routes/api/public/mcp/$key'
 import { Route as ApiPublicTiktokOauthCallbackRouteImport } from './routes/api/public/tiktok/oauth.callback'
 import { Route as ApiPublicRdstationOauthCallbackRouteImport } from './routes/api/public/rdstation/oauth.callback'
 import { Route as ApiPublicPipedriveOauthCallbackRouteImport } from './routes/api/public/pipedrive/oauth.callback'
@@ -227,6 +228,11 @@ const ApiPublicPaymentsWebhookRoute =
     path: '/api/public/payments/webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicMcpKeyRoute = ApiPublicMcpKeyRouteImport.update({
+  id: '/api/public/mcp/$key',
+  path: '/api/public/mcp/$key',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicTiktokOauthCallbackRoute =
   ApiPublicTiktokOauthCallbackRouteImport.update({
     id: '/api/public/tiktok/oauth/callback',
@@ -309,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/api/debug/bing-ai-test': typeof ApiDebugBingAiTestRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/reports/': typeof AuthenticatedReportsIndexRoute
+  '/api/public/mcp/$key': typeof ApiPublicMcpKeyRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
@@ -352,6 +359,7 @@ export interface FileRoutesByTo {
   '/api/debug/bing-ai-test': typeof ApiDebugBingAiTestRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/reports': typeof AuthenticatedReportsIndexRoute
+  '/api/public/mcp/$key': typeof ApiPublicMcpKeyRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
@@ -397,6 +405,7 @@ export interface FileRoutesById {
   '/api/debug/bing-ai-test': typeof ApiDebugBingAiTestRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
+  '/api/public/mcp/$key': typeof ApiPublicMcpKeyRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
@@ -442,6 +451,7 @@ export interface FileRouteTypes {
     | '/api/debug/bing-ai-test'
     | '/auth/tiktok/callback'
     | '/reports/'
+    | '/api/public/mcp/$key'
     | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
@@ -485,6 +495,7 @@ export interface FileRouteTypes {
     | '/api/debug/bing-ai-test'
     | '/auth/tiktok/callback'
     | '/reports'
+    | '/api/public/mcp/$key'
     | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
@@ -529,6 +540,7 @@ export interface FileRouteTypes {
     | '/api/debug/bing-ai-test'
     | '/auth/tiktok/callback'
     | '/_authenticated/reports/'
+    | '/api/public/mcp/$key'
     | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
@@ -563,6 +575,7 @@ export interface RootRouteChildren {
   ApiAiChatRoute: typeof ApiAiChatRoute
   ApiDebugBingAiTestRoute: typeof ApiDebugBingAiTestRoute
   AuthTiktokCallbackRoute: typeof AuthTiktokCallbackRoute
+  ApiPublicMcpKeyRoute: typeof ApiPublicMcpKeyRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   ApiPublicGaOauthCallbackRoute: typeof ApiPublicGaOauthCallbackRoute
   ApiPublicGoogleOauthCallbackRoute: typeof ApiPublicGoogleOauthCallbackRoute
@@ -814,6 +827,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/mcp/$key': {
+      id: '/api/public/mcp/$key'
+      path: '/api/public/mcp/$key'
+      fullPath: '/api/public/mcp/$key'
+      preLoaderRoute: typeof ApiPublicMcpKeyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/tiktok/oauth/callback': {
       id: '/api/public/tiktok/oauth/callback'
       path: '/api/public/tiktok/oauth/callback'
@@ -929,6 +949,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAiChatRoute: ApiAiChatRoute,
   ApiDebugBingAiTestRoute: ApiDebugBingAiTestRoute,
   AuthTiktokCallbackRoute: AuthTiktokCallbackRoute,
+  ApiPublicMcpKeyRoute: ApiPublicMcpKeyRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   ApiPublicGaOauthCallbackRoute: ApiPublicGaOauthCallbackRoute,
   ApiPublicGoogleOauthCallbackRoute: ApiPublicGoogleOauthCallbackRoute,
