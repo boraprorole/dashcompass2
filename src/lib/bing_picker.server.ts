@@ -214,3 +214,65 @@ export async function getBingMetricsReal(reportId: string, dateFrom?: string, da
     topKeywords
   };
 }
+
+/**
+ * Citações por IA (AI Performance / Copilot).
+ *
+ * O relatório "AI Performance" do Bing Webmaster Tools (citações em Copilot e
+ * respostas geradas por IA) existe apenas no portal — a Microsoft ainda não
+ * publicou endpoint oficial na API v2. Tentamos os nomes de método candidatos
+ * e, quando nenhum responde, devolvemos `available: false` para a UI exibir um
+ * estado explícito em vez de números inventados.
+ */
+export async function getBingAiCitationsReal(reportId: string) {
+  const { data: conn } = await supabaseAdmin
+    .from("bing_connections")
+    .select("refresh_token, site_url")
+    .eq("report_id", reportId)
+    .maybeSingle();
+
+  if (!conn?.refresh_token || !conn.site_url || conn.site_url === "Aguardando sincronização...") {
+    return { connected: false, available: false, citations: [], totals: null };
+  }
+
+  const siteUrl = conn.site_url;
+  let accessToken: string;
+  try {
+    accessToken = await getBingAccessToken(conn.refresh_token);
+  } catch (err) {
+    console.error("[getBingAiCitationsReal] falha ao renovar token:", err);
+    return { connected: true, available: false, citations: [], totals: null };
+  }
+
+  const candidates = ["GetAIPerformanceStats", "GetAICitationStats", "GetCopilotCitationStats"];
+
+  for (const method of candidates) {
+    try {
+      const payload = await bingApiFetch(method, accessToken, { siteUrl });
+      const rows = Array.isArray(payload?.d) ? payload.d : [];
+      if (rows.length === 0) continue;
+
+      const citations = rows.map((r: any) => ({
+        url: r.Url ?? r.Page ?? r.url ?? "—",
+        query: r.Query ?? r.GroundingQuery ?? null,
+        citations: Number(r.Citations ?? r.CitationCount ?? 0) || 0,
+        impressions: Number(r.Impressions ?? 0) || 0,
+      }));
+
+      return {
+        connected: true,
+        available: true,
+        siteUrl,
+        citations,
+        totals: {
+          citations: citations.reduce((a: number, c: any) => a + c.citations, 0),
+          pages: new Set(citations.map((c: any) => c.url)).size,
+        },
+      };
+    } catch (err) {
+      console.error(`[getBingAiCitationsReal] ${method} indisponível:`, (err as Error).message);
+    }
+  }
+
+  return { connected: true, available: false, siteUrl, citations: [], totals: null };
+}
