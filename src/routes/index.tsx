@@ -223,13 +223,23 @@ function LandingPage() {
 
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href} 
-                className="text-sm font-medium text-white/60 hover:text-white transition-colors"
-              >
-                {link.name}
-              </a>
+              link.href.startsWith("#") ? (
+                <a 
+                  key={link.name} 
+                  href={link.href} 
+                  className="text-sm font-medium text-white/60 hover:text-white transition-colors"
+                >
+                  {link.name}
+                </a>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.href as any}
+                  className="text-sm font-medium text-white/60 hover:text-white transition-colors"
+                >
+                  {link.name}
+                </Link>
+              )
             ))}
           </div>
 
