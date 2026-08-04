@@ -367,6 +367,13 @@ function UsersTab() {
                     }
                   />
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSubUser({ id: u.id, email: u.email })}
+                >
+                  Assinatura
+                </Button>
               </div>
 
             </li>
@@ -379,9 +386,19 @@ function UsersTab() {
           )}
         </ul>
       )}
+
+      {subUser && (
+        <SubscriptionDialog
+          userId={subUser.id}
+          userEmail={subUser.email}
+          open={!!subUser}
+          onOpenChange={(open) => !open && setSubUser(null)}
+        />
+      )}
     </div>
   );
 }
+
 
 /* ---------------- Reports tab ---------------- */
 
