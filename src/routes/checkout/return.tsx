@@ -45,7 +45,7 @@ function CheckoutReturn() {
               Não localizamos informações de pagamento nesta página.
             </p>
             <Button asChild className="w-full h-12 rounded-2xl font-bold">
-              <Link to="/">Voltar ao início</Link>
+              <Link to="/" search={{}}>Voltar ao início</Link>
             </Button>
           </>
         ) : (
