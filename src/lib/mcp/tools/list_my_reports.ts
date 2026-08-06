@@ -12,7 +12,7 @@ export default defineTool({
   name: "list_my_reports",
   title: "List my reports",
   description:
-    "List the marketing reports the signed-in user has access to. Each report includes its connected assets (Instagram usernames, Facebook Page names, ad account names from both Meta OAuth and Windsor). Use these asset names — not just the report title/company — to match a user's mention like '@setpar' or 'Setpar' to the correct report_id.",
+    "List the marketing reports the signed-in user has access to. Each report includes its connected assets (Instagram usernames, Facebook Page names, ad account names, GA4 properties in `ga4_properties` and Google Search Console sites in `search_console_sites`). Use these asset names — not just the report title/company — to match a user's mention like '@setpar' or 'Setpar' to the correct report_id. NUNCA afirme que GA4 ou Search Console não estão conectados sem antes checar `ga4_properties`/`search_console_sites` deste retorno; se houver itens nesses arrays, chame `get_ga4_full_report` e `get_search_console_full_report` diretamente.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_input, ctx: ToolContext) => {
@@ -40,7 +40,7 @@ export default defineTool({
     // Enrich with connected asset names so the model can match by @handle / page name.
     const { supabaseAdmin } = await import("../../../integrations/supabase/client.server");
 
-    const [metaRes, windRes] = await Promise.all([
+    const [metaRes, windRes, gaRes, gscRes] = await Promise.all([
       ids.length
         ? supabaseAdmin
             .from("meta_connections")
@@ -53,15 +53,36 @@ export default defineTool({
             .select("report_id, connector, account_id, account_name")
             .in("report_id", ids)
         : Promise.resolve({ data: [] as Array<Record<string, unknown>>, error: null }),
+      ids.length
+        ? supabaseAdmin
+            .from("ga_connections")
+            .select("report_id, ga_property_id, label, google_email, refresh_token")
+            .in("report_id", ids)
+        : Promise.resolve({ data: [] as Array<Record<string, unknown>>, error: null }),
+      ids.length
+        ? supabaseAdmin
+            .from("gsc_connections")
+            .select("report_id, site_url, type, google_email, refresh_token")
+            .in("report_id", ids)
+        : Promise.resolve({ data: [] as Array<Record<string, unknown>>, error: null }),
     ]);
 
     const assetsByReport = new Map<
       string,
-      { instagrams: string[]; facebook_pages: string[]; ad_accounts: string[] }
+      {
+        instagrams: string[];
+        facebook_pages: string[];
+        ad_accounts: string[];
+        ga4_properties: string[];
+        search_console_sites: string[];
+      }
     >();
     const bucket = (id: string) => {
       let b = assetsByReport.get(id);
-      if (!b) { b = { instagrams: [], facebook_pages: [], ad_accounts: [] }; assetsByReport.set(id, b); }
+      if (!b) {
+        b = { instagrams: [], facebook_pages: [], ad_accounts: [], ga4_properties: [], search_console_sites: [] };
+        assetsByReport.set(id, b);
+      }
       return b;
     };
 
@@ -100,15 +121,39 @@ export default defineTool({
       else if (c.connector === "facebook_ads") b.ad_accounts.push(label);
     }
 
+    for (const c of (gaRes.data ?? []) as Array<{
+      report_id: string; ga_property_id: string | null; label: string | null; refresh_token: string | null;
+    }>) {
+      if (!c.ga_property_id || !c.refresh_token) continue;
+      bucket(c.report_id).ga4_properties.push(c.label ? `${c.label} (${c.ga_property_id})` : c.ga_property_id);
+    }
+
+    for (const c of (gscRes.data ?? []) as Array<{
+      report_id: string; site_url: string | null; refresh_token: string | null;
+    }>) {
+      if (!c.site_url || !c.refresh_token) continue;
+      bucket(c.report_id).search_console_sites.push(c.site_url);
+    }
+
     const enriched = list.map((r) => {
-      const a = assetsByReport.get(r.id as string) ?? { instagrams: [], facebook_pages: [], ad_accounts: [] };
+      const a =
+        assetsByReport.get(r.id as string) ??
+        { instagrams: [], facebook_pages: [], ad_accounts: [], ga4_properties: [], search_console_sites: [] };
+      const ga4 = Array.from(new Set(a.ga4_properties));
+      const gsc = Array.from(new Set(a.search_console_sites));
       return {
         ...r,
         connected_assets: {
           instagrams: Array.from(new Set(a.instagrams)),
           facebook_pages: Array.from(new Set(a.facebook_pages)),
           ad_accounts: Array.from(new Set(a.ad_accounts)),
+          ga4_properties: ga4,
+          search_console_sites: gsc,
         },
+        available_tools: [
+          ...(ga4.length ? ["get_ga4_full_report"] : []),
+          ...(gsc.length ? ["get_search_console_full_report"] : []),
+        ],
       };
     });
 
