@@ -234,7 +234,7 @@ export async function listGaAccountPropertiesImpl(userId: string, connectionId: 
 
 export type GaMetricsRange = "7d" | "28d" | "90d" | "thisMonth" | "lastMonth";
 
-function rangeToDates(range: GaMetricsRange): { startDate: string; endDate: string } {
+export function rangeToDates(range: GaMetricsRange): { startDate: string; endDate: string } {
   const today = new Date();
   const iso = (d: Date) => d.toISOString().slice(0, 10);
   if (range === "thisMonth") {
@@ -252,7 +252,7 @@ function rangeToDates(range: GaMetricsRange): { startDate: string; endDate: stri
   return { startDate: iso(s), endDate: iso(today) };
 }
 
-async function runReport(
+export async function runReport(
   refreshToken: string,
   propertyId: string,
   body: Record<string, unknown>,
