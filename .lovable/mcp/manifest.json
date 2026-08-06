@@ -19,7 +19,7 @@
       {
         "name": "list_my_reports",
         "title": "List my reports",
-        "description": "List the marketing reports the signed-in user has access to. Each report includes its connected assets (Instagram usernames, Facebook Page names, ad account names from both Meta OAuth and Windsor). Use these asset names — not just the report title/company — to match a user's mention like '@setpar' or 'Setpar' to the correct report_id.",
+        "description": "List the marketing reports the signed-in user has access to. Each report includes its connected assets (Instagram usernames, Facebook Page names, ad account names, GA4 properties in `ga4_properties` and Google Search Console sites in `search_console_sites`). Use these asset names — not just the report title/company — to match a user's mention like '@setpar' or 'Setpar' to the correct report_id. NUNCA afirme que GA4 ou Search Console não estão conectados sem antes checar `ga4_properties`/`search_console_sites` deste retorno; se houver itens nesses arrays, chame `get_ga4_full_report` e `get_search_console_full_report` diretamente.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
