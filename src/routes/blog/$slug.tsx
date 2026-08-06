@@ -149,7 +149,7 @@ function BlogPost() {
                     <p className="text-white/80 mb-8 text-lg relative z-10">
                       Não fique para trás na revolução do GEO. Comece a gerenciar suas métricas com a inteligência que sua agência merece.
                     </p>
-                    <Link to="/auth" className="inline-flex items-center justify-center px-8 py-4 bg-primary text-black font-bold rounded-full hover:scale-105 transition-transform relative z-10">
+                    <Link to="/login" className="inline-flex items-center justify-center px-8 py-4 bg-primary text-black font-bold rounded-full hover:scale-105 transition-transform relative z-10">
                       Experimentar DashCompass Grátis
                     </Link>
                   </div>

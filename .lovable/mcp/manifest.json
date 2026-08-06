@@ -294,6 +294,108 @@
         "outputSchema": null
       },
       {
+        "name": "get_search_console_full_report",
+        "title": "Get full Google Search Console dataset",
+        "description": "Dataset COMPLETO do Google Search Console de um relatório: totais do período com comparativo do período anterior, série diária, todas as queries, páginas, pares página+query, dispositivos, países, aparência na busca e oportunidades (striking distance e alta impressão com CTR baixo). Use sempre que o usuário pedir análise, diagnóstico, SEO, palavras-chave, cliques, impressões, CTR ou posição no Google.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The report UUID"
+            },
+            "datePreset": {
+              "type": "string",
+              "enum": [
+                "last_7d",
+                "last_28d",
+                "last_30d",
+                "last_90d",
+                "last_y"
+              ],
+              "description": "Período relativo. Padrão last_28d."
+            },
+            "dateFrom": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "dateTo": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "rowLimit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "description": "Máximo de linhas por dimensão. Padrão 250."
+            }
+          },
+          "required": [
+            "report_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_ga4_full_report",
+        "title": "Get full Google Analytics 4 dataset",
+        "description": "Dataset COMPLETO do Google Analytics 4 de um relatório: KPIs do período com comparativo do período anterior (usuários, novos usuários, sessões, sessões engajadas, pageviews, taxa de engajamento, duração média, rejeição, eventos, conversões), série diária, canais, origem/mídia, campanhas, landing pages, páginas mais vistas, eventos, dispositivos, países, cidades, idiomas, navegadores, demografia (idade/gênero), novo vs recorrente e desempenho por hora. Use sempre que o usuário pedir análise, diagnóstico, tráfego, aquisição, conversões ou comportamento do site.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The report UUID"
+            },
+            "datePreset": {
+              "type": "string",
+              "enum": [
+                "last_7d",
+                "last_28d",
+                "last_30d",
+                "last_90d",
+                "last_y"
+              ],
+              "description": "Período relativo. Padrão last_28d."
+            },
+            "dateFrom": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "dateTo": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "rowLimit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "description": "Máximo de linhas por dimensão. Padrão 50."
+            }
+          },
+          "required": [
+            "report_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
         "name": "search_news",
         "title": "Search News",
         "description": "Busca notícias e menções na web via NewsAPI. Útil para PR e Clipping.",

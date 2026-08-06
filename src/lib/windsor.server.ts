@@ -11,7 +11,7 @@ async function assertAdmin(callerId: string) {
   if (!data) throw new Error("Forbidden: admin only");
 }
 
-async function assertReportAccess(callerId: string, reportId: string) {
+export async function assertReportAccess(callerId: string, reportId: string) {
   const { data: admin } = await supabaseAdmin
     .from("user_roles")
     .select("role")
