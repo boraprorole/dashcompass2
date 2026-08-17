@@ -199,18 +199,52 @@ export async function getInstagramFullReportImpl(
     ),
   ]);
 
-  const igAccounts = (metrics as Array<{ connector: string }>).filter(
+  type IgGroup = {
+    connector: string;
+    account_id: string;
+    account_name: string | null;
+    metrics?: Record<string, number | null>;
+    previous?: Record<string, number | null>;
+  };
+  const igAccounts = (metrics as IgGroup[]).filter(
     (g) => g.connector === "instagram" || g.connector === "instagram_business",
   );
+
+  const account_summary: InstagramAccountSummary[] = igAccounts.map((g) => {
+    const m = g.metrics ?? {};
+    const p = g.previous ?? {};
+    const fallback = Boolean(m.views_source_posts);
+    return {
+      account_id: g.account_id,
+      account_name: g.account_name ?? null,
+      views: m.views ?? null,
+      reach: m.reach ?? null,
+      followers_count: m.followers_count ?? null,
+      profile_views: m.profile_views ?? null,
+      accounts_engaged: m.accounts_engaged ?? null,
+      total_interactions: m.total_interactions ?? null,
+      views_previous: p.views ?? null,
+      reach_previous: p.reach ?? null,
+      views_from_posts_fallback: fallback,
+      note:
+        m.views == null
+          ? "A API do Instagram não retornou `views` para este período (permissão ou período fora do limite de 30 dias por janela). Use `analytics.totals.views` (soma dos posts) como aproximação."
+          : fallback
+            ? "`views` estimado pela soma das visualizações dos posts do período — a métrica de conta não estava disponível."
+            : undefined,
+    };
+  });
 
   return {
     report_id: reportId,
     range,
     generated_at: new Date().toISOString(),
     accounts: igAccounts,
+    account_summary,
     audience: audience as unknown[],
     posts,
     posts_count: posts.length,
     analytics: buildPostAnalytics(posts),
   };
 }
+
