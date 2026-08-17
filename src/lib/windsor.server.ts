@@ -784,7 +784,7 @@ export async function getTopInstagramPostsImpl(
   sortBy: "engagement" | "reach" | "likes" | "views" = "engagement",
 ): Promise<Array<TopPost & { connector: string }>> {
   await assertReportAccess(callerId, reportId);
-  return withCache(`topposts-v2:${reportId}:${rangeKey(range)}:${sortBy}:${limit}`, reportId, async () => {
+  return withCache(`topposts-v3:${reportId}:${rangeKey(range)}:${sortBy}:${limit}`, reportId, async () => {
 
   const { data: conns, error } = await supabaseAdmin
     .from("windsor_connections")
