@@ -12,7 +12,7 @@ export default defineTool({
   name: "list_my_reports",
   title: "List my reports",
   description:
-    "List the marketing reports the signed-in user has access to. Each report includes its connected assets (Instagram usernames, Facebook Page names, ad account names, GA4 properties in `ga4_properties` and Google Search Console sites in `search_console_sites`). Use these asset names — not just the report title/company — to match a user's mention like '@setpar' or 'Setpar' to the correct report_id. NUNCA afirme que GA4 ou Search Console não estão conectados sem antes checar `ga4_properties`/`search_console_sites` deste retorno; se houver itens nesses arrays, chame `get_ga4_full_report` e `get_search_console_full_report` diretamente.",
+    "List the marketing reports the signed-in user has access to. Each report includes its connected assets (Instagram usernames, Facebook Page names, ad account names, GA4 properties in `ga4_properties` and Google Search Console sites in `search_console_sites`, TikTok accounts in `tiktok_accounts`). Use these asset names — not just the report title/company — to match a user's mention like '@setpar' or 'Setpar' to the correct report_id. NUNCA afirme que GA4 ou Search Console não estão conectados sem antes checar `ga4_properties`/`search_console_sites` deste retorno; se houver itens nesses arrays, chame `get_ga4_full_report` e `get_search_console_full_report` diretamente.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_input, ctx: ToolContext) => {
@@ -40,7 +40,7 @@ export default defineTool({
     // Enrich with connected asset names so the model can match by @handle / page name.
     const { supabaseAdmin } = await import("../../../integrations/supabase/client.server");
 
-    const [metaRes, windRes, gaRes, gscRes] = await Promise.all([
+    const [metaRes, windRes, gaRes, gscRes, ttRes] = await Promise.all([
       ids.length
         ? supabaseAdmin
             .from("meta_connections")
@@ -65,6 +65,12 @@ export default defineTool({
             .select("report_id, site_url, type, google_email, refresh_token")
             .in("report_id", ids)
         : Promise.resolve({ data: [] as Array<Record<string, unknown>>, error: null }),
+      ids.length
+        ? supabaseAdmin
+            .from("tiktok_connections")
+            .select("report_id, label, tiktok_email, tiktok_advertiser_id, access_token")
+            .in("report_id", ids)
+        : Promise.resolve({ data: [] as Array<Record<string, unknown>>, error: null }),
     ]);
 
     const assetsByReport = new Map<
@@ -75,12 +81,13 @@ export default defineTool({
         ad_accounts: string[];
         ga4_properties: string[];
         search_console_sites: string[];
+        tiktok_accounts: string[];
       }
     >();
     const bucket = (id: string) => {
       let b = assetsByReport.get(id);
       if (!b) {
-        b = { instagrams: [], facebook_pages: [], ad_accounts: [], ga4_properties: [], search_console_sites: [] };
+        b = { instagrams: [], facebook_pages: [], ad_accounts: [], ga4_properties: [], search_console_sites: [], tiktok_accounts: [] };
         assetsByReport.set(id, b);
       }
       return b;
@@ -135,12 +142,23 @@ export default defineTool({
       bucket(c.report_id).search_console_sites.push(c.site_url);
     }
 
+    for (const c of (ttRes.data ?? []) as Array<{
+      report_id: string; label: string | null; tiktok_email: string | null;
+      tiktok_advertiser_id: string | null; access_token: string | null;
+    }>) {
+      if (!c.access_token) continue;
+      bucket(c.report_id).tiktok_accounts.push(
+        c.label ?? c.tiktok_email ?? c.tiktok_advertiser_id ?? "TikTok",
+      );
+    }
+
     const enriched = list.map((r) => {
       const a =
         assetsByReport.get(r.id as string) ??
-        { instagrams: [], facebook_pages: [], ad_accounts: [], ga4_properties: [], search_console_sites: [] };
+        { instagrams: [], facebook_pages: [], ad_accounts: [], ga4_properties: [], search_console_sites: [], tiktok_accounts: [] };
       const ga4 = Array.from(new Set(a.ga4_properties));
       const gsc = Array.from(new Set(a.search_console_sites));
+      const tiktok = Array.from(new Set(a.tiktok_accounts));
       return {
         ...r,
         connected_assets: {
@@ -149,10 +167,12 @@ export default defineTool({
           ad_accounts: Array.from(new Set(a.ad_accounts)),
           ga4_properties: ga4,
           search_console_sites: gsc,
+          tiktok_accounts: tiktok,
         },
         available_tools: [
           ...(ga4.length ? ["get_ga4_full_report"] : []),
           ...(gsc.length ? ["get_search_console_full_report"] : []),
+          ...(tiktok.length ? ["get_tiktok_report"] : []),
         ],
       };
     });

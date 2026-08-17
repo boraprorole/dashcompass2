@@ -19,7 +19,7 @@
       {
         "name": "list_my_reports",
         "title": "List my reports",
-        "description": "List the marketing reports the signed-in user has access to. Each report includes its connected assets (Instagram usernames, Facebook Page names, ad account names, GA4 properties in `ga4_properties` and Google Search Console sites in `search_console_sites`). Use these asset names — not just the report title/company — to match a user's mention like '@setpar' or 'Setpar' to the correct report_id. NUNCA afirme que GA4 ou Search Console não estão conectados sem antes checar `ga4_properties`/`search_console_sites` deste retorno; se houver itens nesses arrays, chame `get_ga4_full_report` e `get_search_console_full_report` diretamente.",
+        "description": "List the marketing reports the signed-in user has access to. Each report includes its connected assets (Instagram usernames, Facebook Page names, ad account names, GA4 properties in `ga4_properties` and Google Search Console sites in `search_console_sites`, TikTok accounts in `tiktok_accounts`). Use these asset names — not just the report title/company — to match a user's mention like '@setpar' or 'Setpar' to the correct report_id. NUNCA afirme que GA4 ou Search Console não estão conectados sem antes checar `ga4_properties`/`search_console_sites` deste retorno; se houver itens nesses arrays, chame `get_ga4_full_report` e `get_search_console_full_report` diretamente.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -385,6 +385,59 @@
               "minimum": 1,
               "maximum": 250,
               "description": "Máximo de linhas por dimensão. Padrão 50."
+            }
+          },
+          "required": [
+            "report_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_tiktok_report",
+        "title": "Get TikTok report",
+        "description": "Relatório completo do TikTok conectado ao relatório: KPIs do período com comparativo (views, likes, comentários, compartilhamentos, taxa de engajamento), série diária, dados do perfil e a lista de vídeos com métricas. Use SEMPRE esta ferramenta para qualquer pedido de análise de TikTok — a conexão TikTok é nativa e NÃO aparece em `get_report_metrics`.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The report UUID"
+            },
+            "datePreset": {
+              "type": "string",
+              "enum": [
+                "last_7d",
+                "last_30d",
+                "last_90d",
+                "last_y"
+              ],
+              "description": "Período relativo. Padrão last_30d."
+            },
+            "dateFrom": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "dateTo": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "sortBy": {
+              "type": "string",
+              "enum": [
+                "engagement",
+                "reach",
+                "likes",
+                "views"
+              ]
             }
           },
           "required": [
