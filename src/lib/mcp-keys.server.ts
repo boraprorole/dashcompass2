@@ -21,6 +21,7 @@ export type McpKeyRow = {
   created_at: string;
   last_used_at: string | null;
   revoked_at: string | null;
+  company_id: string | null;
 };
 
 /* ------------------------------- helpers ------------------------------- */
@@ -67,7 +68,7 @@ export async function listMcpKeysImpl(callerId: string): Promise<McpKeyRow[]> {
 
   const { data, error } = await supabaseAdmin
     .from("mcp_access_tokens")
-    .select("id, label, token_prefix, created_at, last_used_at, revoked_at")
+    .select("id, label, token_prefix, created_at, last_used_at, revoked_at, company_id")
     .eq("user_id", callerId)
     .order("created_at", { ascending: false });
 
@@ -75,8 +76,26 @@ export async function listMcpKeysImpl(callerId: string): Promise<McpKeyRow[]> {
   return (data ?? []) as McpKeyRow[];
 }
 
-export async function createMcpKeyImpl(callerId: string, label: string) {
+export async function createMcpKeyImpl(
+  callerId: string,
+  label: string,
+  companyId?: string | null,
+) {
   const caller = await getCallerContext(callerId);
+
+  // Escopo por empresa: valida que a empresa existe e pertence à agência do caller.
+  if (companyId) {
+    const { data: company, error: companyErr } = await supabaseAdmin
+      .from("companies")
+      .select("id, agency_id")
+      .eq("id", companyId)
+      .maybeSingle();
+    if (companyErr) throw new Error(companyErr.message);
+    if (!company) throw new Error("Empresa não encontrada.");
+    if (!caller.isGlobal && caller.agencyId && company.agency_id !== caller.agencyId) {
+      throw new Error("Forbidden: empresa de outra agência.");
+    }
+  }
 
   const raw = generateRawKey();
   const token_hash = await sha256Hex(raw);
@@ -91,8 +110,9 @@ export async function createMcpKeyImpl(callerId: string, label: string) {
       label: label.trim() || "Chave MCP",
       token_hash,
       token_prefix,
+      company_id: companyId ?? null,
     })
-    .select("id, label, token_prefix, created_at, last_used_at, revoked_at")
+    .select("id, label, token_prefix, created_at, last_used_at, revoked_at, company_id")
     .single();
 
   if (error) throw new Error(error.message);
@@ -174,7 +194,22 @@ async function mintAccessToken(userId: string): Promise<string> {
   return token;
 }
 
-export type ResolvedKey = { userId: string; email: string | undefined; accessToken: string };
+export type ResolvedKey = {
+  userId: string;
+  email: string | undefined;
+  accessToken: string;
+  companyId: string | null;
+};
+
+/** Relatórios que uma chave com escopo de empresa pode enxergar. */
+export async function listCompanyReportIds(companyId: string): Promise<string[]> {
+  const { data, error } = await supabaseAdmin
+    .from("reports")
+    .select("id")
+    .eq("company_id", companyId);
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((r) => r.id as string);
+}
 
 /** Valida a chave crua e devolve identidade + token de acesso, ou null. */
 export async function resolveMcpKey(rawKey: string): Promise<ResolvedKey | null> {
@@ -183,7 +218,7 @@ export async function resolveMcpKey(rawKey: string): Promise<ResolvedKey | null>
   const token_hash = await sha256Hex(rawKey);
   const { data, error } = await supabaseAdmin
     .from("mcp_access_tokens")
-    .select("id, user_id, revoked_at")
+    .select("id, user_id, revoked_at, company_id")
     .eq("token_hash", token_hash)
     .maybeSingle();
 
@@ -199,5 +234,10 @@ export async function resolveMcpKey(rawKey: string): Promise<ResolvedKey | null>
   const accessToken = await mintAccessToken(data.user_id);
   const { data: userRes } = await supabaseAdmin.auth.admin.getUserById(data.user_id);
 
-  return { userId: data.user_id, email: userRes?.user?.email ?? undefined, accessToken };
+  return {
+    userId: data.user_id,
+    email: userRes?.user?.email ?? undefined,
+    accessToken,
+    companyId: (data as { company_id: string | null }).company_id ?? null,
+  };
 }
