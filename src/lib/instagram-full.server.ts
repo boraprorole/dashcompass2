@@ -16,16 +16,33 @@ import {
 
 type PostRow = TopPost & { connector: string };
 
+export type InstagramAccountSummary = {
+  account_id: string;
+  account_name: string | null;
+  views: number | null;
+  reach: number | null;
+  followers_count: number | null;
+  profile_views: number | null;
+  accounts_engaged: number | null;
+  total_interactions: number | null;
+  views_previous: number | null;
+  reach_previous: number | null;
+  views_from_posts_fallback: boolean;
+  note?: string;
+};
+
 export type InstagramFullReport = {
   report_id: string;
   range: WindsorRange;
   generated_at: string;
   accounts: unknown[];
+  account_summary: InstagramAccountSummary[];
   audience: unknown[];
   posts: PostRow[];
   posts_count: number;
   analytics: ReturnType<typeof buildPostAnalytics>;
 };
+
 
 const WEEKDAYS = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
 
