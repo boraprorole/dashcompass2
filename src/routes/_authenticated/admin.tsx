@@ -97,6 +97,7 @@ import {
 
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { CompanyMcpKeys } from "@/components/mcp/CompanyMcpKeys";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
