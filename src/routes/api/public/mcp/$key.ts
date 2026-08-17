@@ -47,6 +47,24 @@ function toolListPayload() {
   }));
 }
 
+/** Remove do payload de `list_my_reports` tudo que estiver fora do escopo. */
+function filterReportsResult(result: unknown, allowedReportIds: string[]) {
+  const r = result as {
+    isError?: boolean;
+    structuredContent?: { reports?: Array<{ id?: string }> };
+    content?: Array<{ type: string; text?: string }>;
+  };
+  const reports = r?.structuredContent?.reports;
+  if (r?.isError || !Array.isArray(reports)) return result;
+
+  const filtered = reports.filter((rep) => allowedReportIds.includes(String(rep?.id)));
+  return {
+    ...r,
+    structuredContent: { ...r.structuredContent, reports: filtered },
+    content: [{ type: "text", text: JSON.stringify(filtered, null, 2) }],
+  };
+}
+
 export const Route = createFileRoute("/api/public/mcp/$key")({
   server: {
     handlers: {
@@ -108,6 +126,18 @@ export const Route = createFileRoute("/api/public/mcp/$key")({
         }
         if (!resolved) return rpcError(msg.id, -32001, "Chave de acesso inválida ou revogada.");
 
+        // Escopo por empresa: a chave só enxerga relatórios daquela empresa.
+        let allowedReportIds: string[] | null = null;
+        if (resolved.companyId) {
+          const { listCompanyReportIds } = await import("@/lib/mcp-keys.server");
+          try {
+            allowedReportIds = await listCompanyReportIds(resolved.companyId);
+          } catch (err) {
+            console.error("[mcp-keyed] falha ao resolver escopo da empresa:", err);
+            return rpcError(msg.id, -32000, "Não foi possível resolver o escopo da chave.");
+          }
+        }
+
         const toolName = (msg.params?.name ?? "") as string;
         const tool = mcp.tools.find((t) => t.name === toolName);
         if (!tool) return rpcError(msg.id, -32602, `Unknown tool: ${toolName}`);
@@ -131,6 +161,26 @@ export const Route = createFileRoute("/api/public/mcp/$key")({
           parsedArgs = parsed.data as Record<string, unknown>;
         }
 
+        // Bloqueia acesso a relatórios fora do escopo da chave.
+        if (allowedReportIds) {
+          const requested = parsedArgs["report_id"] ?? parsedArgs["reportId"];
+          if (typeof requested === "string" && !allowedReportIds.includes(requested)) {
+            return json({
+              jsonrpc: "2.0",
+              id: msg.id ?? null,
+              result: {
+                isError: true,
+                content: [
+                  {
+                    type: "text",
+                    text: "Este link MCP está restrito a uma empresa e não tem acesso a este relatório. Use `list_my_reports` para ver os relatórios disponíveis.",
+                  },
+                ],
+              },
+            });
+          }
+        }
+
         const ctx = new ToolContext({
           type: "oauth",
           principal: {
@@ -148,7 +198,11 @@ export const Route = createFileRoute("/api/public/mcp/$key")({
 
         try {
           const result = await tool.handler(parsedArgs, ctx);
-          return json({ jsonrpc: "2.0", id: msg.id ?? null, result });
+          const scoped =
+            allowedReportIds && toolName === "list_my_reports"
+              ? filterReportsResult(result, allowedReportIds)
+              : result;
+          return json({ jsonrpc: "2.0", id: msg.id ?? null, result: scoped });
         } catch (err) {
           console.error(`[mcp-keyed] erro na tool ${toolName}:`, err);
           return json({

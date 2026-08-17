@@ -10,9 +10,16 @@ export const listMcpKeys = createServerFn({ method: "GET" })
 export const createMcpKey = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) =>
-    z.object({ label: z.string().trim().min(1, "Informe um nome.").max(80) }).parse(input),
+    z
+      .object({
+        label: z.string().trim().min(1, "Informe um nome.").max(80),
+        companyId: z.string().uuid().nullish(),
+      })
+      .parse(input),
   )
-  .handler(async ({ context, data }) => createMcpKeyImpl(context.userId, data.label));
+  .handler(async ({ context, data }) =>
+    createMcpKeyImpl(context.userId, data.label, data.companyId ?? null),
+  );
 
 export const revokeMcpKey = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
