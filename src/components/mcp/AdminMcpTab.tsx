@@ -41,6 +41,10 @@ const TOOLS = [
     name: "get_instagram_top_posts",
     desc: "Top posts do Instagram do relatório em um período (legenda, permalink, likes, comentários, alcance, engajamento).",
   },
+  {
+    name: "get_tiktok_report",
+    desc: "Relatório completo do TikTok: KPIs com comparativo, série diária, perfil e vídeos com métricas.",
+  },
 ];
 
 const CLIENTS = [
