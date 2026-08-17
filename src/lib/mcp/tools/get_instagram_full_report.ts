@@ -7,7 +7,8 @@ export default defineTool({
   name: "get_instagram_full_report",
   title: "Get full Instagram dataset",
   description:
-    "COMPLETE Instagram dataset for a report — use this whenever the user asks for an analysis, diagnosis, insights or strategy about Instagram. Returns everything at once: account KPIs with previous-period comparison and daily series, audience demographics (gender, age, cities, countries), the full list of posts in the period (caption, hashtags, permalink, media type, timestamp, likes, comments, shares, saves, reach, views, engagement) and derived analytics (averages, engagement rate, performance by format, by weekday, by hour, top hashtags and mentions).",
+    "COMPLETE Instagram dataset for a report — use this whenever the user asks for an analysis, diagnosis, insights or strategy about Instagram. Returns everything at once: `account_summary` with the headline account KPIs for the period (VIEWS/visualizações, reach, followers, profile views, accounts engaged, interactions and the previous-period values), full account KPIs with daily series, audience demographics (gender, age, cities, countries), the full list of posts in the period (caption, hashtags, permalink, media type, timestamp, likes, comments, shares, saves, reach, views, engagement) and derived analytics (averages, engagement rate, performance by format, by weekday, by hour, top hashtags and mentions). When the user asks about visualizações/views, read `account_summary[].views` first and only fall back to `analytics.totals.views` (sum of post views) if it is null.",
+
   inputSchema: {
     report_id: z.string().uuid().describe("The report UUID"),
     datePreset: z
