@@ -1,0 +1,2 @@
+ALTER TABLE public.mcp_access_tokens ADD COLUMN IF NOT EXISTS company_id uuid REFERENCES public.companies(id) ON DELETE CASCADE;
+CREATE INDEX IF NOT EXISTS idx_mcp_access_tokens_company_id ON public.mcp_access_tokens(company_id);
