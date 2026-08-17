@@ -173,6 +173,8 @@ async function fetchInstagram(
     if (windows.length === 0) windows.push({ s, u });
   }
   const metricErrors: Record<string, string> = {};
+  // `views` (e as demais métricas de conta v22+) exigem `period=day` junto de
+  // `metric_type=total_value`; sem o período a API devolve erro e a métrica some.
   await Promise.all(
     [
       "views",
@@ -191,7 +193,7 @@ async function fetchInstagram(
       for (const w of windows) {
         try {
           const json = (await graphGet(
-            `https://graph.facebook.com/${V}/${igId}/insights?metric=${metric}&metric_type=total_value&since=${w.s}&until=${w.u}&access_token=${encodeURIComponent(userToken)}`,
+            `https://graph.facebook.com/${V}/${igId}/insights?metric=${metric}&period=day&metric_type=total_value&since=${w.s}&until=${w.u}&access_token=${encodeURIComponent(userToken)}`,
           )) as {
             data?: Array<{ name: string; total_value?: { value?: number } }>;
           };
@@ -209,6 +211,7 @@ async function fetchInstagram(
       if (got) totals[metric] = sum;
     }),
   );
+
 
   // Série diária de `views` (e fallback do total caso total_value falhe).
   try {
