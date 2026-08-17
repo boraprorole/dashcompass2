@@ -341,27 +341,41 @@ async function fetchInstagramMediaInWindow(
       const mediaId = String(m.id ?? "");
       if (!mediaId) return;
       const mediaType = String(m.media_type ?? "").toUpperCase();
-      const insightMetrics =
-        mediaType === "VIDEO" || mediaType === "REELS"
-          ? "reach,saved,shares,total_interactions,views"
-          : "reach,saved,shares,total_interactions";
-      let reach = 0, saved = 0, shares = 0, interactions = 0, views = 0;
-      try {
-        const ij = (await graphGet(
-          `https://graph.facebook.com/${V}/${mediaId}/insights?metric=${insightMetrics}&access_token=${encodeURIComponent(userToken)}`,
-        )) as { data?: Array<{ name: string; values?: Array<{ value?: number }> }> };
-        for (const it of ij.data ?? []) {
-          const v = Number(it.values?.[0]?.value ?? 0);
-          if (!Number.isFinite(v)) continue;
-          if (it.name === "reach") reach = v;
-          else if (it.name === "saved") saved = v;
-          else if (it.name === "shares") shares = v;
-          else if (it.name === "total_interactions") interactions = v;
-          else if (it.name === "views") views = v;
+      let reach = 0, saved = 0, shares = 0, interactions = 0, views = 0, impressions = 0;
+
+      // `views` existe para TODOS os formatos na v22+ (imagem, carrossel, reel).
+      // Alguns mídias antigas ainda só aceitam `impressions`; por isso há cascata.
+      const metricCandidates = [
+        "reach,saved,shares,total_interactions,views",
+        "reach,saved,shares,total_interactions,impressions",
+        "reach,saved,shares,total_interactions",
+      ];
+
+      for (const insightMetrics of metricCandidates) {
+        try {
+          const ij = (await graphGet(
+            `https://graph.facebook.com/${V}/${mediaId}/insights?metric=${insightMetrics}&access_token=${encodeURIComponent(userToken)}`,
+          )) as { data?: Array<{ name: string; values?: Array<{ value?: number }> }> };
+          for (const it of ij.data ?? []) {
+            const v = Number(it.values?.[0]?.value ?? 0);
+            if (!Number.isFinite(v)) continue;
+            if (it.name === "reach") reach = v;
+            else if (it.name === "saved") saved = v;
+            else if (it.name === "shares") shares = v;
+            else if (it.name === "total_interactions") interactions = v;
+            else if (it.name === "views") views = v;
+            else if (it.name === "impressions") impressions = v;
+          }
+          break;
+        } catch {
+          // métrica não suportada para este formato/mídia — tenta o próximo conjunto
         }
-      } catch {
-        // some media (e.g. old ones) may not expose insights
       }
+
+      // Estáticos/carrosséis sem `views`: usa impressões e, em último caso, alcance.
+      if (!views) views = impressions || reach || 0;
+      void mediaType;
+
       const likes = Number(m.like_count ?? 0) || 0;
       const comments = Number(m.comments_count ?? 0) || 0;
       results.push({
