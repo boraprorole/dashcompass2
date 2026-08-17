@@ -159,6 +159,20 @@ async function fetchInstagram(
     // ignore
   }
   // Totais (metric_type=total_value) — cada métrica isolada porque a permissão varia.
+  // A API de Insights do Instagram aceita no máximo 30 dias por requisição, então
+  // quebramos o período em janelas de 30 dias e somamos os totais.
+  const windows: Array<{ s: number; u: number }> = [];
+  {
+    const MAX = 30 * 86400;
+    let cursor = s;
+    while (cursor < u) {
+      const end = Math.min(cursor + MAX, u);
+      windows.push({ s: cursor, u: end });
+      cursor = end;
+    }
+    if (windows.length === 0) windows.push({ s, u });
+  }
+  const metricErrors: Record<string, string> = {};
   await Promise.all(
     [
       "views",
@@ -172,21 +186,58 @@ async function fetchInstagram(
       "shares",
       "replies",
     ].map(async (metric) => {
-      try {
-        const json = (await graphGet(
-          `https://graph.facebook.com/${V}/${igId}/insights?metric=${metric}&metric_type=total_value&since=${s}&until=${u}&access_token=${encodeURIComponent(userToken)}`,
-        )) as {
-          data?: Array<{ name: string; total_value?: { value?: number } }>;
-        };
-        for (const m of json.data ?? []) {
-          const val = Number(m.total_value?.value ?? 0);
-          if (Number.isFinite(val)) totals[m.name] = val;
+      let sum = 0;
+      let got = false;
+      for (const w of windows) {
+        try {
+          const json = (await graphGet(
+            `https://graph.facebook.com/${V}/${igId}/insights?metric=${metric}&metric_type=total_value&since=${w.s}&until=${w.u}&access_token=${encodeURIComponent(userToken)}`,
+          )) as {
+            data?: Array<{ name: string; total_value?: { value?: number } }>;
+          };
+          for (const m of json.data ?? []) {
+            const val = Number(m.total_value?.value ?? 0);
+            if (Number.isFinite(val)) {
+              sum += val;
+              got = true;
+            }
+          }
+        } catch (e) {
+          metricErrors[metric] = (e as Error).message;
         }
-      } catch {
-        // ignore
       }
+      if (got) totals[metric] = sum;
     }),
   );
+
+  // Série diária de `views` (e fallback do total caso total_value falhe).
+  try {
+    let viewsSum = 0;
+    let gotViews = false;
+    for (const w of windows) {
+      const json = (await graphGet(
+        `https://graph.facebook.com/${V}/${igId}/insights?metric=views&period=day&since=${w.s}&until=${w.u}&access_token=${encodeURIComponent(userToken)}`,
+      )) as {
+        data?: Array<{ name: string; values?: Array<{ end_time?: string; value?: number }> }>;
+      };
+      for (const m of json.data ?? []) {
+        for (const v of m.values ?? []) {
+          const date = String(v.end_time ?? "").slice(0, 10);
+          const val = Number(v.value ?? 0);
+          if (!date || !Number.isFinite(val)) continue;
+          const b = dailyMap.get(date) ?? {};
+          b.views = (b.views ?? 0) + val;
+          dailyMap.set(date, b);
+          viewsSum += val;
+          gotViews = true;
+        }
+      }
+    }
+    if (gotViews && !totals.views) totals.views = viewsSum;
+  } catch (e) {
+    if (!totals.views) metricErrors.views_daily = (e as Error).message;
+  }
+
 
   try {
     const info = (await graphGet(
