@@ -1768,6 +1768,8 @@ function CompaniesTab() {
                     <ul className="space-y-2">{companyReports.map(renderReport)}</ul>
                   )}
                 </div>
+
+                <CompanyMcpKeys companyId={c.id} companyName={c.name} />
               </div>
             );
           })}
