@@ -724,6 +724,7 @@ export type Database = {
       mcp_access_tokens: {
         Row: {
           agency_id: string | null
+          company_id: string | null
           created_at: string
           id: string
           label: string
@@ -735,6 +736,7 @@ export type Database = {
         }
         Insert: {
           agency_id?: string | null
+          company_id?: string | null
           created_at?: string
           id?: string
           label: string
@@ -746,6 +748,7 @@ export type Database = {
         }
         Update: {
           agency_id?: string | null
+          company_id?: string | null
           created_at?: string
           id?: string
           label?: string
@@ -761,6 +764,13 @@ export type Database = {
             columns: ["agency_id"]
             isOneToOne: false
             referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mcp_access_tokens_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]

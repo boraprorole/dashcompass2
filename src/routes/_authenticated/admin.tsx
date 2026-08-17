@@ -97,6 +97,7 @@ import {
 
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { CompanyMcpKeys } from "@/components/mcp/CompanyMcpKeys";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -1768,6 +1769,8 @@ function CompaniesTab() {
                     <ul className="space-y-2">{companyReports.map(renderReport)}</ul>
                   )}
                 </div>
+
+                <CompanyMcpKeys companyId={c.id} companyName={c.name} />
               </div>
             );
           })}
