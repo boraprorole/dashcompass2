@@ -253,12 +253,13 @@ async function fetchInstagram(
   // Aggregate engagement from media posted within the window (likes/comments/saves/shares/interactions)
   try {
     const posts = await fetchInstagramMediaInWindow(igId, userToken, range);
-    let likes = 0, comments = 0, saved = 0, shares = 0, total_interactions = 0;
+    let likes = 0, comments = 0, saved = 0, shares = 0, total_interactions = 0, postViews = 0;
     for (const p of posts) {
       likes += p.likes;
       comments += p.comments;
       saved += p.saved;
       shares += p.shares;
+      postViews += p.views;
       total_interactions += p.engagement || p.likes + p.comments + p.saved + p.shares;
     }
     if (posts.length > 0) {
@@ -268,7 +269,13 @@ async function fetchInstagram(
       if (!totals.saves) totals.saves = saved;
       if (!totals.shares) totals.shares = shares;
       if (!totals.total_interactions) totals.total_interactions = total_interactions;
+      // Último recurso: soma das visualizações dos posts do período.
+      if (!totals.views && postViews > 0) {
+        totals.views = postViews;
+        totals.views_source_posts = 1;
+      }
     }
+
   } catch {
     // ignore
   }
