@@ -49,6 +49,7 @@ import { Route as ApiPublicRdstationOauthCallbackRouteImport } from './routes/ap
 import { Route as ApiPublicPipedriveOauthCallbackRouteImport } from './routes/api/public/pipedrive/oauth.callback'
 import { Route as ApiPublicMetaOauthCallbackRouteImport } from './routes/api/public/meta/oauth/callback'
 import { Route as ApiPublicLinkedinOauthCallbackRouteImport } from './routes/api/public/linkedin/oauth.callback'
+import { Route as ApiPublicInstagramOauthCallbackRouteImport } from './routes/api/public/instagram/oauth/callback'
 import { Route as ApiPublicGoogleOauthCallbackRouteImport } from './routes/api/public/google/oauth.callback'
 import { Route as ApiPublicGaOauthCallbackRouteImport } from './routes/api/public/ga/oauth.callback'
 import { Route as ApiPublicBingOauthCallbackIndexRouteImport } from './routes/api/public/bing/oauth/callback/index'
@@ -263,6 +264,12 @@ const ApiPublicLinkedinOauthCallbackRoute =
     path: '/api/public/linkedin/oauth/callback',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicInstagramOauthCallbackRoute =
+  ApiPublicInstagramOauthCallbackRouteImport.update({
+    id: '/api/public/instagram/oauth/callback',
+    path: '/api/public/instagram/oauth/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicGoogleOauthCallbackRoute =
   ApiPublicGoogleOauthCallbackRouteImport.update({
     id: '/api/public/google/oauth/callback',
@@ -319,6 +326,7 @@ export interface FileRoutesByFullPath {
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
+  '/api/public/instagram/oauth/callback': typeof ApiPublicInstagramOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
   '/api/public/meta/oauth/callback': typeof ApiPublicMetaOauthCallbackRoute
   '/api/public/pipedrive/oauth/callback': typeof ApiPublicPipedriveOauthCallbackRoute
@@ -363,6 +371,7 @@ export interface FileRoutesByTo {
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
+  '/api/public/instagram/oauth/callback': typeof ApiPublicInstagramOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
   '/api/public/meta/oauth/callback': typeof ApiPublicMetaOauthCallbackRoute
   '/api/public/pipedrive/oauth/callback': typeof ApiPublicPipedriveOauthCallbackRoute
@@ -409,6 +418,7 @@ export interface FileRoutesById {
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
   '/api/public/google/oauth/callback': typeof ApiPublicGoogleOauthCallbackRoute
+  '/api/public/instagram/oauth/callback': typeof ApiPublicInstagramOauthCallbackRoute
   '/api/public/linkedin/oauth/callback': typeof ApiPublicLinkedinOauthCallbackRoute
   '/api/public/meta/oauth/callback': typeof ApiPublicMetaOauthCallbackRoute
   '/api/public/pipedrive/oauth/callback': typeof ApiPublicPipedriveOauthCallbackRoute
@@ -455,6 +465,7 @@ export interface FileRouteTypes {
     | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
+    | '/api/public/instagram/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
     | '/api/public/meta/oauth/callback'
     | '/api/public/pipedrive/oauth/callback'
@@ -499,6 +510,7 @@ export interface FileRouteTypes {
     | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
+    | '/api/public/instagram/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
     | '/api/public/meta/oauth/callback'
     | '/api/public/pipedrive/oauth/callback'
@@ -544,6 +556,7 @@ export interface FileRouteTypes {
     | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
     | '/api/public/google/oauth/callback'
+    | '/api/public/instagram/oauth/callback'
     | '/api/public/linkedin/oauth/callback'
     | '/api/public/meta/oauth/callback'
     | '/api/public/pipedrive/oauth/callback'
@@ -579,6 +592,7 @@ export interface RootRouteChildren {
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   ApiPublicGaOauthCallbackRoute: typeof ApiPublicGaOauthCallbackRoute
   ApiPublicGoogleOauthCallbackRoute: typeof ApiPublicGoogleOauthCallbackRoute
+  ApiPublicInstagramOauthCallbackRoute: typeof ApiPublicInstagramOauthCallbackRoute
   ApiPublicLinkedinOauthCallbackRoute: typeof ApiPublicLinkedinOauthCallbackRoute
   ApiPublicMetaOauthCallbackRoute: typeof ApiPublicMetaOauthCallbackRoute
   ApiPublicPipedriveOauthCallbackRoute: typeof ApiPublicPipedriveOauthCallbackRoute
@@ -869,6 +883,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicLinkedinOauthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/instagram/oauth/callback': {
+      id: '/api/public/instagram/oauth/callback'
+      path: '/api/public/instagram/oauth/callback'
+      fullPath: '/api/public/instagram/oauth/callback'
+      preLoaderRoute: typeof ApiPublicInstagramOauthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/google/oauth/callback': {
       id: '/api/public/google/oauth/callback'
       path: '/api/public/google/oauth/callback'
@@ -953,6 +974,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   ApiPublicGaOauthCallbackRoute: ApiPublicGaOauthCallbackRoute,
   ApiPublicGoogleOauthCallbackRoute: ApiPublicGoogleOauthCallbackRoute,
+  ApiPublicInstagramOauthCallbackRoute: ApiPublicInstagramOauthCallbackRoute,
   ApiPublicLinkedinOauthCallbackRoute: ApiPublicLinkedinOauthCallbackRoute,
   ApiPublicMetaOauthCallbackRoute: ApiPublicMetaOauthCallbackRoute,
   ApiPublicPipedriveOauthCallbackRoute: ApiPublicPipedriveOauthCallbackRoute,
