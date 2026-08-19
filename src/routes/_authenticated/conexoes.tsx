@@ -70,6 +70,7 @@ function ConexoesPage() {
                 </div>
               </div>
               <MetaConnectionsManager reportId={r.id} />
+              <TikTokManager reportId={r.id} />
             </li>
           ))}
         </ul>
