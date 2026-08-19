@@ -8,6 +8,8 @@ import {
   deleteMetaConnection,
   updateMetaConnectionSelection,
 } from "@/lib/meta.functions";
+import { startInstagramLoginOAuth } from "@/lib/instagram_login.functions";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
