@@ -16,6 +16,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LpRouteImport } from './routes/lp'
 import { Route as LogoRouteImport } from './routes/logo'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as CadastroUserRouteImport } from './routes/cadastro-user'
 import { Route as CadastroEmpresaRouteImport } from './routes/cadastro-empresa'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as CompanyRegistrationRouteImport } from './routes/Company-registration'
@@ -89,6 +90,11 @@ const LogoRoute = LogoRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroUserRoute = CadastroUserRouteImport.update({
+  id: '/cadastro-user',
+  path: '/cadastro-user',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroEmpresaRoute = CadastroEmpresaRouteImport.update({
@@ -307,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/Company-registration': typeof CompanyRegistrationRoute
   '/cadastro-empresa': typeof CadastroEmpresaRoute
+  '/cadastro-user': typeof CadastroUserRoute
   '/login': typeof LoginRoute
   '/logo': typeof LogoRoute
   '/lp': typeof LpRoute
@@ -354,6 +361,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/Company-registration': typeof CompanyRegistrationRoute
   '/cadastro-empresa': typeof CadastroEmpresaRoute
+  '/cadastro-user': typeof CadastroUserRoute
   '/login': typeof LoginRoute
   '/logo': typeof LogoRoute
   '/lp': typeof LpRoute
@@ -403,6 +411,7 @@ export interface FileRoutesById {
   '/Company-registration': typeof CompanyRegistrationRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/cadastro-empresa': typeof CadastroEmpresaRoute
+  '/cadastro-user': typeof CadastroUserRoute
   '/login': typeof LoginRoute
   '/logo': typeof LogoRoute
   '/lp': typeof LpRoute
@@ -452,6 +461,7 @@ export interface FileRouteTypes {
     | '/'
     | '/Company-registration'
     | '/cadastro-empresa'
+    | '/cadastro-user'
     | '/login'
     | '/logo'
     | '/lp'
@@ -499,6 +509,7 @@ export interface FileRouteTypes {
     | '/'
     | '/Company-registration'
     | '/cadastro-empresa'
+    | '/cadastro-user'
     | '/login'
     | '/logo'
     | '/lp'
@@ -547,6 +558,7 @@ export interface FileRouteTypes {
     | '/Company-registration'
     | '/_authenticated'
     | '/cadastro-empresa'
+    | '/cadastro-user'
     | '/login'
     | '/logo'
     | '/lp'
@@ -596,6 +608,7 @@ export interface RootRouteChildren {
   CompanyRegistrationRoute: typeof CompanyRegistrationRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   CadastroEmpresaRoute: typeof CadastroEmpresaRoute
+  CadastroUserRoute: typeof CadastroUserRoute
   LoginRoute: typeof LoginRoute
   LogoRoute: typeof LogoRoute
   LpRoute: typeof LpRoute
@@ -678,6 +691,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro-user': {
+      id: '/cadastro-user'
+      path: '/cadastro-user'
+      fullPath: '/cadastro-user'
+      preLoaderRoute: typeof CadastroUserRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastro-empresa': {
@@ -993,6 +1013,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompanyRegistrationRoute: CompanyRegistrationRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   CadastroEmpresaRoute: CadastroEmpresaRoute,
+  CadastroUserRoute: CadastroUserRoute,
   LoginRoute: LoginRoute,
   LogoRoute: LogoRoute,
   LpRoute: LpRoute,
