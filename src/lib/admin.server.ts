@@ -171,3 +171,62 @@ export async function setUserRoleImpl(
   return { ok: true };
 }
 
+
+/**
+ * Vincula um e-mail (usuário já cadastrado) a uma empresa específica.
+ * Independente de vínculos anteriores: sobrescreve o company_id do perfil.
+ */
+export async function linkUserToCompanyByEmailImpl(
+  callerId: string,
+  email: string,
+  companyId: string,
+) {
+  const caller = await getCallerContext(callerId);
+
+  const normalized = email.trim().toLowerCase();
+  if (!normalized) throw new Error("Informe um e-mail válido.");
+
+  // Admin de agência só pode vincular a empresas da própria agência.
+  if (!caller.isGlobal) {
+    const { data: company, error: companyError } = await supabaseAdmin
+      .from("companies")
+      .select("id, agency_id")
+      .eq("id", companyId)
+      .maybeSingle();
+    if (companyError) throw new Error(companyError.message);
+    if (!company) throw new Error("Empresa não encontrada.");
+    if (caller.agencyId && company.agency_id && company.agency_id !== caller.agencyId) {
+      throw new Error("Esta empresa não pertence à sua agência.");
+    }
+  }
+
+  const { data: authUsers, error: authError } = await supabaseAdmin.auth.admin.listUsers({
+    page: 1,
+    perPage: 1000,
+  });
+  if (authError) throw new Error(authError.message);
+
+  const target = authUsers.users.find((u) => (u.email ?? "").toLowerCase() === normalized);
+  if (!target) {
+    throw new Error("Nenhum usuário cadastrado com este e-mail. Peça para ele criar a conta em /cadastro-user.");
+  }
+
+  const { error: profileError } = await supabaseAdmin
+    .from("profiles")
+    .upsert({ id: target.id, company_id: companyId }, { onConflict: "id" });
+  if (profileError) throw new Error(profileError.message);
+
+  // Garante papel de usuário na agência do admin chamador (quando aplicável).
+  if (caller.agencyId) {
+    await supabaseAdmin
+      .from("user_roles")
+      .upsert({ user_id: target.id, role: "user", agency_id: caller.agencyId }, { onConflict: "user_id,role" });
+  }
+
+  // Acesso a Conexões por padrão.
+  await supabaseAdmin
+    .from("user_roles")
+    .upsert({ user_id: target.id, role: "conexoes" }, { onConflict: "user_id,role" });
+
+  return { ok: true, userId: target.id, email: normalized };
+}

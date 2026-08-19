@@ -35,3 +35,16 @@ export const setUserRole = createServerFn({ method: "POST" })
     return setUserRoleImpl(context.userId, data.userId, data.role, data.assign);
   });
 
+
+export const linkUserToCompanyByEmail = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z.object({
+      email: z.string().email("Informe um e-mail válido."),
+      companyId: z.string().uuid(),
+    }).parse(input),
+  )
+  .handler(async ({ context, data }) => {
+    const { linkUserToCompanyByEmailImpl } = await import("./admin.server");
+    return linkUserToCompanyByEmailImpl(context.userId, data.email, data.companyId);
+  });
