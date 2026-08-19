@@ -12,7 +12,13 @@ import { startInstagramLoginOAuth } from "@/lib/instagram_login.functions";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Loader2, Plus, Trash2, Facebook, Instagram, Megaphone, Save } from "lucide-react";
 
 type DiscoveredPages = {
@@ -81,47 +87,111 @@ function SelectionEditor({
     );
   }
 
+  const igList = pages
+    .filter((p) => p.instagram)
+    .map((p) => p.instagram!) as Array<{ id: string; username?: string; name?: string }>;
+
+  const summary = (count: number, total: number, empty: string) =>
+    count === 0 ? empty : count === total ? `Todos (${total})` : `${count} de ${total}`;
+
   return (
     <div className="mt-2 space-y-2">
       <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
         Selecione o que vai aparecer neste relatório
       </p>
-      <div className="space-y-1.5 rounded-md border border-border/30 bg-background/40 p-2">
-        {pages.map((p) => (
-          <div key={p.id} className="space-y-1">
-            <label className="flex items-center gap-2 text-[11px]">
-              <Checkbox
-                checked={sel.pages.includes(p.id)}
-                onCheckedChange={() => toggle("pages", p.id)}
-              />
-              <Facebook className="h-3 w-3 text-primary/70" />
-              <span>{p.name}</span>
-            </label>
-            {p.instagram && (
-              <label className="ml-5 flex items-center gap-2 text-[11px]">
-                <Checkbox
-                  checked={sel.instagrams.includes(p.instagram.id)}
-                  onCheckedChange={() => toggle("instagrams", p.instagram!.id)}
-                />
-                <Instagram className="h-3 w-3 text-primary/70" />
-                <span>@{p.instagram.username ?? p.instagram.id}</span>
-              </label>
-            )}
-          </div>
-        ))}
-        {ads.map((a) => (
-          <label key={a.account_id} className="flex items-center gap-2 text-[11px]">
-            <Checkbox
-              checked={sel.ad_accounts.includes(a.account_id)}
-              onCheckedChange={() => toggle("ad_accounts", a.account_id)}
-            />
-            <Megaphone className="h-3 w-3 text-primary/70" />
-            <span>{a.name ?? a.account_id}</span>
-            <span className="text-[10px] text-muted-foreground">
-              ({a.account_id}{a.currency ? ` · ${a.currency}` : ""})
-            </span>
-          </label>
-        ))}
+      <div className="grid gap-2 sm:grid-cols-3">
+        {pages.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="w-full justify-between text-[11px]">
+                <span className="flex items-center gap-1.5 truncate">
+                  <Facebook className="h-3 w-3 text-primary/70" />
+                  Selecionar Facebook
+                </span>
+                <span className="ml-2 shrink-0 text-[10px] text-muted-foreground">
+                  {summary(sel.pages.length, pages.length, "Nenhum")}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="max-h-64 w-64 overflow-y-auto">
+              <DropdownMenuLabel className="text-[10px]">Páginas do Facebook</DropdownMenuLabel>
+              {pages.map((p) => (
+                <DropdownMenuCheckboxItem
+                  key={p.id}
+                  checked={sel.pages.includes(p.id)}
+                  onCheckedChange={() => toggle("pages", p.id)}
+                  onSelect={(e: Event) => e.preventDefault()}
+                  className="text-[11px]"
+                >
+                  {p.name}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+
+        {igList.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="w-full justify-between text-[11px]">
+                <span className="flex items-center gap-1.5 truncate">
+                  <Instagram className="h-3 w-3 text-primary/70" />
+                  Selecionar Instagram
+                </span>
+                <span className="ml-2 shrink-0 text-[10px] text-muted-foreground">
+                  {summary(sel.instagrams.length, igList.length, "Nenhum")}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="max-h-64 w-64 overflow-y-auto">
+              <DropdownMenuLabel className="text-[10px]">Contas do Instagram</DropdownMenuLabel>
+              {igList.map((ig) => (
+                <DropdownMenuCheckboxItem
+                  key={ig.id}
+                  checked={sel.instagrams.includes(ig.id)}
+                  onCheckedChange={() => toggle("instagrams", ig.id)}
+                  onSelect={(e: Event) => e.preventDefault()}
+                  className="text-[11px]"
+                >
+                  @{ig.username ?? ig.id}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+
+        {ads.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="w-full justify-between text-[11px]">
+                <span className="flex items-center gap-1.5 truncate">
+                  <Megaphone className="h-3 w-3 text-primary/70" />
+                  Selecionar Meta Ads
+                </span>
+                <span className="ml-2 shrink-0 text-[10px] text-muted-foreground">
+                  {summary(sel.ad_accounts.length, ads.length, "Nenhum")}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="max-h-64 w-72 overflow-y-auto">
+              <DropdownMenuLabel className="text-[10px]">Contas de anúncios</DropdownMenuLabel>
+              {ads.map((a) => (
+                <DropdownMenuCheckboxItem
+                  key={a.account_id}
+                  checked={sel.ad_accounts.includes(a.account_id)}
+                  onCheckedChange={() => toggle("ad_accounts", a.account_id)}
+                  onSelect={(e: Event) => e.preventDefault()}
+                  className="text-[11px]"
+                >
+                  {a.name ?? a.account_id}
+                  <span className="ml-1 text-[10px] text-muted-foreground">
+                    ({a.account_id}{a.currency ? ` · ${a.currency}` : ""})
+                  </span>
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
       <div className="flex justify-end">
         <Button size="sm" onClick={() => saveMut.mutate()} disabled={saveMut.isPending}>
@@ -198,7 +268,7 @@ export function MetaConnectionsManager({ reportId }: { reportId: string }) {
             ) : (
               <Plus className="mr-1 h-3.5 w-3.5" />
             )}
-            {hasConn ? "Conectar outra conta" : "Conectar Meta"}
+            Conectar via Facebook
           </Button>
           <Button
             size="sm"
@@ -212,7 +282,7 @@ export function MetaConnectionsManager({ reportId }: { reportId: string }) {
             ) : (
               <Instagram className="mr-1 h-3.5 w-3.5" />
             )}
-            Conectar Instagram
+            Conectar via Instagram
           </Button>
         </div>
 

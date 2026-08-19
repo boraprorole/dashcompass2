@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2, Link2 } from "lucide-react";
 import { listAccessibleReports } from "@/lib/meta.functions";
 import { MetaConnectionsManager } from "@/components/meta/MetaConnectionsManager";
+import { TikTokManager } from "@/components/tiktok/TikTokManager";
 
 export const Route = createFileRoute("/_authenticated/conexoes")({
   beforeLoad: async () => {
@@ -70,6 +71,7 @@ function ConexoesPage() {
                 </div>
               </div>
               <MetaConnectionsManager reportId={r.id} />
+              <TikTokManager reportId={r.id} />
             </li>
           ))}
         </ul>
