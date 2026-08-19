@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { listUsers, setUserRole, linkUserToAgency } from "@/lib/admin.functions";
+import { listUsers, setUserRole, linkUserToAgency, linkUserToCompanyByEmail } from "@/lib/admin.functions";
 import { SubscriptionDialog } from "@/components/admin/SubscriptionDialog";
 import { AgencyBillingTab } from "@/components/admin/AgencyBillingTab";
 
@@ -271,6 +271,70 @@ type AdminUser = {
   isConexoes: boolean;
   companyId: string | null;
 };
+
+function LinkUserByEmailDialog({ companyId, companyName }: { companyId: string; companyName: string }) {
+  const linkFn = useServerFn(linkUserToCompanyByEmail);
+  const qc = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const mutation = useMutation({
+    mutationFn: () => linkFn({ data: { email: email.trim(), companyId } }),
+    onSuccess: () => {
+      toast.success("E-mail vinculado à empresa.");
+      setEmail("");
+      setOpen(false);
+      qc.invalidateQueries({ queryKey: ["admin-users-minimal"] });
+      qc.invalidateQueries({ queryKey: ["admin-users"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="h-6 text-[10px] gap-1 px-2">
+          <Plus className="h-3 w-3" /> Vincular Usuário
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Vincular usuário a {companyName}</DialogTitle>
+        </DialogHeader>
+        <form
+          className="space-y-4 py-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!email.trim()) return;
+            mutation.mutate();
+          }}
+        >
+          <div className="space-y-1.5">
+            <Label htmlFor={`link-company-email-${companyId}`} className="text-xs text-muted-foreground">
+              E-mail do usuário
+            </Label>
+            <Input
+              id={`link-company-email-${companyId}`}
+              type="email"
+              autoFocus
+              placeholder="nome@empresa.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <p className="text-[11px] text-muted-foreground">
+            O usuário precisa ter conta no DashCompass (/cadastro-user). Ao vincular, ele passa a
+            visualizar os relatórios desta empresa.
+          </p>
+          <Button type="submit" className="w-full" disabled={mutation.isPending || !email.trim()}>
+            {mutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            Vincular
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 function LinkUserToAgencyCard() {
   const linkUser = useServerFn(linkUserToAgency);
