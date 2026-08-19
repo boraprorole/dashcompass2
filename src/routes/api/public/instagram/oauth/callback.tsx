@@ -12,6 +12,25 @@ export const Route = createFileRoute("/api/public/instagram/oauth/callback")({
     handlers: {
       GET: async ({ request }) => {
         const url = new URL(request.url);
+
+        // Meta Webhooks verification handshake (caso esta URL seja usada como callback de webhook)
+        const hubMode = url.searchParams.get("hub.mode");
+        if (hubMode) {
+          const hubToken = url.searchParams.get("hub.verify_token");
+          const hubChallenge = url.searchParams.get("hub.challenge") ?? "";
+          const expected =
+            process.env["META_WEBHOOK_VERIFY_TOKEN"] ??
+            process.env["INSTAGRAM_WEBHOOK_VERIFY_TOKEN"] ??
+            "";
+          if (hubMode === "subscribe" && expected && hubToken === expected) {
+            return new Response(hubChallenge, {
+              status: 200,
+              headers: { "content-type": "text/plain; charset=utf-8" },
+            });
+          }
+          return new Response("Forbidden", { status: 403 });
+        }
+
         const code = url.searchParams.get("code");
         const state = url.searchParams.get("state");
         const error = url.searchParams.get("error");
