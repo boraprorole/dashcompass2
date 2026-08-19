@@ -909,7 +909,7 @@ async function fetchFollowerBreakdown(
 ): Promise<Array<{ label: string; value: number }>> {
   try {
     const url =
-      `${igBase(userToken)}/${igId}/insights` +
+      `${igBase(token)}/${igId}/insights` +
       `?metric=follower_demographics&period=lifetime&metric_type=total_value` +
       `&breakdown=${breakdown}&access_token=${encodeURIComponent(token)}`;
     const j = (await graphGet(url)) as {
