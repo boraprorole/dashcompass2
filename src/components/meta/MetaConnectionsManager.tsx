@@ -8,6 +8,8 @@ import {
   deleteMetaConnection,
   updateMetaConnectionSelection,
 } from "@/lib/meta.functions";
+import { startInstagramLoginOAuth } from "@/lib/instagram_login.functions";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -137,6 +139,8 @@ function SelectionEditor({
 
 export function MetaConnectionsManager({ reportId }: { reportId: string }) {
   const startOAuth = useServerFn(startMetaOAuth);
+  const startIgOAuth = useServerFn(startInstagramLoginOAuth);
+
   const listConns = useServerFn(listMetaConnections);
   const deleteConn = useServerFn(deleteMetaConnection);
   const qc = useQueryClient();
@@ -156,6 +160,15 @@ export function MetaConnectionsManager({ reportId }: { reportId: string }) {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const connectIgMut = useMutation({
+    mutationFn: () => startIgOAuth({ data: { reportId } }),
+    onSuccess: ({ url }) => {
+      window.location.href = url;
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
   const deleteMut = useMutation({
     mutationFn: (id: string) => deleteConn({ data: { id } }),
     onSuccess: () => {
@@ -173,19 +186,36 @@ export function MetaConnectionsManager({ reportId }: { reportId: string }) {
         <div className="flex items-center gap-2 text-xs font-medium text-foreground">
           <Facebook className="h-3.5 w-3.5 text-primary" /> Facebook / Instagram / Ads
         </div>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => connectMut.mutate()}
-          disabled={connectMut.isPending}
-        >
-          {connectMut.isPending ? (
-            <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
-          ) : (
-            <Plus className="mr-1 h-3.5 w-3.5" />
-          )}
-          {hasConn ? "Conectar outra conta" : "Conectar Meta"}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => connectMut.mutate()}
+            disabled={connectMut.isPending}
+          >
+            {connectMut.isPending ? (
+              <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Plus className="mr-1 h-3.5 w-3.5" />
+            )}
+            {hasConn ? "Conectar outra conta" : "Conectar Meta"}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => connectIgMut.mutate()}
+            disabled={connectIgMut.isPending}
+            title="Login direto com Instagram (API com login empresarial)"
+          >
+            {connectIgMut.isPending ? (
+              <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Instagram className="mr-1 h-3.5 w-3.5" />
+            )}
+            Conectar Instagram
+          </Button>
+        </div>
+
       </div>
 
       {connsQ.isLoading ? (

@@ -10,6 +10,12 @@ import { buildInsights, computeDerived } from "./windsor.server";
 
 const V = "v25.0";
 
+// Tokens do "Instagram API com login empresarial" (prefixo IGAA) só funcionam
+// em graph.instagram.com; tokens do Facebook Login usam graph.facebook.com.
+function igBase(token: string): string {
+  return token.startsWith("IG") ? "https://graph.instagram.com/v23.0" : `https://graph.facebook.com/${V}`;
+}
+
 type DiscoveredPage = {
   id: string;
   name: string;
@@ -140,7 +146,7 @@ async function fetchInstagram(
   // `reach` continua aceitando period=day como time_series.
   try {
     const json = (await graphGet(
-      `https://graph.facebook.com/${V}/${igId}/insights?metric=reach&period=day&since=${s}&until=${u}&access_token=${encodeURIComponent(userToken)}`,
+      `${igBase(userToken)}/${igId}/insights?metric=reach&period=day&since=${s}&until=${u}&access_token=${encodeURIComponent(userToken)}`,
     )) as {
       data?: Array<{ name: string; values?: Array<{ end_time?: string; value?: number }> }>;
     };
@@ -193,7 +199,7 @@ async function fetchInstagram(
       for (const w of windows) {
         try {
           const json = (await graphGet(
-            `https://graph.facebook.com/${V}/${igId}/insights?metric=${metric}&period=day&metric_type=total_value&since=${w.s}&until=${w.u}&access_token=${encodeURIComponent(userToken)}`,
+            `${igBase(userToken)}/${igId}/insights?metric=${metric}&period=day&metric_type=total_value&since=${w.s}&until=${w.u}&access_token=${encodeURIComponent(userToken)}`,
           )) as {
             data?: Array<{ name: string; total_value?: { value?: number } }>;
           };
@@ -219,7 +225,7 @@ async function fetchInstagram(
     let gotViews = false;
     for (const w of windows) {
       const json = (await graphGet(
-        `https://graph.facebook.com/${V}/${igId}/insights?metric=views&period=day&since=${w.s}&until=${w.u}&access_token=${encodeURIComponent(userToken)}`,
+        `${igBase(userToken)}/${igId}/insights?metric=views&period=day&since=${w.s}&until=${w.u}&access_token=${encodeURIComponent(userToken)}`,
       )) as {
         data?: Array<{ name: string; values?: Array<{ end_time?: string; value?: number }> }>;
       };
@@ -244,7 +250,7 @@ async function fetchInstagram(
 
   try {
     const info = (await graphGet(
-      `https://graph.facebook.com/${V}/${igId}?fields=followers_count,follows_count,media_count&access_token=${encodeURIComponent(userToken)}`,
+      `${igBase(userToken)}/${igId}?fields=followers_count,follows_count,media_count&access_token=${encodeURIComponent(userToken)}`,
     )) as { followers_count?: number; follows_count?: number; media_count?: number };
     if (typeof info.followers_count === "number") totals.followers_count = info.followers_count;
     if (typeof info.follows_count === "number") totals.follows_count = info.follows_count;
@@ -312,7 +318,7 @@ async function fetchInstagramMediaInWindow(
     "comments_count",
   ].join(",");
   let url: string | null =
-    `https://graph.facebook.com/${V}/${igId}/media?fields=${fields}&limit=50&access_token=${encodeURIComponent(userToken)}`;
+    `${igBase(userToken)}/${igId}/media?fields=${fields}&limit=50&access_token=${encodeURIComponent(userToken)}`;
 
   const raw: Array<Record<string, unknown>> = [];
   let pages = 0;
@@ -354,7 +360,7 @@ async function fetchInstagramMediaInWindow(
       for (const insightMetrics of metricCandidates) {
         try {
           const ij = (await graphGet(
-            `https://graph.facebook.com/${V}/${mediaId}/insights?metric=${insightMetrics}&access_token=${encodeURIComponent(userToken)}`,
+            `${igBase(userToken)}/${mediaId}/insights?metric=${insightMetrics}&access_token=${encodeURIComponent(userToken)}`,
           )) as { data?: Array<{ name: string; values?: Array<{ value?: number }> }> };
           for (const it of ij.data ?? []) {
             const v = Number(it.values?.[0]?.value ?? 0);
@@ -903,7 +909,7 @@ async function fetchFollowerBreakdown(
 ): Promise<Array<{ label: string; value: number }>> {
   try {
     const url =
-      `https://graph.facebook.com/${V}/${igId}/insights` +
+      `${igBase(token)}/${igId}/insights` +
       `?metric=follower_demographics&period=lifetime&metric_type=total_value` +
       `&breakdown=${breakdown}&access_token=${encodeURIComponent(token)}`;
     const j = (await graphGet(url)) as {
