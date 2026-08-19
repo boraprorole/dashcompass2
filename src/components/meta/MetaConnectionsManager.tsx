@@ -156,6 +156,15 @@ export function MetaConnectionsManager({ reportId }: { reportId: string }) {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const connectIgMut = useMutation({
+    mutationFn: () => startIgOAuth({ data: { reportId } }),
+    onSuccess: ({ url }) => {
+      window.location.href = url;
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
   const deleteMut = useMutation({
     mutationFn: (id: string) => deleteConn({ data: { id } }),
     onSuccess: () => {
