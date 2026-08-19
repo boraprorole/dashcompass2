@@ -44,6 +44,7 @@ import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as ApiPublicMcpKeyRouteImport } from './routes/api/public/mcp/$key'
+import { Route as ApiPublicInstagramWebhookRouteImport } from './routes/api/public/instagram/webhook'
 import { Route as ApiPublicTiktokOauthCallbackRouteImport } from './routes/api/public/tiktok/oauth.callback'
 import { Route as ApiPublicRdstationOauthCallbackRouteImport } from './routes/api/public/rdstation/oauth.callback'
 import { Route as ApiPublicPipedriveOauthCallbackRouteImport } from './routes/api/public/pipedrive/oauth.callback'
@@ -234,6 +235,12 @@ const ApiPublicMcpKeyRoute = ApiPublicMcpKeyRouteImport.update({
   path: '/api/public/mcp/$key',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicInstagramWebhookRoute =
+  ApiPublicInstagramWebhookRouteImport.update({
+    id: '/api/public/instagram/webhook',
+    path: '/api/public/instagram/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicTiktokOauthCallbackRoute =
   ApiPublicTiktokOauthCallbackRouteImport.update({
     id: '/api/public/tiktok/oauth/callback',
@@ -322,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/api/debug/bing-ai-test': typeof ApiDebugBingAiTestRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/reports/': typeof AuthenticatedReportsIndexRoute
+  '/api/public/instagram/webhook': typeof ApiPublicInstagramWebhookRoute
   '/api/public/mcp/$key': typeof ApiPublicMcpKeyRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
@@ -367,6 +375,7 @@ export interface FileRoutesByTo {
   '/api/debug/bing-ai-test': typeof ApiDebugBingAiTestRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/reports': typeof AuthenticatedReportsIndexRoute
+  '/api/public/instagram/webhook': typeof ApiPublicInstagramWebhookRoute
   '/api/public/mcp/$key': typeof ApiPublicMcpKeyRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
@@ -414,6 +423,7 @@ export interface FileRoutesById {
   '/api/debug/bing-ai-test': typeof ApiDebugBingAiTestRoute
   '/auth/tiktok/callback': typeof AuthTiktokCallbackRoute
   '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
+  '/api/public/instagram/webhook': typeof ApiPublicInstagramWebhookRoute
   '/api/public/mcp/$key': typeof ApiPublicMcpKeyRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/ga/oauth/callback': typeof ApiPublicGaOauthCallbackRoute
@@ -461,6 +471,7 @@ export interface FileRouteTypes {
     | '/api/debug/bing-ai-test'
     | '/auth/tiktok/callback'
     | '/reports/'
+    | '/api/public/instagram/webhook'
     | '/api/public/mcp/$key'
     | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
@@ -506,6 +517,7 @@ export interface FileRouteTypes {
     | '/api/debug/bing-ai-test'
     | '/auth/tiktok/callback'
     | '/reports'
+    | '/api/public/instagram/webhook'
     | '/api/public/mcp/$key'
     | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
@@ -552,6 +564,7 @@ export interface FileRouteTypes {
     | '/api/debug/bing-ai-test'
     | '/auth/tiktok/callback'
     | '/_authenticated/reports/'
+    | '/api/public/instagram/webhook'
     | '/api/public/mcp/$key'
     | '/api/public/payments/webhook'
     | '/api/public/ga/oauth/callback'
@@ -588,6 +601,7 @@ export interface RootRouteChildren {
   ApiAiChatRoute: typeof ApiAiChatRoute
   ApiDebugBingAiTestRoute: typeof ApiDebugBingAiTestRoute
   AuthTiktokCallbackRoute: typeof AuthTiktokCallbackRoute
+  ApiPublicInstagramWebhookRoute: typeof ApiPublicInstagramWebhookRoute
   ApiPublicMcpKeyRoute: typeof ApiPublicMcpKeyRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   ApiPublicGaOauthCallbackRoute: typeof ApiPublicGaOauthCallbackRoute
@@ -848,6 +862,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicMcpKeyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/instagram/webhook': {
+      id: '/api/public/instagram/webhook'
+      path: '/api/public/instagram/webhook'
+      fullPath: '/api/public/instagram/webhook'
+      preLoaderRoute: typeof ApiPublicInstagramWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/tiktok/oauth/callback': {
       id: '/api/public/tiktok/oauth/callback'
       path: '/api/public/tiktok/oauth/callback'
@@ -970,6 +991,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAiChatRoute: ApiAiChatRoute,
   ApiDebugBingAiTestRoute: ApiDebugBingAiTestRoute,
   AuthTiktokCallbackRoute: AuthTiktokCallbackRoute,
+  ApiPublicInstagramWebhookRoute: ApiPublicInstagramWebhookRoute,
   ApiPublicMcpKeyRoute: ApiPublicMcpKeyRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   ApiPublicGaOauthCallbackRoute: ApiPublicGaOauthCallbackRoute,
