@@ -1699,36 +1699,7 @@ function CompaniesTab() {
                         </Button>
                       </Badge>
                     ))}
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="sm" className="h-6 text-[10px] gap-1 px-2">
-                          <Plus className="h-3 w-3" /> Vincular Usuário
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Vincular usuário a {c.name}</DialogTitle>
-                        </DialogHeader>
-                        <div className="grid gap-2 py-4 max-h-[300px] overflow-y-auto">
-                          {users?.filter(u => u.company_id !== c.id).map(u => (
-                            <Button
-                              key={u.id}
-                              variant="ghost"
-                              className="justify-start font-normal h-10"
-                              onClick={() => userCompanyMutation.mutate({ userId: u.id, companyId: c.id })}
-                            >
-                              <div className="flex items-center gap-2">
-                                <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px]">
-                                  {u.display_name?.[0] || "U"}
-                                </div>
-                                <span>{u.display_name || "Usuário sem nome"}</span>
-                                {u.company_id && <span className="text-[10px] text-muted-foreground italic">(Já em outra empresa)</span>}
-                              </div>
-                            </Button>
-                          ))}
-                        </div>
-                      </DialogContent>
-                    </Dialog>
+                    <LinkUserByEmailDialog companyId={c.id} companyName={c.name} />
                   </div>
                 </div>
 
