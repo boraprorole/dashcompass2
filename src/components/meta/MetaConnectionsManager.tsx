@@ -268,7 +268,7 @@ export function MetaConnectionsManager({ reportId }: { reportId: string }) {
             ) : (
               <Plus className="mr-1 h-3.5 w-3.5" />
             )}
-            {hasConn ? "Conectar via Facebook" : "Conectar via Facebook"}
+            Conectar via Facebook
           </Button>
           <Button
             size="sm"
