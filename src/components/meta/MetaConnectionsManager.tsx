@@ -120,7 +120,7 @@ function SelectionEditor({
                   key={p.id}
                   checked={sel.pages.includes(p.id)}
                   onCheckedChange={() => toggle("pages", p.id)}
-                  onSelect={(e) => e.preventDefault()}
+                  onSelect={(e: Event) => e.preventDefault()}
                   className="text-[11px]"
                 >
                   {p.name}
@@ -150,7 +150,7 @@ function SelectionEditor({
                   key={ig.id}
                   checked={sel.instagrams.includes(ig.id)}
                   onCheckedChange={() => toggle("instagrams", ig.id)}
-                  onSelect={(e) => e.preventDefault()}
+                  onSelect={(e: Event) => e.preventDefault()}
                   className="text-[11px]"
                 >
                   @{ig.username ?? ig.id}
@@ -180,7 +180,7 @@ function SelectionEditor({
                   key={a.account_id}
                   checked={sel.ad_accounts.includes(a.account_id)}
                   onCheckedChange={() => toggle("ad_accounts", a.account_id)}
-                  onSelect={(e) => e.preventDefault()}
+                  onSelect={(e: Event) => e.preventDefault()}
                   className="text-[11px]"
                 >
                   {a.name ?? a.account_id}
@@ -268,7 +268,7 @@ export function MetaConnectionsManager({ reportId }: { reportId: string }) {
             ) : (
               <Plus className="mr-1 h-3.5 w-3.5" />
             )}
-            {hasConn ? "Conectar outra conta" : "Conectar Meta"}
+            {hasConn ? "Conectar via Facebook" : "Conectar via Facebook"}
           </Button>
           <Button
             size="sm"
@@ -282,7 +282,7 @@ export function MetaConnectionsManager({ reportId }: { reportId: string }) {
             ) : (
               <Instagram className="mr-1 h-3.5 w-3.5" />
             )}
-            Conectar Instagram
+            Conectar via Instagram
           </Button>
         </div>
 
