@@ -137,6 +137,8 @@ function SelectionEditor({
 
 export function MetaConnectionsManager({ reportId }: { reportId: string }) {
   const startOAuth = useServerFn(startMetaOAuth);
+  const startIgOAuth = useServerFn(startInstagramLoginOAuth);
+
   const listConns = useServerFn(listMetaConnections);
   const deleteConn = useServerFn(deleteMetaConnection);
   const qc = useQueryClient();
